@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   useEffect(() => {
-    // Mobile menu toggle
     const mobileMenuButton = document.getElementById("mobile-menu-button");
     const mobileMenu = document.getElementById("mobile-menu");
 
@@ -13,22 +12,24 @@ const Header = () => {
 
     mobileMenuButton?.addEventListener("click", toggleMenu);
 
-    // Smooth scrolling for navigation links
+    // Smooth scroll for anchor links
     const handleSmoothScroll = (e) => {
-      e.preventDefault();
-      const target = document.querySelector(e.currentTarget.getAttribute("href"));
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-        mobileMenu?.classList.add("hidden");
+      const href = e.currentTarget.getAttribute("href");
+      if (href.startsWith("#")) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          mobileMenu?.classList.add("hidden"); // Close on click
+        }
       }
     };
 
     const anchors = document.querySelectorAll('a[href^="#"]');
-    anchors.forEach((anchor) => {
-      anchor.addEventListener("click", handleSmoothScroll);
-    });
+    anchors.forEach((anchor) =>
+      anchor.addEventListener("click", handleSmoothScroll)
+    );
 
-    // Add scroll effect to navigation
     const nav = document.querySelector("nav");
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -39,7 +40,6 @@ const Header = () => {
     };
     window.addEventListener("scroll", handleScroll);
 
-    // Add animation to cards when they come into view
     const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -53,7 +53,6 @@ const Header = () => {
       observer.observe(card);
     });
 
-    // Add click-to-call functionality
     const telLinks = document.querySelectorAll('a[href^="tel:"]');
     const handleTelClick = function () {
       this.style.transform = "scale(0.95)";
@@ -65,7 +64,6 @@ const Header = () => {
       link.addEventListener("click", handleTelClick);
     });
 
-    // Cleanup listeners on unmount
     return () => {
       mobileMenuButton?.removeEventListener("click", toggleMenu);
       anchors.forEach((anchor) =>
@@ -79,110 +77,46 @@ const Header = () => {
   }, []);
 
   return (
-    <>
-      <nav className="bg-white shadow-lg fixed w-full z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <div className="text-2xl font-bold text-indigo-600">
-                <img className="w-[250px]" src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png" alt="" />
-                {/* <i className="fas fa-home mr-2"></i>Gopal's Paying Guest
-                Services */}
-              </div>
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="#home"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"
-              >
-                Home
-              </a>
-              <a
-                href="#services"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"
-              >
-                Services
-              </a>
-              <a
-                href="#about"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"
-              >
-                About us
-              </a>
-             
-              <a
-                href="#pricing"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"
-              >
-                Pricing
-              </a>
-              <a
-                href="#locations"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"
-              >
-                Locations
-              </a>
-              <a
-                href="#contact"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"              >
-                Contact Us
-              </a>
-               <Link
-                to="/gallary"
-                className="text-gray-700 hover:text-indigo-600 transition duration-300"
-              >
-              Gallary
-              </Link>
-              <Link
-                to="gpgs-actions"
-                className="text-gray-700 px-4 py-2 rounded-lg  transition duration-300"
-              >
-                Office Use Only
-              </Link>
-            </div>
-            <div className="md:hidden flex items-center">
-              <button id="mobile-menu-button" className="text-gray-700">
-                <i className="fas fa-bars text-xl"></i>
-              </button>
-            </div>
+    <nav className="bg-white shadow-lg fixed w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <img
+              className="w-[250px]"
+              src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png"
+              alt="GPGS Logo"
+            />
+          </div>
+          <div className="hidden md:flex items-center space-x-8">
+            <a href="#home" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</a>
+            <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</a>
+            <a href="#about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</a>
+            <a href="#pricing" className="text-gray-700 hover:text-indigo-600 transition duration-300">Pricing</a>
+            <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</a>
+            <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</a>
+            <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
+            <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office Use Only</Link>
+          </div>
+          <div className="md:hidden flex items-center">
+            <button id="mobile-menu-button" className="text-gray-700 focus:outline-none">
+              <i className="fas fa-bars text-xl"></i>
+            </button>
           </div>
         </div>
-        <div id="mobile-menu" className="md:hidden hidden bg-white border-t">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            <a
-              href="#home"
-              className="block px-3 py-2 text-gray-700 hover:text-indigo-600"
-            >
-              Home
-            </a>
-            <a
-              href="#services"
-              className="block px-3 py-2 text-gray-700 hover:text-indigo-600"
-            >
-              Services
-            </a>
-            <a
-              href="#pricing"
-              className="block px-3 py-2 text-gray-700 hover:text-indigo-600"
-            >
-              Pricing
-            </a>
-            <a
-              href="#locations"
-              className="block px-3 py-2 text-gray-700 hover:text-indigo-600"
-            >
-              Locations
-            </a>
-            <a
-              href="#contact"
-              className="block px-3 py-2 text-gray-700 hover:text-indigo-600"
-            >
-              Contact
-            </a>
-          </div>
-        </div>
-      </nav>
-    </>
+      </div>
+
+      {/* Mobile menu */}
+      <div id="mobile-menu" className="md:hidden hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6 space-y-2">
+        <a href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
+        <a href="#services" className="block text-gray-700 hover:text-indigo-600">Services</a>
+        <a href="#about" className="block text-gray-700 hover:text-indigo-600">About us</a>
+        <a href="#pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</a>
+        <a href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
+        <a href="#contact" className="block text-gray-700 hover:text-indigo-600">Contact</a>
+        <Link to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
+        <Link to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
+      </div>
+    </nav>
   );
 };
 

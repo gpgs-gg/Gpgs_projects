@@ -29,7 +29,7 @@ const Contact = () => {
               </div>
               <h3 className="text-xl text-[#3730a3] font-bold mb-4">Sachin Patil</h3>
               <a href="tel:7208382803" className="text-2xl text-[#3730a3] font-bold hover:text-[#3730a10] transition duration-300 block mb-2">
-                <i className="fas fa-phone mr-2"></i>7208382803
+                <i className="fas fa-phone mr-2"></i>9167108043
               </a>
               <p className="opacity-80 text-[#3730a3] font-bold">Backup Contact 1</p>
             </div>
@@ -47,7 +47,7 @@ const Contact = () => {
           </div>
 
           <div className="mt-10 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8">
-            <h3 className="text-2xl font-semibold text-[#3730a3] font-bold mb-6 text-center">Business Proprietor</h3>
+            <h3 className="text-2xl  text-[#3730a3] font-bold mb-6 text-center">Business Proprietor</h3>
             <div className="text-center">
               <p className="mb-4 opacity-90 text-[#3730a3] font-bold">In case the above contact numbers are not responding, please let the business proprietor know ASAP:</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
