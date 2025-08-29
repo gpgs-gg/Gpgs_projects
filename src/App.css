@@ -1,0 +1,50 @@
+/* 1. Define the custom property for Nunito */
+:root {
+  --font-primary: 'Nunito', sans-serif;
+}
+
+/* 2. Apply it to the body */
+body {
+  font-family: var(--font-primary);
+}
+
+/* Existing styles */
+.gradient-bg {
+  background: linear-gradient(135deg, #FACC15 50%, #f3d955 50%);
+}
+.gradient-bg-contact {
+  background: linear-gradient(135deg, #689b40f0 50%, #689b40f0 50%);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.price-card {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.feature-icon {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
