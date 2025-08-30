@@ -80,7 +80,7 @@ const Gallary = () => {
     <div className="p-6 space-y-12 ">
       {/* Girls PG Section */}
       <section className='mt-20'>
-        <h2 className="text-2xl md:text-3xl font-bold text-pink-600 text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold  text-blue-700 text-center mb-6">
           Male PG Photos
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -102,7 +102,7 @@ const Gallary = () => {
 
       {/* Boys PG Section */}
       <section>
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-700 text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-pink-600 text-center mb-6">
           Female PG Photos
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

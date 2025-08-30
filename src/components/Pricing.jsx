@@ -22,7 +22,7 @@ const Pricing = () => {
             <p className="text-xl text-gray-600">Choose the perfect accommodation that fits your budget</p>
           </div>
 
-          <div data-aos="fade-left" data-aos-duration="2000" data-aos-offset="200" className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div  className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="card-hover bg-white rounded-xl shadow-lg overflow-hidden border">
               <div className="price-card p-6 text-white text-center">
                 <h3 className="text-2xl font-bold mb-2">Double Sharing</h3>

@@ -19,7 +19,7 @@ const Services = () => {
                         <p className="text-xl text-gray-600 max-w-4xl mx-auto">Choose from our wide range of accommodation options designed for your comfort and convenience</p>
                     </div>
 
-                    <div data-aos="fade-left" data-aos-duration="1000" data-aos-offset="200" className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <div className="card-hover bg-white rounded-xl shadow-lg p-8 border">
                             <div className="feature-icon w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
                                 <i className="fas fa-bed text-white text-2xl"></i>
