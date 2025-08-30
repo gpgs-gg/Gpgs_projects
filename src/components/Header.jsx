@@ -1,26 +1,20 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
   useEffect(() => {
-    const mobileMenuButton = document.getElementById("mobile-menu-button");
-    const mobileMenu = document.getElementById("mobile-menu");
-
-    const toggleMenu = () => {
-      mobileMenu?.classList.toggle("hidden");
-    };
-
-    mobileMenuButton?.addEventListener("click", toggleMenu);
-
-    // Smooth scroll for anchor links
     const handleSmoothScroll = (e) => {
       const href = e.currentTarget.getAttribute("href");
-      if (href.startsWith("#")) {
+      if (href?.startsWith("#")) {
         e.preventDefault();
         const target = document.querySelector(href);
         if (target) {
           target.scrollIntoView({ behavior: "smooth", block: "start" });
-          mobileMenu?.classList.add("hidden"); // Close on click
+          setMenuOpen(false); // Close mobile menu on link click
         }
       }
     };
@@ -65,16 +59,23 @@ const Header = () => {
     });
 
     return () => {
-      mobileMenuButton?.removeEventListener("click", toggleMenu);
       anchors.forEach((anchor) =>
         anchor.removeEventListener("click", handleSmoothScroll)
       );
       window.removeEventListener("scroll", handleScroll);
-      telLinks.forEach((link) => {
-        link.removeEventListener("click", handleTelClick);
-      });
+      telLinks.forEach((link) =>
+        link.removeEventListener("click", handleTelClick)
+      );
     };
   }, []);
+
+  const handleMobileToggle = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  const handleMenuLinkClick = () => {
+    setMenuOpen(false);
+  };
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
@@ -88,34 +89,68 @@ const Header = () => {
             />
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</a>
-            <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</a>
-            <a href="#about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</a>
-            <a href="#pricing" className="text-gray-700 hover:text-indigo-600 transition duration-300">Pricing</a>
-            <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</a>
-            <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</a>
+            {isHomePage ? (
+              <>
+                <a href="#home" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</a>
+                <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</a>
+                <a href="#about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</a>
+                <a href="#pricing" className="text-gray-700 hover:text-indigo-600 transition duration-300">Pricing</a>
+                <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</a>
+                <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</a>
+              </>
+            ) : (
+              <>
+                <Link to="/" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</Link>
+                <Link to="/services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</Link>
+                <Link to="/about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</Link>
+                <Link to="/pricing" className="text-gray-700 hover:text-indigo-600 transition duration-300">Pricing</Link>
+                <Link to="/location" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</Link>
+                <Link to="/contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</Link>
+              </>
+            )}
             <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
             <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office Use Only</Link>
           </div>
+
+          {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center">
-            <button id="mobile-menu-button" className="text-gray-700 focus:outline-none">
-              <i className="fas fa-bars text-xl"></i>
+            <button onClick={handleMobileToggle} className="text-gray-700 focus:outline-none">
+              {menuOpen ? (
+                <i className="fas fa-times text-xl"></i>
+              ) : (
+                <i className="fas fa-bars text-xl"></i>
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <div id="mobile-menu" className="md:hidden hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6 space-y-2">
-        <a href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
-        <a href="#services" className="block text-gray-700 hover:text-indigo-600">Services</a>
-        <a href="#about" className="block text-gray-700 hover:text-indigo-600">About us</a>
-        <a href="#pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</a>
-        <a href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
-        <a href="#contact" className="block text-gray-700 hover:text-indigo-600">Contact</a>
-        <Link to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
-        <Link to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
-      </div>
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6 space-y-2">
+          {isHomePage ? (
+            <>
+              <a onClick={handleMenuLinkClick} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
+              <a onClick={handleMenuLinkClick} href="#services" className="block text-gray-700 hover:text-indigo-600">Services</a>
+              <a onClick={handleMenuLinkClick} href="#about" className="block text-gray-700 hover:text-indigo-600">About us</a>
+              <a onClick={handleMenuLinkClick} href="#pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</a>
+              <a onClick={handleMenuLinkClick} href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
+              <a onClick={handleMenuLinkClick} href="#contact" className="block text-gray-700 hover:text-indigo-600">Contact</a>
+            </>
+          ) : (
+            <>
+              <Link onClick={handleMenuLinkClick} to="/" className="block text-gray-700 hover:text-indigo-600">Home</Link>
+              <Link onClick={handleMenuLinkClick} to="/services" className="block text-gray-700 hover:text-indigo-600">Services</Link>
+              <Link onClick={handleMenuLinkClick} to="/about" className="block text-gray-700 hover:text-indigo-600">About us</Link>
+              <Link onClick={handleMenuLinkClick} to="/pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</Link>
+              <Link onClick={handleMenuLinkClick} to="/location" className="block text-gray-700 hover:text-indigo-600">Locations</Link>
+              <Link onClick={handleMenuLinkClick} to="/contact" className="block text-gray-700 hover:text-indigo-600">Contact</Link>
+            </>
+          )}
+          <Link onClick={handleMenuLinkClick} to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
+          <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
+        </div>
+      )}
     </nav>
   );
 };

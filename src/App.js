@@ -95,35 +95,29 @@ function App() {
     };
   }, []);
 
-
   return (
     <>
-       <Header />
+      <Header />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Home />
-              <Services />
-              <About />
-              <Pricing />
-              <Location />
-              <Contact />
-            </>
-          }
-        />
+        <Route path="/" element={
+          <>
+            <Home />
+            <Services />
+            <About />
+            <Pricing />
+            <Location />
+            <Contact />
+          </>
+        } />
+        <Route path="/home" element={<Home />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/location" element={<Location />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/gpgs-actions" element={<Gpgsaction />} />
         <Route path="/gallary" element={<Gallary />} />
       </Routes>
-
-
-
-
-
-
-
-
 
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -158,8 +152,6 @@ function App() {
           </div>
         </div>
       </footer>
-
-
     </>
   );
 }
