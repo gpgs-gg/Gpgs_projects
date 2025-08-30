@@ -79,16 +79,16 @@ const Header = () => {
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-8xl mx-auto px-4 h-20 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <img
-              className="w-[250px]"
+              className="w-[280px] mt-3"
               src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png"
               alt="GPGS Logo"
             />
           </div>
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8 text-lg mt-3 font-bold">
             {isHomePage ? (
               <>
                 <a href="#home" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</a>
@@ -113,7 +113,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center  text-lg mt-3 font-bold">
             <button onClick={handleMobileToggle} className="text-gray-700 focus:outline-none">
               {menuOpen ? (
                 <i className="fas fa-times text-xl"></i>
@@ -127,7 +127,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6 space-y-2">
+        <div className="md:hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6  text-lg mt-3 font-bold space-y-2">
           {isHomePage ? (
             <>
               <a onClick={handleMenuLinkClick} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
