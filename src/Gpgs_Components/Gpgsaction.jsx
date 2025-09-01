@@ -75,7 +75,7 @@ const Gpgsaction = () => {
 
         <div onClick={handleOpenUrlThird} className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
-            <i class="fa-solid fa-bed text-2xl"></i>          </div>
+            <i class="fa-solid fa-file-invoice"></i>          </div>
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">
              Accounts
           </h3>
