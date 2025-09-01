@@ -67,12 +67,12 @@ const Gpgsaction = () => {
             convenience, and community living across Mumbai & Navi Mumbai.
           </p>
           <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
-            Go For Check
+            Go For BEDS
           </button>
         </div>
 
 
-
+ {/* Card 3 */}
         <div onClick={handleOpenUrlThird} className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
             <i class="fa-solid fa-file-invoice text-2xl"></i>          </div>
@@ -84,7 +84,7 @@ const Gpgsaction = () => {
             convenience, and community living across Mumbai & Navi Mumbai.
           </p>
           <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
-            Go For Check
+            Go For Accounts
           </button>
         </div>
 
