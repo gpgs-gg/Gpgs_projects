@@ -67,7 +67,7 @@ const Gpgsaction = () => {
             convenience, and community living across Mumbai & Navi Mumbai.
           </p>
           <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
-            Go For BEDS
+            Go For Beds
           </button>
         </div>
 
