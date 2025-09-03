@@ -3,20 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
+    "@tanstack/react-query": "^5.85.9",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "aos": "^2.3.4",
+    "axios": "^1.11.0",
+    "jspdf": "^3.0.2",
+    "lucide-react": "^0.542.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hook-form": "^7.62.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.8.2",
     "react-scripts": "5.0.1",
+    "react-select": "^5.10.2",
     "react-typed": "^2.0.12",
-    "web-vitals": "^2.1.4"
+    "swiper": "^11.2.10",
+    "web-vitals": "^2.1.4",
+    "yup": "^1.7.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

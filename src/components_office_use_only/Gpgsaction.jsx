@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { Link } from 'react-router-dom';
 const Gpgsaction = () => {
   useEffect(() => {
     AOS.init({
@@ -10,16 +11,8 @@ const Gpgsaction = () => {
     AOS.refresh(); // refresh AOS when component mounts or updates
   }, []);
 
-  const handleOpenUrlone = () => {
-    window.open("https://gpgs-booking-system.vercel.app/");
-  };
-  const handleOpenUrlSecond = () => {
-    window.open("https://gpgs-user.vercel.app/");
-  };
 
-  const handleOpenUrlThird = () =>{
-     window.open("https://gpgs-accounts.vercel.app/");
-  }
+ 
 
   return (
     <section className="bg-gray-200 py-16 px-6">
@@ -35,10 +28,11 @@ const Gpgsaction = () => {
       </div>
 
       {/* Cards Container */}
-      <div data-aos="fade-right" data-aos-duration="2000" data-aos-offset="200" className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div  className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {/* Card 1 */}
         {/* <Link> */}
-        <div onClick={handleOpenUrlone} className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
+        <Link to = "/gpgs-actions/new-booking">
+        <div  className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-6 mx-auto">
             <i className="fa-solid fa-book text-2xl"></i>          </div>
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -52,11 +46,13 @@ const Gpgsaction = () => {
             Go For Booking
           </button>
         </div>
+        </Link>
 
         {/* </Link> */}
 
         {/* Card 2 */}
-        <div onClick={handleOpenUrlSecond} className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
+   <Link to ="/gpgs-actions/beds-avilable">
+        <div  className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
             <i class="fa-solid fa-bed text-2xl"></i>          </div>
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -70,14 +66,17 @@ const Gpgsaction = () => {
             Go For Beds
           </button>
         </div>
+   </Link>
 
 
  {/* Card 3 */}
-        <div onClick={handleOpenUrlThird} className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
+
+ <Link to ="/gpgs-actions/accounts">
+      <div  className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
             <i class="fa-solid fa-file-invoice text-2xl"></i>          </div>
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-             Accounts
+             ACCOUNTS
           </h3>
           <p className="text-gray-600 mb-6">
             Discover why Gopal’s PG Services is the trusted choice for comfort,
@@ -87,8 +86,7 @@ const Gpgsaction = () => {
             Go For Accounts
           </button>
         </div>
-
-
+ </Link >
         <div className="bg-white shadow-lg rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
             <i className="fas fa-info-circle text-2xl"></i>

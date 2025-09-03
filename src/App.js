@@ -9,8 +9,11 @@ import About from './components/About';
 import Pricing from './components/Pricing';
 import Location from './components/Location';
 import Contact from './components/Contact';
-import Gpgsaction from './Gpgs_Components/Gpgsaction';
+import Gpgsaction from './components_office_use_only/Gpgsaction';
 import Gallary from './components/Gallary';
+import NewBooking from './components_office_use_only/GPGS_NewBooking/NewBooking';
+import BedsAvilable from './components_office_use_only/Gpgps_Bedsavilable/BedsAvilable';
+import Accounts from './components_office_use_only/Gpgs_Accounts/Accounts';
 
 function App() {
 
@@ -117,6 +120,9 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/gpgs-actions" element={<Gpgsaction />} />
         <Route path="/gallary" element={<Gallary />} />
+         <Route path="/gpgs-actions/beds-avilable" element={<BedsAvilable />} />
+        <Route path="/gpgs-actions/new-booking" element={<NewBooking />} />
+        <Route path="/gpgs-actions/accounts" element={<Accounts />} />
       </Routes>
 
       <footer className="bg-gray-900 text-white py-12">
