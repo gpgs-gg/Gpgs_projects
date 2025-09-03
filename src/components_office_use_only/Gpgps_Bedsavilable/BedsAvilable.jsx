@@ -194,14 +194,14 @@ const BedsAvilable = () => {
 
   if (loading)
     return (
-      <p className="text-center flex justify-center  items-center text-orange-200 min-h-screen mt-10 text-4xl">
+      <p className="text-center flex justify-center  items-center text-orange-200 min-h-screen text-4xl">
         <img className="w-[300px]" src="https://png.pngtree.com/png-clipart/20230413/original/pngtree-jai-shri-ram-text-with-hindu-flag-design-png-image_9050809.png" alt="" /> Loading.....
       </p>
     );
 
   return (
     
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen bg-gray-50">
       <div className="sticky top-0 z-5 ">
         <div className="relative flex items-center justify-center ">
           <div className="absolute  p-2 left-0 w-[250px]">
@@ -373,3 +373,15 @@ const BedsAvilable = () => {
 };
 
 export default BedsAvilable;
+
+
+
+
+
+
+
+
+
+
+
+
