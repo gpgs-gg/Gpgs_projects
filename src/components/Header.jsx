@@ -113,7 +113,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex items-center  text-lg mt-3 font-bold">
+          <div className="md:hidden flex items-center  text-xl mt-3 font-bold">
             <button onClick={handleMobileToggle} className="text-gray-700 focus:outline-none">
               {menuOpen ? (
                 <i className="fas fa-times text-xl"></i>
