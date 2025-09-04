@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
-
+  useEffect(() => {
+        AOS.init({
+            duration: 1000, // global animation duration
+            once: false, // whether animation should happen only once - default true
+        });
+        AOS.refresh(); // refresh AOS when component mounts or updates
+    }, []);
   useEffect(() => {
     const handleSmoothScroll = (e) => {
       const href = e.currentTarget.getAttribute("href");
@@ -127,7 +135,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6  text-lg mt-3 font-bold space-y-2">
+        <div data-aos="fade-left" data-aos-offset="100" data-aos-easing="ease-in-sine" data-aos-duration="500" className="md:hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6  text-lg mt-3 font-bold space-y-5">
           {isHomePage ? (
             <>
               <a onClick={handleMenuLinkClick} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
