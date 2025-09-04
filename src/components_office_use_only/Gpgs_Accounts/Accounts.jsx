@@ -19,51 +19,75 @@ const Accounts = () => {
   const selectedMonth = watch("selectedMonth");
   const selectedProperty = watch("selectedProperty");
 
-  useEffect(() => {
-    if (isSuccess && propertySheetData?.data) {
-      // Build formula string like: "=123 + 456", skipping 0s
-      const buildFormulaString = (values) => {
-        const filtered = values
-          .map(v => Number(v))
-          .filter(v => !isNaN(v) && v > 0);
+useEffect(() => {
+  if (isSuccess && propertySheetData?.data) {
+    const validItems = propertySheetData.data.filter(
+      item => typeof item.FullName === "string" && item.FullName.trim() !== ""
+    );
 
-        return filtered.length > 0 ? `= ${filtered.join(" + ")}` : "";
-      };
+    // Build formula string like: "=123 + 456", skipping 0s
+    const buildFormulaString = (values) => {
+      const filtered = values
+        .map(v => Number(v))
+        .filter(v => !isNaN(v) && v > 0);
 
-      // Extract names with due > 0, joined by newline
-      const getNamesByDueCondition = (key) =>
-        propertySheetData.data
-          .filter(item => Number(item[key]) > 0)
-          .map(item => item.FullName)
-          .filter(name => name && name.trim() !== "")
-          .join("\n"); // ⬅️ Changed from ", " to "\n"
+      return filtered.length > 0 ? `= ${filtered.join(" + ")}` : "";
+    };
 
-      const ClientNameCurrentDue = getNamesByDueCondition("CurDueAmt");
-      const ClientNameDepositDue = getNamesByDueCondition("DADue");
-      const ClientNamePreviousDue = getNamesByDueCondition("PreDueAmt");
+    // Helper function for custom currentDue calculation
+    const calculateCurrentDue = (item) => {
+      const cur = Number(item.CurDueAmt);
+      const pre = Number(item.PreDueAmt);
 
-      // Build formulas
-      const currentDue = buildFormulaString(propertySheetData.data.map(item => item.CurDueAmt));
-      const daDue = buildFormulaString(propertySheetData.data.map(item => item.DADue));
-      const preDue = buildFormulaString(propertySheetData.data.map(item => item.PreDueAmt));
+      if (isNaN(cur) && isNaN(pre)) return 0;
+      if (isNaN(pre)) return cur;
+      if (!isNaN(cur)) return pre < 0 ? cur + pre : cur;
 
-      // Final object
-      const transformed = [
-        {
-          PropertyCode: selectedProperty.label,
-          ClientNameCurrentDue: ClientNameCurrentDue || "None",
-          ClientNameDepositDue: ClientNameDepositDue || "None",
-          ClientNamePreviousDue: ClientNamePreviousDue || "None",
-          CurrentDue: currentDue,
-          DepositDue: daDue,
-          PreviousDue: preDue,
-        }
-      ];
+      return 0;
+    };
 
-      setRnrSheetData(transformed);
-    }
-  }, [isSuccess, propertySheetData]);
+    // Get FullNames with calculated current due > 0
+    const getNamesByCalculatedCurrentDue = () =>
+      validItems
+        .filter(item => calculateCurrentDue(item) > 0)
+        .map(item => item.FullName.trim())
+        .join("\n");
 
+    // Other due name filters (simple > 0 checks)
+    const getNamesByDueCondition = (key) =>
+      validItems
+        .filter(item => Number(item[key]) > 0)
+        .map(item => item.FullName.trim())
+        .join("\n");
+
+    const ClientNameCurrentDue = getNamesByCalculatedCurrentDue();
+    const ClientNameDepositDue = getNamesByDueCondition("DADue");
+    const ClientNamePreviousDue = getNamesByDueCondition("PreDueAmt");
+
+    // Build total formula strings
+    const currentDue = buildFormulaString(
+      validItems.map(calculateCurrentDue)
+    );
+
+    const daDue = buildFormulaString(validItems.map(item => item.DADue));
+    const preDue = buildFormulaString(validItems.map(item => item.PreDueAmt));
+
+    // Final object
+    const transformed = [
+      {
+        PropertyCode: selectedProperty.label,
+        ClientNameCurrentDue: ClientNameCurrentDue || "None",
+        ClientNameDepositDue: ClientNameDepositDue || "None",
+        ClientNamePreviousDue: ClientNamePreviousDue || "None",
+        CurrentDue: currentDue,
+        DepositDue: daDue,
+        PreviousDue: preDue,
+      }
+    ];
+
+    setRnrSheetData(transformed);
+  }
+}, [isSuccess, propertySheetData]);
 
   const { mutate: submitBooking, isLoading: isBookingLoading } = useAddBooking();
 
@@ -275,8 +299,8 @@ const Accounts = () => {
                     <div className="bg-gray-200 p-4 rounded-xl shadow">
                       <div className="mt-1 text-lg max-h-40 overflow-y-auto pr-2">
 
-                      <p className="text-sm text-orange-400">Current Due Amount</p>
-                      <p className="text-lg font-semibold">{rnrSheetData[0].CurrentDue || 0}</p>
+                        <p className="text-sm text-orange-400">Current Due Amount</p>
+                        <p className="text-lg font-semibold">{rnrSheetData[0].CurrentDue || 0}</p>
                       </div>
                     </div>
                   </div>
@@ -285,7 +309,7 @@ const Accounts = () => {
                   <div className="border-2 p-2 border-orange-200">
                     <div className="mb-2">
                       <span className="font-semibold text-orange-500">Client Names:</span>
-                        <div className="mt-1 text-lg max-h-40 overflow-y-auto pr-2">
+                      <div className="mt-1 text-lg max-h-40 overflow-y-auto pr-2">
                         {rnrSheetData[0].ClientNamePreviousDue
                           ?.split('\n') // First, try splitting by newline
                           .map((name, index) => (
@@ -304,7 +328,7 @@ const Accounts = () => {
                   <div className=" border-2 p-2 border-orange-200">
                     <div className="mb-2">
                       <span className="font-semibold text-orange-500">Client Names:</span>
-                       <div className="mt-1 text-lg max-h-40 overflow-y-auto pr-2">
+                      <div className="mt-1 text-lg max-h-40 overflow-y-auto pr-2">
                         {rnrSheetData[0].ClientNameDepositDue
                           ?.split('\n') // First, try splitting by newline
                           .map((name, index) => (
