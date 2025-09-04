@@ -83,7 +83,7 @@ const Header = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center justify-center">
             <img
-              className="w-[280px] mt-3"
+              className="w-[250px] md:w-[280px] mt-3"
               src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png"
               alt="GPGS Logo"
             />
