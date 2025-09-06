@@ -112,19 +112,27 @@ useEffect(() => {
   }, [selectedMonth, selectedProperty, fetchSingleSheetData]);
 
   // Manual submit action
-  const onSubmit = (data) => {
-    submitBooking(
-      {
-        rnrSheetData: rnrSheetData[0],
-        selectedMonth: selectedMonth?.value
+const onSubmit = (data) => {
+  submitBooking(
+    {
+      rnrSheetData: rnrSheetData[0],
+      selectedMonth: selectedMonth?.value,
+    },
+    {
+      onSuccess: () => {
+        alert("✅ Data successfully sent to Google Sheet!");
       },
-      {
-        onSuccess: () => {
-          alert("✅ Data successfully sent to Google Sheet!");
-        }
-      }
-    );
-  };
+      onError: (error) => {
+        // Try to extract error message from response
+        console.error("Submission error:", error);
+        const message =
+          error?.response?.data?.error || error.message || "❌ Unknown error occurred while submitting data.";
+
+        alert(`❌ Failed to submit data:\n${message}`);
+      },
+    }
+  );
+};
 
   // Property options
   const propertyOptions =
