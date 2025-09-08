@@ -14,7 +14,7 @@ import Gallary from './components/Gallary';
 import BedsAvilable from './components_office_use_only/Gpgps_Bedsavilable/BedsAvilable';
 import Accounts from './components_office_use_only/Gpgs_Accounts/Accounts';
 import AdminLayout from './components_office_use_only/TicketSystem/AdminLayout';
-import NewBooking from './components_office_use_only/Gpgs_NewBooking/NewBooking';
+import NewBooking from './components_office_use_only/NewBooking/NewBooking';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
