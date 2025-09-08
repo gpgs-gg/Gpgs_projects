@@ -1758,8 +1758,6 @@ const NewBooking = () => {
    
  const TotalAmt =
       (applyPermBedRent ? Number(data.PermBedRentAmt || 0) : 0) +
-      Number(data.PermBedRentAmt || 0) +
-
       Number(data.PermBedDepositAmt || 0) +
       Number(data.ProcessingFeesAmt || 0) +
       Number(data.TempBedRentAmt || 0);
