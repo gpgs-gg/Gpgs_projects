@@ -23,8 +23,8 @@ export    const KanbanBoard = () => {
 
             const handleDrop = (e, newStatus) => {
                 e.preventDefault();
-                if (draggedTicket && draggedTicket.status !== newStatus) {
-                    updateTicket(draggedTicket.id, { status: newStatus });
+                if (draggedTicket && draggedTicket.Status !== newStatus) {
+                    updateTicket(draggedTicket.TicketID, { Status: newStatus });
                 }
                 setDraggedTicket(null);
             };
@@ -38,7 +38,7 @@ export    const KanbanBoard = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                         {columns.map(column => {
-                            const columnTickets = tickets.filter(ticket => ticket.status === column.id);
+                            const columnTickets = tickets.filter(ticket => ticket.Status === column.id);
                             
                             return (
                                 <div
@@ -65,7 +65,7 @@ export    const KanbanBoard = () => {
                                                 className="bg-white p-3 rounded-lg shadow cursor-move hover:shadow-lg transition-shadow"
                                             >
                                                 <div className="flex items-start justify-between mb-2">
-                                                    <span className="text-xs font-medium text-gray-500">{ticket.id}</span>
+                                                    <span className="text-xs font-medium text-gray-500">{ticket.TicketID}</span>
                                                     <span className={`px-2 py-1 text-xs rounded-full priority-${ticket?.Priority?.toLowerCase()}`}>
                                                         {ticket?.Priority}
                                                     </span>
@@ -80,8 +80,8 @@ export    const KanbanBoard = () => {
                                                 </p>
                                                 
                                                 <div className="flex items-center justify-between text-xs text-gray-500">
-                                                    <span>{ticket.assignedTo || 'Unassigned'}</span>
-                                                    <span>{ticket.createdDate}</span>
+                                                    <span>{ticket.Assignee || 'Unassigned'}</span>
+                                                    <span>{ticket.DateCreated}</span>
                                                 </div>
                                             </div>
                                         ))}

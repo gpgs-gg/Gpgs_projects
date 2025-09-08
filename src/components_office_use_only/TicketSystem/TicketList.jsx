@@ -192,7 +192,7 @@ export const TicketList = () => {
                                     </td>
                                 ))}
                                 
-                                <td className="px-4 py-3 whitespace-nowrap text-sm font-medium sticky right-0 bg-white z-10">
+                                <td className="px-8 py-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
                                     <button
                                         onClick={() => editTicket(ticket)}
                                         className="text-green-600 hover:text-green-900 mr-3"
@@ -200,13 +200,13 @@ export const TicketList = () => {
                                     >
                                         <i className="fas fa-edit"></i>
                                     </button>
-                                    <button
+                                    {/* <button
                                         onClick={() => deleteTicket(ticket.TicketID)}
                                         className="text-red-600 hover:text-red-900"
                                         title="Delete"
                                     >
                                         <i className="fas fa-trash"></i>
-                                    </button>
+                                    </button> */}
                                 </td>
                             </tr>
                         ))}

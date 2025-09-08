@@ -3,18 +3,21 @@ import { useApp } from "./AppProvider";
 
 export const Dashboard = () => {
     const { tickets } = useApp();
-
+    console.log("tickets in dashboard", tickets);
     const statusChartRef = useRef(null);
     const priorityChartRef = useRef(null);
 
     const stats = {
         total: tickets.length,
-        open: tickets.filter(t => t.status === 'Open').length,
-        inProgress: tickets.filter(t => t.status === 'In Progress').length,
-        resolved: tickets.filter(t => t.status === 'Resolved').length,
-        closed: tickets.filter(t => t.status === 'Closed').length,
-        critical: tickets.filter(t => t.priority === 'Critical').length
+        open: tickets.filter(t => t.Status === 'Open').length,
+        inProgress: tickets.filter(t => t.Status === 'In Progress').length,
+        resolved: tickets.filter(t => t.Status === 'Resolved').length,
+        closed: tickets.filter(t => t.Status === 'Closed').length,
+        critical: tickets.filter(t => t.Priority === 'Critical').length,
+        Acknowledged: tickets.filter(t => t.Status == 'Acknowledged').length,
+        Assigned: tickets.filter(t => t.Status == 'Assigned').length
     };
+    console.log("stats", tickets);
 
     useEffect(() => {
         const statusCtx = document.getElementById('statusChart');
@@ -29,54 +32,54 @@ export const Dashboard = () => {
         }
 
         // Status Chart
-if (window.Chart && statusCtx) {
-    statusChartRef.current = new window.Chart(statusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Open', 'In Progress', 'Resolved', 'Closed'],
-            datasets: [{
-                data: [stats.open, stats.inProgress, stats.resolved, stats.closed],
-                backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#6b7280']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
+        if (window.Chart && statusCtx) {
+            statusChartRef.current = new window.Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Open', 'In Progress', 'Resolved', 'Closed'],
+                    datasets: [{
+                        data: [stats.open, stats.inProgress, stats.resolved, stats.closed, stats.Acknowledged, stats.Assigned],
+                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#6b7280', '#FFA500', '#DAA520'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
         }
-    });
-}
 
 
         // Priority Chart
         if (window.Chart && priorityCtx) {
-               const priorityData = {
-                Low: tickets.filter(t => t.priority === 'Low').length,
-                Medium: tickets.filter(t => t.priority === 'Medium').length,
-                High: tickets.filter(t => t.priority === 'High').length,
-                Critical: tickets.filter(t => t.priority === 'Critical').length
+            const priorityData = {
+                Low: tickets.filter(t => t.Priority === 'Low').length,
+                Medium: tickets.filter(t => t.Priority === 'Medium').length,
+                High: tickets.filter(t => t.Priority === 'High').length,
+                Critical: tickets.filter(t => t.Priority === 'Critical').length
             };
 
-    priorityChartRef.current = new window.Chart(priorityCtx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(priorityData),
-            datasets: [{
-                label: 'Tickets',
-                data: Object.values(priorityData),
-                backgroundColor: ['#10b981', '#f59e0b', '#f97316', '#ef4444']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+            priorityChartRef.current = new window.Chart(priorityCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(priorityData),
+                    datasets: [{
+                        label: 'Tickets',
+                        data: Object.values(priorityData),
+                        backgroundColor: ['#10b981', '#f59e0b', '#f97316', '#ef4444' , "#FFB6C1"]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
-            }
+            });
         }
-    });
-}
 
 
         return () => {
@@ -102,6 +105,8 @@ if (window.Chart && statusCtx) {
                 {[
                     { label: "Total", value: stats.total, icon: "fas fa-ticket-alt", color: "orange" },
                     { label: "Open", value: stats.open, icon: "fas fa-clock", color: "yellow" },
+                    { label: "Acknowledged", value: stats.Acknowledged, icon: "fa fa-check", color: "blue" },
+                    { label: "Assigned", value: stats.Assigned, icon: "fas fa-tasks", color: "pink" },
                     { label: "In Progress", value: stats.inProgress, icon: "fas fa-spinner", color: "orange" },
                     { label: "Resolved", value: stats.resolved, icon: "fas fa-check-circle", color: "green" },
                     { label: "Closed", value: stats.closed, icon: "fas fa-times-circle", color: "gray" },
@@ -142,16 +147,15 @@ if (window.Chart && statusCtx) {
                 <h3 className="text-lg font-semibold mb-4">Recent Tickets</h3>
                 <div className="space-y-3">
                     {tickets.slice(0, 8).map(ticket => (
-                        <div key={ticket.id} className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg">
-                            <div className={`w-3 h-3 rounded-full ${
-                                ticket.priority === 'Critical' ? 'bg-red-500' :
-                                ticket.priority === 'High' ? 'bg-orange-500' :
-                                ticket.priority === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
-                            }`}></div>
+                        <div key={ticket.TicketID} className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg">
+                            <div className={`w-3 h-3 rounded-full ${ticket.Priority === 'Critical' ? 'bg-red-500' :
+                                ticket.Priority === 'High' ? 'bg-orange-500' :
+                                    ticket.Priority === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
+                                }`}></div>
                             <div className="flex-1">
-                                <p className="font-medium text-sm">{ticket.title}</p>
+                                <p className="font-medium text-sm">{ticket.Title}</p>
                                 <p className="text-xs text-gray-500">
-                                    {ticket.id} • {ticket.createdBy} • {ticket.createdDate}
+                                    {ticket.TicketID} • {ticket.CreatedBy} • {ticket.DateCreated}
                                 </p>
                             </div>
                             <span className={`px-2 py-1 text-xs rounded-full status-${ticket.Status.toLowerCase().replace(' ', '')}`}>

@@ -1,13 +1,14 @@
 //   import React, { useContext, useMemo } from 'react';   
 
 import React, { useState, useContext, useMemo, createContext, useEffect } from 'react';
-import { usePropertyData } from './Services';
+import { usePropertyData, useUpdateTicketSheetData } from './Services';
 
 // ✅ Export the context
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
  const { data } = usePropertyData();
+  const { mutate: updateTicketData, isLoading: isticketUpdate } = useUpdateTicketSheetData();
 
 // Start with an empty array
 const [tickets, setTickets] = useState([]);
@@ -61,26 +62,41 @@ useEffect(() => {
         setTickets([...tickets, newTicket]);
     };
 
-    const updateTicket = (ticketId, updates) => {
-        setTickets(tickets.map(ticket =>
-            ticket.id === ticketId
-                ? {
-                    ...ticket,
-                    ...updates,
-                    workLogs: [
-                        ...ticket.workLogs,
-                        {
-                            id: ticket.workLogs.length + 1,
-                            message: `Ticket updated: ${Object.keys(updates).join(', ')}`,
-                            user: currentUser.name,
-                            timestamp: new Date().toISOString(),
-                            type: 'update'
-                        }
-                    ]
-                }
-                : ticket
-        ));
-    };
+const updateTicket = (ticketId, updates) => {
+    console.log("updates", updates, ticketId);
+
+    // Step 1: Find the ticket to update
+    const ticketToUpdate = tickets?.find(ticket => ticket.TicketID === ticketId);
+
+    if (!ticketToUpdate) {
+        console.error(`❌ Ticket with ID ${ticketId} not found.`);
+        return;
+    }
+
+    // Step 2: Merge updates into the found ticket
+    const updatedTicket = { ...ticketToUpdate, ...updates };
+
+    console.log("updatedTicket", updatedTicket);
+
+    // Step 3: Send only the updated ticket
+    updateTicketData(updatedTicket, {
+        onSuccess: () => {
+            alert("✅ Ticket successfully updated in Google Sheet!");
+        },
+        onError: (error) => {
+            console.error("❌ Failed to update ticket:", error);
+        },
+    });
+
+    return updatedTicket;
+};
+
+
+
+
+
+
+
 
     const deleteTicket = (ticketId) => {
         setTickets(tickets.filter(ticket => ticket.id !== ticketId));
