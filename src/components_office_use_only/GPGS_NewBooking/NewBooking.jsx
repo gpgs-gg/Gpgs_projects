@@ -1003,6 +1003,7 @@ const PropertyFormSection = memo(({
   tempSelectedBedNumber,
   handlePropertyCodeChange,
   handleBedNoChange,
+  handleTempBedNoChange,
   activeTab,
   register,
   setValue,
@@ -1284,7 +1285,7 @@ const PropertyFormSection = memo(({
                   styles={selectStyles}
                   onChange={(selectedOption) => {
                     field.onChange(selectedOption);
-                    handleBedNoChange(
+                    handleTempBedNoChange(
                       { target: { value: selectedOption?.value || "" } },
                       titlePrefix
                     );
@@ -1687,6 +1688,42 @@ const NewBooking = () => {
     }
   }, [singleSheetData, setValue]);
 
+
+
+  const handleTempBedNoChange = useCallback((e, titlePrefix) => {
+    const selectedBedNo = e.target.value;
+    setSelectedBedNumber(selectedBedNo);
+    settempSelectedBedNumber(selectedBedNo)
+    const matchedRow = singleTempSheetData?.data?.find(
+      (row) => row["BedNo"]?.trim() === selectedBedNo
+    );
+    console.log("matchedRow", matchedRow , titlePrefix)
+
+    if (matchedRow) {
+      const acNonAc = matchedRow["ACRoom"]?.trim() || "";
+      const rentAmt = matchedRow["MFR"] || "";
+
+      setValue(`${titlePrefix}ACRoom`, acNonAc);
+      setValue(`${titlePrefix}BedNo`, selectedBedNo);
+      setValue(`${titlePrefix}BedMonthlyFixRent`, rentAmt);
+      setValue(`${titlePrefix}BedDepositAmt`, matchedRow["DA"]?.trim() || "");
+      setValue(`${titlePrefix}UpcomingRentHikeDt`, matchedRow["URHD"]?.trim() || "");
+      setValue(`${titlePrefix}UpcomingRentHikeAmt`, matchedRow["URHA"]?.trim() || "");
+      setValue(`${titlePrefix}RoomNo`, matchedRow["RoomNo"]?.trim() || "");
+    } else {
+      setValue(`${titlePrefix}AcRoom`, "");
+      setValue(`${titlePrefix}BedRentAmt`, "");
+      setValue(`${titlePrefix}roomNo`, "");
+      setValue(`${titlePrefix}roomAcNonAc`, "");
+      setValue(`${titlePrefix}BedMonthlyFixRent`, "");
+      setValue(`${titlePrefix}BedDepositAmt`, "");
+      setValue(`${titlePrefix}UpcomingRentHikeAmt`, "");
+      setValue(`${titlePrefix}revisionAmount`, "");
+      setValue(`${titlePrefix}RoomNo`, "");
+      setValue(`${titlePrefix}BedNo`, selectedBedNo);
+    }
+  }, [singleTempSheetData, setValue]);
+
   const handlePermanentCheckbox = useCallback((checked) => {
     if (!checked) {
       resetTabFields("Perm");
@@ -2031,7 +2068,7 @@ const NewBooking = () => {
                   selectedBedNumber={selectedBedNumber}
                   handlePropertyCodeChange={handlePropertyCodeChange}
                   handleTempPropertyCodeChange = {handleTempPropertyCodeChange}
-                  handleBedNoChange={handleBedNoChange}
+                  handleTempBedNoChange={handleTempBedNoChange}
                   activeTab={activeTab}
                   register={register}
                   setValue={setValue}
