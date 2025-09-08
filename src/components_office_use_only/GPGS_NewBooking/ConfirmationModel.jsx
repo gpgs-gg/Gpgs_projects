@@ -128,8 +128,6 @@ const ConfirmationModel = ({
 
     const totalAmount =
       (applyPermBedRent ? Number(PermBedRentAmt || 0) : 0) +
-      Number(PermBedRentAmt || 0) +
-
       Number(PermBedDepositAmt || 0) +
       Number(ProcessingFeesAmt || 0) +
       Number(TempBedRentAmt || 0);
