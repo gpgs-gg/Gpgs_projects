@@ -42,43 +42,43 @@ const ConfirmationModel = ({
 
   let endOfDOJMonth = null;
 
-if (formPreviewData?.PermBedDOJ) {
-  const dojDate = new Date(formPreviewData.PermBedDOJ);
+  if (formPreviewData?.PermBedDOJ) {
+    const dojDate = new Date(formPreviewData.PermBedDOJ);
 
-  if (!isNaN(dojDate)) {
-    endOfDOJMonth = new Date(
-      dojDate.getFullYear(),
-      dojDate.getMonth() + 1,
-      0
-    ).toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    if (!isNaN(dojDate)) {
+      endOfDOJMonth = new Date(
+        dojDate.getFullYear(),
+        dojDate.getMonth() + 1,
+        0
+      ).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
   }
-}
- console.log("endOfDOJMonth", endOfDOJMonth)
+  console.log("endOfDOJMonth", endOfDOJMonth)
 
   let tempEndOfDOJMonth = null;
 
-if (formPreviewData?.TempBedDOJ) {
-  const dojDate = new Date(formPreviewData.TempBedDOJ);
+  if (formPreviewData?.TempBedDOJ) {
+    const dojDate = new Date(formPreviewData.TempBedDOJ);
 
-  if (!isNaN(dojDate)) {
-    tempEndOfDOJMonth = new Date(
-      dojDate.getFullYear(),
-      dojDate.getMonth() + 1,
-      0
-    ).toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    if (!isNaN(dojDate)) {
+      tempEndOfDOJMonth = new Date(
+        dojDate.getFullYear(),
+        dojDate.getMonth() + 1,
+        0
+      ).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
   }
-}
- console.log("tempEndOfDOJMonth", tempEndOfDOJMonth)
+  console.log("tempEndOfDOJMonth", tempEndOfDOJMonth)
 
-// console.log("endOfDOJMonth", endOfDOJMonth)
+  // console.log("endOfDOJMonth", endOfDOJMonth)
 
   const shareOnWhatsApp = () => {
     const {
@@ -134,8 +134,8 @@ if (formPreviewData?.TempBedDOJ) {
     const balanceAmount =
       totalAmount - (AskForBAOrFA === "Booking_Amount " ? Number(PermBedMonthlyFixRent) : 0);
 
-  let msg = `Payment Details For ${ClientFullName} ( Contact No : ${CallingNo} )`;
-  msg += "\n\n";
+    let msg = `Payment Details For ${ClientFullName} ( Contact No : ${CallingNo} )`;
+    msg += "\n";
     if (TempPropCode) {
       msg += `
 Temporary PG Facility Code: ${TempPropCode}
@@ -144,10 +144,10 @@ Bed No.: ${TempBedNo}
 AC Room: ${TempACRoom}
 Start Date: ${formattedTempBedDOJ}
 Last Date: ${formattedTempBedLDt}
-Temporary Bed Rent Amount: ₹${TempBedRentAmt} (This rent is from ${formattedTempBedDOJ} to ${tempEndOfDOJMonth}, monthly fixed rent is ₹${TempBedMonthlyFixRent})
+Temporary Bed Rent Amount: ₹${TempBedRentAmt} (This rent is from ${formattedTempBedDOJ} to ${formPreviewData.TempBedLDt || tempEndOfDOJMonth}, monthly fixed rent is ₹${TempBedMonthlyFixRent})
     `.trim() + "\n\n";
     }
-msg += "\n\n";
+    msg += "\n";
     msg += `
 Permanent PG Facility Code: ${PermPropCode}
 Room No.: ${PermRoomNo}
@@ -155,7 +155,7 @@ Bed No.: ${PermBedNo}
 AC Room: ${PermACRoom}
 Start Date: ${formattedPermBedDOJ}
 Last Date: ${formattedPermBedLDt}
-Permanent Bed Rent Amount: ₹${PermBedRentAmt} (This rent is from ${formattedPermBedDOJ} to ${endOfDOJMonth}, monthly fixed rent is ₹${PermBedMonthlyFixRent})
+Permanent Bed Rent Amount: ₹${PermBedRentAmt} (This rent is from ${formattedPermBedDOJ} to ${formPreviewData.PermBedLDt || endOfDOJMonth}, monthly fixed rent is ₹${PermBedMonthlyFixRent})
 Permanent Bed Deposit Amount: ₹${PermBedDepositAmt}
 Processing Fees: ₹${ProcessingFeesAmt}
 Total Amount to be paid: ₹${totalAmount}
@@ -359,8 +359,8 @@ Total Amount to be paid: ₹${totalAmount}
                   })} to{" "}
                   {
                     formPreviewData.PermBedLDt ||
-                    endOfDOJMonth 
-                    }, also please note the monthly fix rent of this bed is ₹{" "}
+                    endOfDOJMonth
+                  }, also please note the monthly fix rent of this bed is ₹{" "}
                   {formPreviewData.PermBedMonthlyFixRent})
                 </p>
 
@@ -395,8 +395,8 @@ Total Amount to be paid: ₹${totalAmount}
 
                 {Number(formPreviewData.PermBedRentAmt) +
                   Number(formPreviewData.PermBedDepositAmt) +
-                  Number(formPreviewData.ProcessingFeesAmt) +(formPreviewData.TempBedRentAmt ? Number(formPreviewData.TempBedRentAmt) : 0)
-                   - formPreviewData.PermBedMonthlyFixRent}{" "}
+                  Number(formPreviewData.ProcessingFeesAmt) + (formPreviewData.TempBedRentAmt ? Number(formPreviewData.TempBedRentAmt) : 0)
+                  - formPreviewData.PermBedMonthlyFixRent}{" "}
                 is to be paid before possession on the date of joining.
               </p>
             )}
