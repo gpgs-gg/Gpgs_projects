@@ -973,7 +973,7 @@ import Select from "react-select";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ConfirmationModel from './ConfirmationModel';
-import { useAddBooking, useEmployeeDetails, usePropertyData, usePropertySheetData } from './services';
+import { useAddBooking, useEmployeeDetails, usePropertyData, usePropertySheetData, useTempPropertySheetData } from './services';
 import LoaderPage from './LoaderPage';
 
 // Memoized Select Component to prevent unnecessary re-renders
@@ -995,7 +995,10 @@ const PropertyFormSection = memo(({
   control,
   errors,
   singleSheetData,
+  singleTempSheetData,
   isPropertySheetData,
+  isTempPropertySheetData,
+  handleTempPropertyCodeChange,
   selectedBedNumber,
   tempSelectedBedNumber,
   handlePropertyCodeChange,
@@ -1116,7 +1119,8 @@ const PropertyFormSection = memo(({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
       {/* Property Code */}
-      <div>
+      {activeTab == "permanent" && (
+  <div>
         <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Property Code</label>
         <Controller
           name={`${titlePrefix}PropCode`}
@@ -1147,114 +1151,150 @@ const PropertyFormSection = memo(({
         />
         {renderError(`${titlePrefix}PropCode`)}
       </div>
+      )}
+    
+
+       {activeTab == "temporary" && (
+      <div>
+        <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500"> Property Code</label>
+        <Controller
+          name={`TempPropCode`}
+          control={control}
+          defaultValue={null}
+          render={({ field }) => {
+            const options = propertyList?.data?.map((item) => ({
+              value: `${item["PG Main  Sheet ID"]},${item["Bed Count"]},${item["Property Code"]}`,
+              label: item["Property Code"],
+            })) || [];
+
+            return (
+              <MemoizedSelect
+                field={field}
+                options={options}
+                placeholder="Search & Select Property Code"
+                styles={selectStyles}
+                onChange={(selectedOption) => {
+                  field.onChange(selectedOption);
+                  handleTempPropertyCodeChange(
+                    { target: { value: selectedOption?.value || "" } },
+                    titlePrefix
+                  );
+                }}
+              />
+            );
+          }}
+        />
+        {renderError(`${titlePrefix}PropCode`)}
+      </div>
+       )}
 
       {/* Bed No */}
-   {activeTab == "permanent" && (
-      <div className="relative">
-        <label className="text-sm font-medium text-gray-700 relative after:content-['*'] after:ml-1 after:text-red-500">
-          Bed No
-        </label>
+      {activeTab == "permanent" && (
+        <div className="relative">
+          <label className="text-sm font-medium text-gray-700 relative after:content-['*'] after:ml-1 after:text-red-500">
+            Bed No
+          </label>
 
-        {isPropertySheetData && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-10 rounded">
-            <LoaderPage />
-          </div>
-        )}
+          {isPropertySheetData && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-10 rounded">
+              <LoaderPage />
+            </div>
+          )}
 
-        <Controller
-          name={`PermBedNo`}
-          control={control}
-          defaultValue={
-            tempSelectedBedNumber
+          <Controller
+            name={`PermBedNo`}
+            control={control}
+            defaultValue={
+              tempSelectedBedNumber
                 ? { value: tempSelectedBedNumber, label: String(tempSelectedBedNumber) }
                 : null
-          }
+            }
 
 
-          render={({ field }) => {
-            const options = isPropertySheetData
-              ? []
-              : singleSheetData?.data?.length > 0
-                ? singleSheetData.data.map((ele) => ({
-                  value: ele.BedNo,
-                  label: ele.BedNo,
-                }))
-                : [{ value: "", label: "No beds available", isDisabled: true }];
+            render={({ field }) => {
+              const options = isPropertySheetData
+                ? []
+                : singleSheetData?.data?.length > 0
+                  ? singleSheetData.data.map((ele) => ({
+                    value: ele.BedNo,
+                    label: ele.BedNo,
+                  }))
+                  : [{ value: "", label: "No beds available", isDisabled: true }];
 
-            return (
-              <MemoizedSelect
-                field={field}
-                options={options}
-                isDisabled={isPropertySheetData}
-                placeholder="Search & Select Bed No"
-                styles={selectStyles}
-                onChange={(selectedOption) => {
-                  field.onChange(selectedOption);
-                  handleBedNoChange(
-                    { target: { value: selectedOption?.value || "" } },
-                    titlePrefix
-                  );
-                }}
-              />
-            );
-          }}
-        />
-        {renderError(`${titlePrefix}BedNo`)}
-      </div>
-  )}
+              return (
+                <MemoizedSelect
+                  field={field}
+                  options={options}
+                  isDisabled={isPropertySheetData}
+                  placeholder="Search & Select Bed No"
+                  styles={selectStyles}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption);
+                    handleBedNoChange(
+                      { target: { value: selectedOption?.value || "" } },
+                      titlePrefix
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          {renderError(`${titlePrefix}BedNo`)}
+        </div>
+      )}
 
-   {activeTab == "temporary" && (
-      <div className="relative">
-        <label className="text-sm font-medium text-gray-700 relative after:content-['*'] after:ml-1 after:text-red-500">
-          Bed No
-        </label>
+      {activeTab == "temporary" && (
+        <div className="relative">
+          <label className="text-sm font-medium text-gray-700 relative after:content-['*'] after:ml-1 after:text-red-500">
+            Bed No
+          </label>
 
-        {isPropertySheetData && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-10 rounded">
-            <LoaderPage />
-          </div>
-        )}
+          {isPropertySheetData && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-10 rounded">
+              <LoaderPage />
+            </div>
+          )}
 
-        <Controller
-          name={`TempBedNo`}
-          control={control}
-          defaultValue={
-            selectedBedNumber
-              ? { value: selectedBedNumber, label: String(selectedBedNumber) }
-              : null
-          }
+          <Controller
+            name={`TempBedNo`}
+            control={control}
+            defaultValue={
+              selectedBedNumber
+                ? { value: selectedBedNumber, label: String(selectedBedNumber) }
+                : null
+            }
 
 
-          render={({ field }) => {
-            const options = isPropertySheetData
-              ? []
-              : singleSheetData?.data?.length > 0
-                ? singleSheetData.data.map((ele) => ({
-                  value: ele.BedNo,
-                  label: ele.BedNo,
-                }))
-                : [{ value: "", label: "No beds available", isDisabled: true }];
+            render={({ field }) => {
+              const options = isTempPropertySheetData
+                ? []
+                : singleTempSheetData?.data?.length > 0
+                  ? singleTempSheetData.data.map((ele) => ({
+                    value: ele.BedNo,
+                    label: ele.BedNo,
+                  }))
+                  : [{ value: "", label: "No beds available", isDisabled: true }];
 
-            return (
-              <MemoizedSelect
-                field={field}
-                options={options}
-                isDisabled={isPropertySheetData}
-                placeholder="Search & Select Bed No"
-                styles={selectStyles}
-                onChange={(selectedOption) => {
-                  field.onChange(selectedOption);
-                  handleBedNoChange(
-                    { target: { value: selectedOption?.value || "" } },
-                    titlePrefix
-                  );
-                }}
-              />
-            );
-          }}
-        />
-        {renderError(`${titlePrefix}BedNo`)}
-      </div>
+              return (
+                <MemoizedSelect
+                  field={field}
+                  options={options}
+                  isDisabled={isTempPropertySheetData}
+                  placeholder="Search & Select Bed No"
+                  styles={selectStyles}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption);
+                    handleBedNoChange(
+                      { target: { value: selectedOption?.value || "" } },
+                      titlePrefix
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          {renderError(`${titlePrefix}BedNo`)}
+        </div>
       )}
 
       {/* Room No */}
@@ -1415,7 +1455,10 @@ const NewBooking = () => {
   const [activeTab, setActiveTab] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formPreviewData, setFormPreviewData] = useState(null);
+
+   console.log("formPreviewData", formPreviewData)
   const [selectedSheetId, setSelctedSheetId] = useState(null);
+  const [selectedTempSheetId, setSelctedTempSheetId] = useState(null);
   const [selectedBedNumber, setSelectedBedNumber] = useState(null);
   const [tempSelectedBedNumber, settempSelectedBedNumber] = useState(null);
   const [permanentPropertyFilledChecked, setPermanentPropertyFilledChecked] = useState()
@@ -1501,7 +1544,8 @@ const NewBooking = () => {
   const { data: propertyList, isLoading: isPropertyLoading } = usePropertyData();
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: singleSheetData, isLoading: isPropertySheetData } = usePropertySheetData(selectedSheetId);
-
+  const { data: singleTempSheetData, isLoading: isTempPropertySheetData } = useTempPropertySheetData(selectedTempSheetId);
+              
   const {
     register,
     handleSubmit,
@@ -1570,6 +1614,7 @@ const NewBooking = () => {
     const value = e.target.value;
     setSelctedSheetId(value);
 
+
     setValue(`${titlePrefix}PropCode`, value);
     setValue(`${titlePrefix}AcRoom`, "");
     setValue(`${titlePrefix}BedNo`, "");
@@ -1583,10 +1628,36 @@ const NewBooking = () => {
     setValue(`${titlePrefix}RoomNo`, "");
   }, [setValue]);
 
+  const handleTempPropertyCodeChange = useCallback((e, titlePrefix) => {
+    const value = e.target.value;
+    setSelctedTempSheetId(value);
+
+
+    setValue(`${titlePrefix}PropCode`, value);
+    setValue(`${titlePrefix}AcRoom`, "");
+    setValue(`${titlePrefix}BedNo`, "");
+    setValue(`${titlePrefix}BedRentAmt`, "");
+    setValue(`${titlePrefix}roomNo`, "");
+    setValue(`${titlePrefix}roomAcNonAc`, "");
+    setValue(`${titlePrefix}BedMonthlyFixRent`, "");
+    setValue(`${titlePrefix}BedDepositAmt`, "");
+    setValue(`${titlePrefix}ProcessingFeesAmount`, "");
+    setValue(`${titlePrefix}UpcomingRentHikeDt`, "");
+    setValue(`${titlePrefix}RoomNo`, "");
+  }, [setValue]);
+
+
+
+
+
+
+
+
   const handleBedNoChange = useCallback((e, titlePrefix) => {
     const selectedBedNo = e.target.value;
     setSelectedBedNumber(selectedBedNo);
     settempSelectedBedNumber(selectedBedNo)
+
     const matchedRow = singleSheetData?.data?.find(
       (row) => row["BedNo"]?.trim() === selectedBedNo
     );
@@ -1727,7 +1798,7 @@ const NewBooking = () => {
         });
     }
 
-
+  
     setFormPreviewData(filteredData);
     setShowConfirmModal(true);
   }, [showPermanent, showtemporary]);
@@ -1737,7 +1808,7 @@ const NewBooking = () => {
       onSuccess: () => {
         alert("✅ Data successfully sent to Google Sheet!");
 
-        
+
         setShowConfirmModal(false);
 
         // Reset the entire form
@@ -1839,7 +1910,7 @@ const NewBooking = () => {
   return (
     <div className="max-w-8xl mx-auto bg-gray-100 min-h-screen">
       <div className="bg-white shadow-lg rounded-xl  p-6">
-  
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 mt-20">
           {/* === CLIENT DETAILS === */}
           <section className="bg-orange-50 border border-gray-200 rounded-lg p-2 shadow-sm">
@@ -1848,7 +1919,7 @@ const NewBooking = () => {
               {[
                 { name: 'ClientFullName', label: 'Full Name' },
                 { name: 'WhatsAppNo', label: 'WhatsApp No' },
-                { name: 'CallingNo', label: 'Calling No' , type:"number" },
+                { name: 'CallingNo', label: 'Calling No', type: "number" },
                 { name: 'EmgyCont1FullName', label: 'Emergency Contact1 Full Name' },
                 { name: 'EmgyCont1No', label: 'Emergency Contact1 No' },
                 { name: 'EmgyCont2FullName', label: 'Emergency Contact2 Full Name' },
@@ -1942,6 +2013,7 @@ const NewBooking = () => {
                   isPropertySheetData={isPropertySheetData}
                   selectedBedNumber={selectedBedNumber}
                   handlePropertyCodeChange={handlePropertyCodeChange}
+                  handleTempPropertyCodeChange = {handleTempPropertyCodeChange}
                   handleBedNoChange={handleBedNoChange}
                   activeTab={activeTab}
                   register={register}
@@ -1954,10 +2026,11 @@ const NewBooking = () => {
                   titlePrefix="Temp"
                   control={control}
                   errors={errors}
-                  singleSheetData={singleSheetData}
-                  isPropertySheetData={isPropertySheetData}
+                  singleTempSheetData={singleTempSheetData}
+                  isTempPropertySheetData={isTempPropertySheetData}
                   selectedBedNumber={selectedBedNumber}
                   handlePropertyCodeChange={handlePropertyCodeChange}
+                  handleTempPropertyCodeChange = {handleTempPropertyCodeChange}
                   handleBedNoChange={handleBedNoChange}
                   activeTab={activeTab}
                   register={register}
