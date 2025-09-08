@@ -65,31 +65,6 @@ export const useTempPropertySheetData = (sheetId, enabled) => {
   });
 };
 
-const fetchTempPropertySheetData = async (sheetId) => {
-  if(sheetId){
-    const response = await apiClient.get(`/property-sheet-data-for-new-booking?sheetId=${sheetId}`);
-    return response.data;
-  }
-};
-
-
-export const useTempPropertySheetData = (sheetId, enabled) => {
-  return useQuery({
-    queryKey: ["property-sheet", sheetId],
-    queryFn: () => fetchTempPropertySheetData(sheetId),
-    enabled: !!sheetId && enabled, // Only fetch when sheetId is available
-  });
-};
-
-
-
-
-
-
-
-
-
-
 
 const fetchEmployeeDetailsData = async () => {
   const response = await apiClient.get("/Employees-details");
