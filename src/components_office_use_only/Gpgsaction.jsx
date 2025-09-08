@@ -83,7 +83,26 @@ const Gpgsaction = () => {
             </button>
           </div>
         </Link >
-        <div className="bg-white shadow-lg rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
+        
+             <Link to="/gpgs-actions/admin">
+          <div className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
+            <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
+              <i class="fa-solid fa-file-invoice text-2xl"></i>          </div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+              TICKETS SYSTEM
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Discover why Gopal’s PG Services is the trusted choice for comfort,
+              convenience, and community living across Mumbai & Navi Mumbai.
+            </p>
+            <button className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+              Go For Tickets System
+            </button>
+          </div>
+        </Link >
+
+
+        {/* <div className="bg-white shadow-lg rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
           <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
             <i className="fas fa-info-circle text-2xl"></i>
           </div>
@@ -96,7 +115,7 @@ const Gpgsaction = () => {
           <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
             Explore
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   );

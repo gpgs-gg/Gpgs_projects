@@ -1463,6 +1463,8 @@ const NewBooking = () => {
   const [selectedBedNumber, setSelectedBedNumber] = useState(null);
   const [tempSelectedBedNumber, settempSelectedBedNumber] = useState(null);
   const [permanentPropertyFilledChecked, setPermanentPropertyFilledChecked] = useState()
+    const [applyPermBedRent, setApplyPermBedRent] = useState(true);
+
 
   // Validation schema
   const schema = yup.object().shape({
@@ -1753,10 +1755,16 @@ const NewBooking = () => {
 
   const onSubmit = useCallback((data) => {
     // Always include client info
-    const TotalAmt =
-      Number(data.PermBedDepositAmt) +
-      Number(data.PermBedRentAmt) +
-      Number(data.ProcessingFeesAmt);
+   
+ const TotalAmt =
+      (applyPermBedRent ? Number(data.PermBedRentAmt || 0) : 0) +
+      Number(data.PermBedRentAmt || 0) +
+
+      Number(data.PermBedDepositAmt || 0) +
+      Number(data.ProcessingFeesAmt || 0) +
+      Number(data.TempBedRentAmt || 0);
+
+
 
     const filteredData = {
       Date: new Date().toLocaleDateString("en-GB", {
@@ -1951,7 +1959,7 @@ const NewBooking = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 mt-20">
           {/* === CLIENT DETAILS === */}
           <section className="bg-orange-50 border border-gray-200 rounded-lg p-2 shadow-sm">
-            <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-200 text-black p-2 rounded-sm">Client Details</h3>
+            <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
                 { name: 'ClientFullName', label: 'Full Name' },
@@ -2080,7 +2088,7 @@ const NewBooking = () => {
 
           <div className="flex justify-center">
             <section className="bg-orange-50 border border-gray-200 rounded-lg p-2 shadow-sm">
-              <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-200 text-black p-2 rounded-sm">Send Payment Details ...</h3>
+              <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-300 text-black p-2 rounded-sm">Send Payment Details ...</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {/* Date Field with default today */}
                 {/* <div>
@@ -2183,7 +2191,7 @@ const NewBooking = () => {
               <div className='flex px-2  mt-5 justify-center'>
                 <button
                   type="submit"
-                  className="px-5 py-3 text-xl bg-orange-200 text-black rounded-lg hover:bg-orange-600 transition-all shadow-md"
+                  className="px-5 py-2 text-lg bg-orange-300 text-black rounded-lg hover:bg-orange-400 transition-all shadow-md"
                 >
                   Submit Booking
                 </button>
@@ -2197,6 +2205,9 @@ const NewBooking = () => {
         showConfirmModal={showConfirmModal}
         setShowConfirmModal={setShowConfirmModal}
         handleFinalSubmit={handleFinalSubmit}
+        setApplyPermBedRent = {setApplyPermBedRent}
+        applyPermBedRent = {applyPermBedRent}
+
         formPreviewData={formPreviewData}
       />
     </div>

@@ -216,7 +216,7 @@ const BedsAvilable = () => {
       </div>
 
          {showContent && (
-          <div className="grid grid-cols-2 mt-[100px] sm:flex sm:flex-wrap justify-end mr-10  gap-2">
+          <div className="grid grid-cols-2 mt-[100px] sm:flex sm:flex-wrap justify-center  gap-2">
             {filterButtons.map((btn) => {
               let selectedOptions = [];
               if (btn.id === "gender" && genderFilter) {
@@ -320,17 +320,17 @@ const BedsAvilable = () => {
                 result(s)
               </div>
             )}
-            <div className="overflow-auto max-h-screen rounded-xl border border-gray-200">
+            <div className="overflow-auto max-h-screen  border border-gray-200">
               <table className="min-w-[1000px] w-full text-sm text-left text-gray-700">
-                <thead className="sticky top-0 bg-orange-200 z-10 shadow-md text-gray-800 text-base">
+                <thead className="sticky top-0 bg-orange-300 z-10 shadow-md font-bold text-gray-800 text-base">
                   <tr>
                     {Object.keys(filteredData[0] || {}).map((key, idx) => (
                       <th
                         key={key}
-                        className={`px-2 py-2 border-b border-gray-300 whitespace-nowrap font-medium ${idx === 0
-                            ? "sticky left-0 z-20 bg-orange-200"
+                        className={`px-2 py-2 border-b font-bold border-gray-300 whitespace-nowrap  ${idx === 0
+                            ? "sticky left-0 z-20 bg-orange-300"
                             : idx === 1
-                              ? "sticky left-[30px] z-20 bg-orange-200 "
+                              ? "sticky left-[30px] z-20 bg-orange-300 "
                               : ""
                           }`}
                       >
@@ -349,9 +349,9 @@ const BedsAvilable = () => {
                         <td
                           key={idx}
                           className={`px-2 py-2 text-[15px] align-top whitespace-nowrap ${idx === 0
-                              ? "sticky left-0 font-medium bg-orange-200"
+                              ? "sticky left-0  font-bold bg-orange-300"
                               : idx === 1
-                                ? "sticky left-[30px] font-medium bg-orange-200"
+                                ? "sticky left-[30px] font-bold bg-orange-300"
                                 : ""
                             }`}
                         // style={{ minWidth: "100px" }}

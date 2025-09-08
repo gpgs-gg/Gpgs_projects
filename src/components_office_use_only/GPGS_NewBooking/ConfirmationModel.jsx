@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Copy, X, FileDown, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -8,6 +8,8 @@ const ConfirmationModel = ({
   setShowConfirmModal,
   formPreviewData,
   handleFinalSubmit,
+  applyPermBedRent,
+  setApplyPermBedRent,
   // isBookingLoading
 }) => {
   const invoiceRef = useRef();
@@ -37,7 +39,6 @@ const ConfirmationModel = ({
       pdf.save(`PG_Payment_${formPreviewData.ClientFullName}.pdf`);
     });
   };
-
 
 
   let endOfDOJMonth = null;
@@ -126,7 +127,9 @@ const ConfirmationModel = ({
     const formattedPermBedLDt = formatDate(PermBedLDt) || fallbackLastDate;
 
     const totalAmount =
+      (applyPermBedRent ? Number(PermBedRentAmt || 0) : 0) +
       Number(PermBedRentAmt || 0) +
+
       Number(PermBedDepositAmt || 0) +
       Number(ProcessingFeesAmt || 0) +
       Number(TempBedRentAmt || 0);
@@ -160,6 +163,11 @@ Permanent Bed Deposit Amount: ₹${PermBedDepositAmt}
 Processing Fees: ₹${ProcessingFeesAmt}
 Total Amount to be paid: ₹${totalAmount}
 `.trim();
+ if(applyPermBedRent){
+    msg += "(Permanent Bed Rent is included in the above total amount)"
+ }  else{
+    msg += "(Permanent Bed Rent is not included in the above total amount )"
+ }
 
     msg += "\n\n";
 
@@ -342,6 +350,20 @@ Total Amount to be paid: ₹${totalAmount}
 
                 </p>
               </div>
+              <div className="flex items-center  gap-2 mt-2 text-orange-400">
+                <input
+                  type="checkbox"
+                  id="permanent-bed-rent"
+                  checked={applyPermBedRent} // 🔗 bind to state
+                  onChange={(e) => setApplyPermBedRent(e.target.checked)} // 🔁 update state
+                  className="w-5 h-5 accent-orange-500 border border-orange-500"
+                />
+                {
+                  applyPermBedRent ? (  <label htmlFor="permanent-bed-rent" className='text-sm'>Permanent Bed Rent Applied</label>) : (  <label  htmlFor="permanent-bed-rent" className='text-sm'>Permanent Bed Rent Not Applied</label>)
+                }
+              </div>
+
+
             </section>
 
             <section className='max-w-[50%]'>
@@ -375,15 +397,22 @@ Total Amount to be paid: ₹${totalAmount}
                 <p>
                   <strong>Total Amount To Be paid :</strong> ₹{" "}
                   {
-
-                    Number(formPreviewData.PermBedRentAmt) +
+                    (applyPermBedRent ? Number(formPreviewData.PermBedRentAmt || 0) : 0)
+                    +
                     Number(formPreviewData.PermBedDepositAmt) +
                     Number(formPreviewData.ProcessingFeesAmt) +
                     (formPreviewData.TempBedRentAmt ? Number(formPreviewData.TempBedRentAmt) : 0)
                   }
+                  <br />
+                  <p className="text-xs italic text-orange-500 mt-1">
+
+                    {applyPermBedRent
+                      ? "Please Note : Permanent Bed Rent is included in the above total amount"
+                      : "Please Note : Permanent Bed Rent is not included in the above total amount"}
+                  </p>
+
                 </p>
               </div>
-
             </section>
           </div>
           <section className="text-sm p-2 text-gray-600 border-t pt-2">
@@ -393,7 +422,7 @@ Total Amount to be paid: ₹${totalAmount}
                 {formPreviewData.PermBedMonthlyFixRent} is received by us.
                 The balance amount ₹{" "}
 
-                {Number(formPreviewData.PermBedRentAmt) +
+                {(applyPermBedRent ? Number(formPreviewData.PermBedRentAmt || 0) : 0) +
                   Number(formPreviewData.PermBedDepositAmt) +
                   Number(formPreviewData.ProcessingFeesAmt) + (formPreviewData.TempBedRentAmt ? Number(formPreviewData.TempBedRentAmt) : 0)
                   - formPreviewData.PermBedMonthlyFixRent}{" "}
@@ -404,7 +433,7 @@ Total Amount to be paid: ₹${totalAmount}
               <p>
                 📌 The booking is confirmed only after full amount ₹{" "}
                 {
-                  Number(formPreviewData.PermBedRentAmt) +
+                 (applyPermBedRent ? Number(formPreviewData.PermBedRentAmt || 0) : 0) +
                   Number(formPreviewData.PermBedDepositAmt) +
                   Number(formPreviewData.ProcessingFeesAmt) +
                   (formPreviewData.TempBedRentAmt ? Number(formPreviewData.TempBedRentAmt) : 0)
@@ -459,3 +488,14 @@ Total Amount to be paid: ₹${totalAmount}
   );
 };
 export default ConfirmationModel;
+
+
+
+
+
+
+
+
+
+
+

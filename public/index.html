@@ -28,6 +28,17 @@
     -->
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+       <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- JavaScript Libraries -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.45.4/dist/index.umd.min.js"></script>
 
     <title>Gopal's Paying Guest Services</title>
      <style>
@@ -40,6 +51,50 @@
     body {
       font-family: var(--font-primary);
     }
+    
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .status-open { background: #fef3c7; color: #92400e; }
+        .status-assigned { background: #dbeafe; color: #1e40af; }
+        .status-inprogress { background: #fde68a; color: #b45309; }
+        .status-resolved { background: #d1fae5; color: #065f46; }
+        .status-closed { background: #f3f4f6; color: #374151; }
+        
+        .priority-low { background: #dcfce7; color: #166534; }
+        .priority-medium { background: #fef3c7; color: #92400e; }
+        .priority-high { background: #fed7d7; color: #c53030; }
+        .priority-critical { background: #fecaca; color: #991b1b; }
+        
+        .section-hidden { display: none; }
+        .section-visible { display: block; }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        /* PDF Export Optimization */
+        @media print {
+            body { print-color-adjust: exact; }
+            .no-print { display: none !important; }
+        }
+        
+        /* Single page layout for PDF */
+        .main-content {
+            min-height: 100vh;
+            overflow: visible;
+        }
     
   </style>
   </head>
@@ -58,3 +113,7 @@
     -->
   </body>
 </html>
+
+
+
+

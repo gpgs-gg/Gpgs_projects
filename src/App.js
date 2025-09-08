@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header';
 import Home from './components/Home';
@@ -11,16 +11,19 @@ import Location from './components/Location';
 import Contact from './components/Contact';
 import Gpgsaction from './components_office_use_only/Gpgsaction';
 import Gallary from './components/Gallary';
-import NewBooking from './components_office_use_only/GPGS_NewBooking/NewBooking';
 import BedsAvilable from './components_office_use_only/Gpgps_Bedsavilable/BedsAvilable';
 import Accounts from './components_office_use_only/Gpgs_Accounts/Accounts';
+import AdminLayout from './components_office_use_only/TicketSystem/AdminLayout';
+import NewBooking from './components_office_use_only/Gpgs_NewBooking/NewBooking';
 
 function App() {
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
+  const location = useLocation();
 
-  // Smooth scrolling
+  const isAdminRoute = location.pathname.startsWith("/gpgs-actions/admin");
+
+  // Smooth scroll
   useEffect(() => {
     const handleSmoothScroll = (e) => {
       e.preventDefault();
@@ -29,7 +32,7 @@ function App() {
       if (target) {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      setIsMenuOpen(false); // close mobile menu after click
+      setIsMenuOpen(false);
     };
 
     const anchors = document.querySelectorAll('a[href^="#"]');
@@ -42,7 +45,7 @@ function App() {
     };
   }, [isMenuOpen]);
 
-  // Scroll effect on nav
+  // Navbar scroll effect
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -56,7 +59,7 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Intersection Observer for cards
+  // Card fade-in animation
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -79,7 +82,7 @@ function App() {
     };
   }, []);
 
-  // Click-to-call animation
+  // Telephone link click effect
   useEffect(() => {
     const telLinks = document.querySelectorAll('a[href^="tel:"]');
 
@@ -100,7 +103,9 @@ function App() {
 
   return (
     <>
-      <Header />
+      {/* Show Header only if not in admin route */}
+      {!isAdminRoute && <Header />}
+
       <Routes>
         <Route path="/" element={
           <>
@@ -120,44 +125,15 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/gpgs-actions" element={<Gpgsaction />} />
         <Route path="/gallary" element={<Gallary />} />
-         <Route path="/gpgs-actions/beds-avilable" element={<BedsAvilable />} />
+        <Route path="/gpgs-actions/beds-avilable" element={<BedsAvilable />} />
         <Route path="/gpgs-actions/new-booking" element={<NewBooking />} />
         <Route path="/gpgs-actions/accounts" element={<Accounts />} />
-      </Routes>
 
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="col-span-2">
-              <div className="text-2xl font-bold mb-4">
-                <i className="fas fa-home mr-2"></i>Gopal's Paying Guest Services
-              </div>
-              <p className="text-gray-400 mb-4">We Serve Beyond Business - Enjoy Luxury at the Best Price</p>
-              <p className="text-gray-400">Quality paying guest accommodations for professionals and students in Mumbai & Navi Mumbai with all modern amenities and excellent service.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#services" className="hover:text-white transition duration-300">Services</a></li>
-                <li><a href="#pricing" className="hover:text-white transition duration-300">Pricing</a></li>
-                <li><a href="#locations" className="hover:text-white transition duration-300">Locations</a></li>
-                <li><a href="#contact" className="hover:text-white transition duration-300">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact Info</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><i className="fas fa-phone mr-2"></i>9326262292</li>
-                <li><i className="fas fa-map-marker-alt mr-2"></i>Mumbai & Navi Mumbai</li>
-                <li><i className="fas fa-clock mr-2"></i>24/7 Available</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Premium PG Services. All rights reserved. We Serve Beyond Business.</p>
-          </div>
-        </div>
-      </footer>
+        {/* Admin routes */}
+        <Route path="/gpgs-actions/admin/*" element={
+            <AdminLayout />
+        } />
+      </Routes>
     </>
   );
 }

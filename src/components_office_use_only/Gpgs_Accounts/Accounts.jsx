@@ -361,7 +361,7 @@ const onSubmit = (data) => {
           <button
             type="submit"
             disabled={!isSuccess}
-            className={`w-full px-4 py-2 ${!isSuccess ? "bg-orange-300" : "bg-orange-500"} text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-orange-400`}
+            className={`w-full px-4 py-2 ${!isSuccess ? "bg-orange-300" : "bg-orange-300"} text-black rounded-lg transition focus:outline-none focus:ring-2 focus:ring-orange-400`}
           >
             {isLoading ? "Loading..." : "Update RNR Sheet"}
             {/* Update RNR Sheet */}
