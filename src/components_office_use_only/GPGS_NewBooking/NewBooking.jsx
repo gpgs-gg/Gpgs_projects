@@ -1249,7 +1249,7 @@ const PropertyFormSection = memo(({
             Bed No
           </label>
 
-          {isPropertySheetData && (
+          {isTempPropertySheetData && (
             <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-10 rounded">
               <LoaderPage />
             </div>
