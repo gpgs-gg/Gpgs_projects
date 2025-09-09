@@ -162,10 +162,11 @@ Processing Fees: ₹${ProcessingFeesAmt}
 Total Amount to be paid: ₹${totalAmount}
 `.trim();
  if(applyPermBedRent){
-    msg += "(Permanent Bed Rent is included in the above total amount)"
+    msg += "Please Note : Permanent Bed Rent is included in the above total amount"
  }  else{
-    msg += "(Permanent Bed Rent is not included in the above total amount )"
+    msg += "Please Note : Permanent Bed Rent is not included in the above total amount"
  }
+
 
     msg += "\n\n";
 
