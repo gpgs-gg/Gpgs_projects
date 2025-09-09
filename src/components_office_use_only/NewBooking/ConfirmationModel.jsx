@@ -163,9 +163,9 @@ Processing Fees: ₹${ProcessingFeesAmt}
 Total Amount to be paid: ₹${totalAmount}
 `.trim();
  if(applyPermBedRent){
-    msg += "  Please Note : Permanent Bed Rent is included in the above total amount"
+    msg += "  ( Please Note : Permanent Bed Rent is included )"
  }  else{
-    msg += "  Please Note : Permanent Bed Rent is not included in the above total amount"
+    msg += "  ( Please Note : Permanent Bed Rent is not included )"
  }
 
     msg += "\n\n";
@@ -406,8 +406,8 @@ Total Amount to be paid: ₹${totalAmount}
                   <p className="text-xs italic text-orange-500 mt-1">
 
                     {applyPermBedRent
-                      ? "Please Note : Permanent Bed Rent is included in the above total amount"
-                      : "Please Note : Permanent Bed Rent is not included in the above total amount"}
+                      ? "( Please Note : Permanent Bed Rent is included )"
+                      : "( Please Note : Permanent Bed Rent is not included )"}
                   </p>
 
                 </p>
