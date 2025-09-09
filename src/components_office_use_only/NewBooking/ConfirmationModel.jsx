@@ -138,6 +138,7 @@ const ConfirmationModel = ({
     let msg = `Payment Details For ${ClientFullName} ( Contact No : ${CallingNo} )`;
     msg += "\n";
     if (TempPropCode) {
+       msg += "\n";
       msg += `
 Temporary PG Facility Code: ${TempPropCode}
 Room No.: ${TempRoomNo}
@@ -146,7 +147,7 @@ AC Room: ${TempACRoom}
 Start Date: ${formattedTempBedDOJ}
 Last Date: ${formattedTempBedLDt}
 Temporary Bed Rent Amount: ₹${TempBedRentAmt} (This rent is from ${formattedTempBedDOJ} to ${formPreviewData.TempBedLDt || tempEndOfDOJMonth}, monthly fixed rent is ₹${TempBedMonthlyFixRent})
-    `.trim() + "\n\n";
+    `.trim() + "\n";
     }
     msg += "\n";
     msg += `
@@ -162,9 +163,9 @@ Processing Fees: ₹${ProcessingFeesAmt}
 Total Amount to be paid: ₹${totalAmount}
 `.trim();
  if(applyPermBedRent){
-    msg += "(Permanent Bed Rent is included in the above total amount)"
+    msg += "  ( Please Note : Permanent Bed Rent is included )"
  }  else{
-    msg += "(Permanent Bed Rent is not included in the above total amount )"
+    msg += "  ( Please Note : Permanent Bed Rent is not included )"
  }
 
     msg += "\n\n";
@@ -405,8 +406,8 @@ Total Amount to be paid: ₹${totalAmount}
                   <p className="text-xs italic text-orange-500 mt-1">
 
                     {applyPermBedRent
-                      ? "Please Note : Permanent Bed Rent is included in the above total amount"
-                      : "Please Note : Permanent Bed Rent is not included in the above total amount"}
+                      ? "( Please Note : Permanent Bed Rent is included )"
+                      : "( Please Note : Permanent Bed Rent is not included )"}
                   </p>
 
                 </p>

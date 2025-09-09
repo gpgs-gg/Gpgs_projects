@@ -990,7 +990,7 @@ const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange
 ));
 
 // Memoized Property Form Section
-const PropertyFormSection = memo(({
+const   PropertyFormSection = memo(({
   titlePrefix,
   control,
   errors,
@@ -1951,12 +1951,12 @@ const NewBooking = () => {
   };
 
   return (
-    <div className="max-w-8xl mx-auto bg-gray-100 min-h-screen">
-      <div className="bg-white shadow-lg rounded-xl  p-6">
+    <div className="max-w-8xl mx-auto bg-gray-50 min-h-screen">
+      <div className="bg-gray-50 shadow-lg rounded-xl  p-6">
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 mt-20">
           {/* === CLIENT DETAILS === */}
-          <section className="bg-orange-50 border border-gray-200 rounded-lg p-2 shadow-sm">
+          <section className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
             <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
@@ -2023,12 +2023,12 @@ const NewBooking = () => {
 
           {/* === TABS === */}
           {(showPermanent || showtemporary) && (
-            <div className="bg-orange-50 border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <div className="mb-4 border-b border-gray-300 flex space-x-4">
                 {showPermanent && (
                   <button
                     type="button"
-                    className={`px-4 text-[20px] md:text-[20px] py-2 ${activeTab === 'permanent' ? 'bg-orange-200 text-black rounded-t-lg' : ''
+                    className={`px-4 text-[20px] md:text-[20px] py-2 ${activeTab === 'permanent' ? 'bg-orange-300 text-black rounded-t-lg' : ''
                       }`}
                     onClick={() => setActiveTab('permanent')}
                   >
@@ -2038,7 +2038,7 @@ const NewBooking = () => {
                 {showtemporary && (
                   <button
                     type="button"
-                    className={`px-4 text-[20px] py-2 ${activeTab === 'temporary' ? 'bg-orange-200 text-black rounded-t-lg' : ''
+                    className={`px-4 text-[20px] py-2 ${activeTab === 'temporary' ? 'bg-orange-300 text-black rounded-t-lg' : ''
                       }`}
                     onClick={() => setActiveTab('temporary')}
                   >
@@ -2084,8 +2084,8 @@ const NewBooking = () => {
             </div>
           )}
 
-          <div className="flex justify-center">
-            <section className="bg-orange-50 border border-gray-200 rounded-lg p-2 shadow-sm">
+          <div className="flex justify-center bg-gray-50">
+            <section className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
               <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-300 text-black p-2 rounded-sm">Send Payment Details ...</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {/* Date Field with default today */}
