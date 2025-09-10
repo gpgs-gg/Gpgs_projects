@@ -1,6 +1,8 @@
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { useApp } from "./AppProvider";
+import CryptoJS from "crypto-js";
+import { SECRET_KEY } from "../../Config";
 import {
   useCreateTicket,
   useEmployeeDetails,
@@ -126,8 +128,25 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: property } = usePropertMasteryData();
   const [previousWlogs, setPreviousWlogs] = useState("");
-
   const [previews, setPreviews] = useState([]);
+  const [decryptedUser, setDecryptedUser] = useState(null);
+
+  useEffect(() => {
+    setDecryptedUser(decryptUser(localStorage.getItem('user')))
+      ; // Just to verify decryption works
+  }, []);
+  console.log("Decrypted user in Navigation:", decryptedUser?.name);
+
+  const decryptUser = (encryptedData) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return JSON.parse(decrypted);
+    } catch (error) {
+      console.error('Failed to decrypt user:', error);
+      return null;
+    }
+  };
 
   const {
     register,
@@ -229,6 +248,16 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     return `${day} ${month} ${year} ${hours}:${minutes}${ampm}`;
   }
 
+
+  function Timestamp() {
+    const now = new Date();
+    return `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+  }
+
+
+
+
+
   const onSubmit = (data) => {
     const attachmentArray = previews || [];
 
@@ -237,23 +266,37 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     const newWorkLogEntry = data.WorkLogs
       ? `[${currentTimestamp}] ${data.WorkLogs.trim()}`
       : "";
+    const statusValue = isEdit ? data.Status?.value || "" : "Open";
 
-    const formattedData = {
-      ...data,
-      Priority: data.Priority?.value || "",
-      PropertyCode: data.PropertyCode?.value || "",
-      Department: data.Department?.value || "",
-      Category: data.Category?.value || "",
-      Assignee: data.Assignee?.value || "",
-      Manager: data.Manager?.value || "",
-      Status: isEdit ? data.Status?.value || "" : "Open",
-      Attachment: attachmentArray,
-      WorkLogs: newWorkLogEntry
-        ? previousWlogs
-          ? `${newWorkLogEntry}\n\n ${previousWlogs}`
-          : newWorkLogEntry
-        : previousWlogs || "",
-    };
+   const formattedData = {
+  ...data,
+  Priority: data.Priority?.value || "",
+  PropertyCode: data.PropertyCode?.value || "",
+  Department: data.Department?.value || "",
+  Category: data.Category?.value || "",
+  Assignee: data.Assignee?.value || "",
+  Manager: data.Manager?.value || "",
+  Status: statusValue,
+  Attachment: attachmentArray,
+  WorkLogs: newWorkLogEntry
+    ? previousWlogs
+      ? `${newWorkLogEntry}\n\n${previousWlogs}`
+      : newWorkLogEntry
+    : previousWlogs || "",
+  ClosedDate: statusValue === "Closed" ? Timestamp() : "",
+  ...(isEdit
+    ? {
+        UpdatedByName: decryptedUser?.name || "Unknown",
+        UpdatedById: decryptedUser?.id || "Unknown",
+        UpdatedDateTime: Timestamp(),
+      }
+    : {
+        CreatedByName: decryptedUser?.name || "Unknown",
+        CreatedById: decryptedUser?.id || "Unknown",
+      }),
+};
+
+
 
     console.log("Formatted Data to submit:", formattedData);
 
@@ -302,11 +345,11 @@ export const CreateEditTicket = ({ isEdit = false }) => {
               <Controller
                 control={control}
                 name="PropertyCode"
-                disabled={isEdit}
                 rules={{ required: "Required" }}
                 render={({ field, fieldState: { error } }) => (
                   <>
-                    <Select {...field} options={ProperyOptions} styles={SelectStyles} isClearable placeholder="Search & Select Property Code" />
+                    <Select {...field} isDisabled={isEdit}
+                      options={ProperyOptions} styles={SelectStyles} isClearable placeholder="Search & Select Property Code" />
                     {error && <p className="text-red-500 text-sm">{error.message}</p>}
                   </>
                 )}

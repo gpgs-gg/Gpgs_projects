@@ -93,11 +93,6 @@ const updateTicket = (ticketId, updates) => {
 
 
 
-
-
-
-
-
     const deleteTicket = (ticketId) => {
         setTickets(tickets.filter(ticket => ticket.id !== ticketId));
     };

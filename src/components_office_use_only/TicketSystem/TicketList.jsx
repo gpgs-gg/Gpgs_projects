@@ -18,10 +18,9 @@ export const TicketList = () => {
         setSelectedTicket(ticket);
         setCurrentView("edit");
     };
-
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
-
+  
         // Assuming dateString is in "dd/MM/yyyy, HH:mm:ss" or similar format
         const [datePart, timePart] = dateString.split(",").map((str) => str.trim());
         const [day, month, year] = datePart.split("/");
@@ -29,6 +28,7 @@ export const TicketList = () => {
         const isoString = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
 
         const date = new Date(isoString);
+        console.log("Parsed date:", date);
         if (isNaN(date)) return "Invalid Date";
 
         const options = {
@@ -65,7 +65,7 @@ export const TicketList = () => {
         { label: "Created By Id", key: "CreatedById" },
         { label: "Created By Name", key: "CreatedByName" },
         { label: "Closed Date", key: "ClosedDate" },
-        { label: "Updated By ID", key: "UpdatedByID" },
+        { label: "Updated By ID", key: "UpdatedById" },
         { label: "Updated By Name", key: "UpdatedByName" },
         { label: "Updated Date Time", key: "UpdatedDateTime" },
         { label: "WorkLogs", key: "WorkLogs" },
@@ -94,38 +94,40 @@ export const TicketList = () => {
             <TicketFilters />
 
             <div className="bg-white rounded-lg shadow overflow-auto">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                <table className="min-w-full  divide-gray-200 text-sm">
                     <thead className="bg-orange-300">
                         <tr>
                             {headers.map(({ label, key }) => (
                                 <th
                                     key={label}
-                                    className={`px-4 py-2 text-left font-bold text-black text-lg ${key === "TicketID" ? "sticky left-0 z-20 bg-orange-300" : ""
+                                    className={`px-6 py-3 text-left font-bold text-black text-lg whitespace-nowrap overflow-hidden  max-w-[200px] ${key === "TicketID" ? "sticky left-0 z-20 bg-orange-300" : ""
                                         }`}
+                                    title={label} // Tooltip on hover
                                 >
                                     {label}
                                 </th>
                             ))}
-                            <th className="px-4 py-2 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-10">
+                            <th
+                                className="px-6 py-3 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-10 whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]" title="Actions">
                                 Actions
                             </th>
                         </tr>
-                    </thead>
 
+                    </thead>
                     <tbody className="bg-white divide-y text-[15px] divide-gray-200">
                         {filteredTickets.map((ticket) => (
-                            <tr key={ticket.TicketID} className="hover:bg-gray-50">
+                            <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
                                 {headers.map(({ key }) => (
                                     <td
                                         key={key}
-                                        className={`px-4 py-3 whitespace-nowrap text-gray-900 max-w-[200px] ${key === "TicketID" ? "sticky left-0 bg-white z-10" : ""
+                                        className={`px-4 py-3 whitespace-nowrap  text-gray-900 max-w-[200px] ${key === "TicketID" ? "sticky left-0 bg-white z-10" : ""
                                             }`}
                                         title={typeof ticket[key] === "string" ? ticket[key] : ""}
                                     >
                                         {key === "Title" ? (
                                             <div>
                                                 <div className="font-medium">{ticket.Title || "N/A"}</div>
-                                                <div className="text-xs text-gray-500">
+                                                <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden   text-ellipsis">
                                                     {ticket.Description
                                                         ? `${ticket.Description.substring(0, 60)}...`
                                                         : "No Description"}
@@ -182,19 +184,28 @@ export const TicketList = () => {
                                                     ));
                                                 })()}
                                             </div>
-                                        ) : key === "DateCreated" ||
-                                            key === "ClosedDate" ||
-                                            key === "UpdatedDateTime" ? (
+                                        ) : key === "DateCreated"
+                                            // key === "ClosedDate" ||
+                                            // key === "UpdatedDateTime"
+                                             ? (
                                             formatDate(ticket[key])
+
+                                        ) : key === "WorkLogs" ? (
+                                            <div className="text-xs text-gray-700 whitespace-pre-wrap break-words max-w-[1000px]">
+                                                {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
+                                            </div>
                                         ) : (
                                             ticket[key] || "N/A"
-                                        )}
+                                        )
+
+                                        }
+
                                     </td>
                                 ))}
-                                
-                                <td className="px-5 py-3 flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
 
-                                     <button
+                                <td className="px-5 py-7 h-full flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
+
+                                    <button
                                         onClick={() => editTicket(ticket)}
                                         className="text-red-600 hover:text-red-900"
                                         title="Delete"
@@ -209,7 +220,7 @@ export const TicketList = () => {
                                     >
                                         <i className="fas fa-edit"></i>
                                     </button>
-                                   
+
                                 </td>
                             </tr>
                         ))}

@@ -1425,6 +1425,7 @@ const   PropertyFormSection = memo(({
       )}
 
       {/* Upcoming Rent Hike Amount */}
+        {activeTab !== "temporary" && (
       <div>
         <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Upcoming Rent Hike Ammount ( ₹ )</label>
         <input
@@ -1435,7 +1436,7 @@ const   PropertyFormSection = memo(({
         />
         {renderError(`${titlePrefix}UpcomingRentHikeAmt`)}
       </div>
-
+        )}
       {/* Comments */}
       <div>
         <label>Comments</label>
@@ -1664,6 +1665,7 @@ const NewBooking = () => {
     const matchedRow = singleSheetData?.data?.find(
       (row) => row["BedNo"]?.trim() === selectedBedNo
     );
+     console.log("matchedRow", matchedRow , titlePrefix)
 
     if (matchedRow) {
       const acNonAc = matchedRow["ACRoom"]?.trim() || "";
@@ -1673,7 +1675,7 @@ const NewBooking = () => {
       setValue(`${titlePrefix}BedNo`, selectedBedNo);
       setValue(`${titlePrefix}BedMonthlyFixRent`, rentAmt);
       setValue(`${titlePrefix}BedDepositAmt`, matchedRow["DA"]?.trim() || "");
-      setValue(`${titlePrefix}UpcomingRentHikeDt`, matchedRow["URHD"]?.trim() || "");
+      setValue(`${titlePrefix}UpcomingRentHikeDt`, matchedRow["URHD"]?.trim() || ""); 
       setValue(`${titlePrefix}UpcomingRentHikeAmt`, matchedRow["URHA"]?.trim() || "");
       setValue(`${titlePrefix}RoomNo`, matchedRow["RoomNo"]?.trim() || "");
     } else {

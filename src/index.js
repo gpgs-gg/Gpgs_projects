@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from './components_office_use_only/TicketSystem/AppProvider';
+import { AuthProvider } from './context/AuthContext';
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
@@ -19,7 +20,9 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <BrowserRouter>
-          <App />
+      <AuthProvider>
+            <App />
+      </AuthProvider>
         </BrowserRouter>
       </AppProvider>
     </QueryClientProvider>

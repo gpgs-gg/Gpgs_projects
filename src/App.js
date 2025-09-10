@@ -15,13 +15,15 @@ import BedsAvilable from './components_office_use_only/Gpgps_Bedsavilable/BedsAv
 import Accounts from './components_office_use_only/Gpgs_Accounts/Accounts';
 import AdminLayout from './components_office_use_only/TicketSystem/AdminLayout';
 import NewBooking from './components_office_use_only/NewBooking/NewBooking';
+import ProtectedRoute from './components/ProtectedRoutes';
+import LoginPage from './auth/LoginPage';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
   const location = useLocation();
 
-  const isAdminRoute = location.pathname.startsWith("/gpgs-actions/admin");
+  const isAdminRoute = location.pathname.startsWith("/gpgs-actions/tickets");
 
   // Smooth scroll
   useEffect(() => {
@@ -128,11 +130,17 @@ function App() {
         <Route path="/gpgs-actions/beds-avilable" element={<BedsAvilable />} />
         <Route path="/gpgs-actions/new-booking" element={<NewBooking />} />
         <Route path="/gpgs-actions/accounts" element={<Accounts />} />
+             <Route path="/gpgs-actions/login" element={<LoginPage />} />
+         <Route path="/gpgs-actions/tickets" element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          } />
 
         {/* Admin routes */}
-        <Route path="/gpgs-actions/admin/*" element={
+        {/* <Route path="/gpgs-actions/tickets" element={
             <AdminLayout />
-        } />
+        } /> */}
       </Routes>
     </>
   );

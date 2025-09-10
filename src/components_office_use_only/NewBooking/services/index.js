@@ -3,7 +3,7 @@ import axios from "axios";
 
 const apiClient = axios.create({
   baseURL: "https://gpgs-main-server.vercel.app/api", // for vercel deployement
-  // baseURL: "http://localhost:3000", // for Local Developement
+  // baseURL: "http://localhost:3000/api", // for Local Developement
 });
 
 // POST request to send booking data

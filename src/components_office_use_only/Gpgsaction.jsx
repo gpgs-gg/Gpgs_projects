@@ -84,7 +84,7 @@ const Gpgsaction = () => {
           </div>
         </Link >
         
-             <Link to="/gpgs-actions/admin">
+             <Link to="/gpgs-actions/tickets">
           <div className="bg-white shadow-lg cursor-pointer rounded-2xl p-8 hover:shadow-2xl transition duration-300 border">
             <div className="flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-6 mx-auto">
               <i class="fa-solid fa-file-invoice text-2xl"></i>          </div>
