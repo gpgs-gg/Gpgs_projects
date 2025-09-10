@@ -1425,6 +1425,7 @@ const   PropertyFormSection = memo(({
       )}
 
       {/* Upcoming Rent Hike Amount */}
+        {activeTab !== "temporary" && (
       <div>
         <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Upcoming Rent Hike Ammount ( ₹ )</label>
         <input
@@ -1435,6 +1436,7 @@ const   PropertyFormSection = memo(({
         />
         {renderError(`${titlePrefix}UpcomingRentHikeAmt`)}
       </div>
+        )}
 
       {/* Comments */}
       <div>
