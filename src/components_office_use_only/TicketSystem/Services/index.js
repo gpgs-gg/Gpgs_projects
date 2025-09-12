@@ -28,15 +28,16 @@ export const useCreateTicket = () => {
 
 
 // ✅ Fetch Property Sheet Data (Ticket Sheet)
-const fetchPropertyData = async () => {
+const fetchTicketSheetData = async () => {
   const response = await apiClient.get("/ticket-sheet-data");
   return response.data;
 };
 
-export const usePropertyData = () => {
+export const useTicketSheetData = ( enabled = true ) => {
   return useQuery({
     queryKey: ["ticket-sheet-data"],
-    queryFn: fetchPropertyData,
+    queryFn: fetchTicketSheetData,
+    enabled ,// Only fetch when enabled is true
   });
 };
 

@@ -22,9 +22,13 @@ const Accounts = () => {
 useEffect(() => {
   if (isSuccess && propertySheetData?.data) {
     const validItems = propertySheetData.data.filter(
-      item => typeof item.FullName === "string" && item.FullName.trim() !== ""
+      item => typeof item.FullName === "string" && item.FullName.trim() !== "" 
     );
 
+
+    console.log("Valid items count:", validItems);
+
+    
     // Build formula string like: "=123 + 456", skipping 0s
     const buildFormulaString = (values) => {
       const filtered = values
@@ -287,8 +291,6 @@ const onSubmit = (data) => {
               <div></div>
               {/* Full Name Section */}
               <div>
-
-
                 {/* Amounts in Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
 
@@ -303,17 +305,13 @@ const onSubmit = (data) => {
                           ))}
                       </div>
                     </div>
-
                     <div className="bg-gray-200 p-4 rounded-xl shadow">
                       <div className="mt-1 text-lg max-h-40 overflow-y-auto pr-2">
-
                         <p className="text-sm text-orange-400">Current Due Amount</p>
                         <p className="text-lg font-semibold">{rnrSheetData[0].CurrentDue || 0}</p>
                       </div>
                     </div>
                   </div>
-
-
                   <div className="border-2 p-2 border-orange-200">
                     <div className="mb-2">
                       <span className="font-semibold text-orange-500">Client Names:</span>
@@ -331,8 +329,6 @@ const onSubmit = (data) => {
                       <p className="text-lg font-semibold">{rnrSheetData[0].PreviousDue || 0}</p>
                     </div>
                   </div>
-
-
                   <div className=" border-2 p-2 border-orange-200">
                     <div className="mb-2">
                       <span className="font-semibold text-orange-500">Client Names:</span>
@@ -350,10 +346,7 @@ const onSubmit = (data) => {
                     </div>
 
                   </div>
-
-
                 </div>
-
               </div>
             </div>
           )}

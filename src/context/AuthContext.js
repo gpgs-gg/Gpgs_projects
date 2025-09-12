@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (user) => {
-    const encryptedUser = encryptUser(user);
+    const encryptedUser = encryptUser(user)
     setAuth({ isAuthenticated: true, user });
     localStorage.setItem('user', encryptedUser);
     localStorage.setItem('auth', 'true');

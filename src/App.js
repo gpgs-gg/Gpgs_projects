@@ -106,8 +106,7 @@ function App() {
   return (
     <>
       {/* Show Header only if not in admin route */}
-      {!isAdminRoute && <Header />}
-
+<Header />
       <Routes>
         <Route path="/" element={
           <>
@@ -125,17 +124,25 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/location" element={<Location />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/gpgs-actions" element={<Gpgsaction />} />
+        <Route path="/gpgs-actions/tickets" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>} />
         <Route path="/gallary" element={<Gallary />} />
-        <Route path="/gpgs-actions/beds-avilable" element={<BedsAvilable />} />
-        <Route path="/gpgs-actions/new-booking" element={<NewBooking />} />
-        <Route path="/gpgs-actions/accounts" element={<Accounts />} />
-             <Route path="/gpgs-actions/login" element={<LoginPage />} />
-         <Route path="/gpgs-actions/tickets" element={
-            <ProtectedRoute>
-              <AdminLayout />
-            </ProtectedRoute>
-          } />
+        <Route path="/gpgs-actions/beds-avilable" element={<ProtectedRoute><BedsAvilable /></ProtectedRoute>} />
+        <Route path="/gpgs-actions/new-booking" element={<ProtectedRoute><NewBooking /></ProtectedRoute>} />
+        <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute> } />
+        <Route path="/gpgs-actions/login" element={<LoginPage />} />
+        <Route path="/gpgs-actions" element={
+          <ProtectedRoute>
+            <Gpgsaction />
+          </ProtectedRoute>
+        } />
+
+
+
+
+
+
+
+
 
         {/* Admin routes */}
         {/* <Route path="/gpgs-actions/tickets" element={

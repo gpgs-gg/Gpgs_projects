@@ -77,7 +77,7 @@ export const Navigation = () => {
 
       {/* Navigation Menu */}
       <nav className="px-4 sm:px-6">
-        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-6 ${isMobileMenuOpen ? 'flex' : 'hidden'} sm:flex`}>
+        <div className={`flex-col mt-6 sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-6 ${isMobileMenuOpen ? 'flex' : 'hidden'} sm:flex`}>
           {menuItems.map(item => {
             if (item.adminOnly && currentUser.role !== 'Admin') return null;
 

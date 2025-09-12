@@ -1,14 +1,20 @@
 //   import React, { useContext, useMemo } from 'react';   
 
 import React, { useState, useContext, useMemo, createContext, useEffect } from 'react';
-import { usePropertyData, useUpdateTicketSheetData } from './Services';
+import { usePropertyData, useTicketSheetData, useUpdateTicketSheetData } from './Services';
+import { useLocation } from 'react-router-dom';
 
 // ✅ Export the context
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
- const { data } = usePropertyData();
-  const { mutate: updateTicketData, isLoading: isticketUpdate } = useUpdateTicketSheetData();
+
+ const location = useLocation();
+
+  const isTicketsPage = location.pathname === '/gpgs-actions/tickets';
+
+  const { data, isLoading, error } = useTicketSheetData(isTicketsPage); 
+    const { mutate: updateTicketData, isLoading: isticketUpdate } = useUpdateTicketSheetData();
 
 // Start with an empty array
 const [tickets, setTickets] = useState([]);
@@ -30,12 +36,7 @@ useEffect(() => {
         { id: 7, name: 'Sarah Davis', role: 'Leader', email: 'sarah@company.com', department: 'Marketing' },
         { id: 8, name: 'Tom Anderson', role: 'Member', email: 'tom@company.com', department: 'Operations' }
     ];
-
-
-
-
     
-
     const [users, setUsers] = useState(initialUsers);
     const [currentUser, setCurrentUser] = useState(initialUsers[0]);
     const [currentView, setCurrentView] = useState('dashboard');

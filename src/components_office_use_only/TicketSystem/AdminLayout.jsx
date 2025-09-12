@@ -40,7 +40,7 @@ const AdminLayout = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      <main className="main-content container mx-auto px-6 pb-12">
+      <main className="main-content container mx-auto px-6 pb-0 ">
         {renderContent()}
       </main>
     </div>

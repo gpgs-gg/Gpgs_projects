@@ -10,6 +10,7 @@ import {
   useUpdateTicketSheetData,
 } from "./Services";
 import { useEffect, useState } from "react";
+import LoaderPage from "../NewBooking/LoaderPage";
 
 // Select dropdown options
 const PriorityOptions = [
@@ -123,8 +124,9 @@ const SelectStyles = {
 
 export const CreateEditTicket = ({ isEdit = false }) => {
   const { addTicket, updateTicket, setCurrentView, users, selectedTicket } = useApp();
-  const { mutate: submitBooking } = useCreateTicket();
-  const { mutate: updateTicketData } = useUpdateTicketSheetData();
+  const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
+  const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
+
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: property } = usePropertMasteryData();
   const [previousWlogs, setPreviousWlogs] = useState("");
@@ -147,6 +149,12 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       return null;
     }
   };
+
+
+
+
+
+
 
   const {
     register,
@@ -264,42 +272,37 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     const currentTimestamp = getFormattedTimestamp();
 
     const newWorkLogEntry = data.WorkLogs
-      ? `[${currentTimestamp}] ${data.WorkLogs.trim()}`
+      ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
       : "";
     const statusValue = isEdit ? data.Status?.value || "" : "Open";
 
-   const formattedData = {
-  ...data,
-  Priority: data.Priority?.value || "",
-  PropertyCode: data.PropertyCode?.value || "",
-  Department: data.Department?.value || "",
-  Category: data.Category?.value || "",
-  Assignee: data.Assignee?.value || "",
-  Manager: data.Manager?.value || "",
-  Status: statusValue,
-  Attachment: attachmentArray,
-  WorkLogs: newWorkLogEntry
-    ? previousWlogs
-      ? `${newWorkLogEntry}\n\n${previousWlogs}`
-      : newWorkLogEntry
-    : previousWlogs || "",
-  ClosedDate: statusValue === "Closed" ? Timestamp() : "",
-  ...(isEdit
-    ? {
-        UpdatedByName: decryptedUser?.name || "Unknown",
-        UpdatedById: decryptedUser?.id || "Unknown",
-        UpdatedDateTime: Timestamp(),
-      }
-    : {
-        CreatedByName: decryptedUser?.name || "Unknown",
-        CreatedById: decryptedUser?.id || "Unknown",
-      }),
-};
-
-
-
-    console.log("Formatted Data to submit:", formattedData);
-
+    const formattedData = {
+      ...data,
+      Priority: data.Priority?.value || "",
+      PropertyCode: data.PropertyCode?.value || "",
+      Department: data.Department?.value || "",
+      Category: data.Category?.value || "",
+      Assignee: data.Assignee?.value || "",
+      Manager: data.Manager?.value || "",
+      Status: statusValue,
+      Attachment: attachmentArray,
+      WorkLogs: newWorkLogEntry
+        ? previousWlogs
+          ? `${newWorkLogEntry}\n\n${previousWlogs}`
+          : newWorkLogEntry
+        : previousWlogs || "",
+      ClosedDate: statusValue === "Closed" ? Timestamp() : "",
+      ...(isEdit
+        ? {
+          UpdatedByName: decryptedUser?.name || "Unknown",
+          UpdatedById: decryptedUser?.id || "Unknown",
+          UpdatedDateTime: Timestamp(),
+        }
+        : {
+          CreatedByName: decryptedUser?.name || "Unknown",
+          CreatedById: decryptedUser?.id || "Unknown",
+        }),
+    };
 
     if (isEdit && selectedTicket) {
       updateTicketData(formattedData, {
@@ -417,8 +420,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 </div>
               ))}
 
-
-
               {isEdit && (
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">Status <span className="text-red-500">*</span></label>
@@ -469,7 +470,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 <label className="block text-sm font-medium text-black mb-2">Work Logs <span className="text-red-500">*</span></label>
                 {previousWlogs && (
                   <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-32 overflow-y-auto">
-                    <pre className="text-xs text-gray-700 whitespace-pre-wrap">{previousWlogs}</pre>
+                    <pre className="text-xs text-black whitespace-pre-wrap">{previousWlogs}</pre>
                   </div>
                 )}
                 <textarea
@@ -516,16 +517,23 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             />
           </div>
 
-
-
           {/* Buttons */}
           <div className="flex gap-4">
             <button
               type="submit"
-              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700"
+              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 flex items-center justify-center gap-2"
+              disabled={isSubmittingBooking || isUpdatingTicket}
             >
-              {isEdit ? "Update Ticket" : "Create Ticket"}
+              {(isSubmittingBooking || isUpdatingTicket) ? (
+                <>
+                  <LoaderPage size="small" />
+                  {isEdit ? 'Updating...' : 'Creating...'}
+                </>
+              ) : (
+                isEdit ? 'Update Ticket' : 'Create Ticket'
+              )}
             </button>
+
             <button
               type="button"
               onClick={() => setCurrentView("tickets")}
@@ -534,6 +542,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
               Cancel
             </button>
           </div>
+
         </form>
       </div>
     </div>

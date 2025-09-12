@@ -2,18 +2,24 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { useAuth } from "../context/AuthContext";
+import CryptoJS from 'crypto-js';
+import { SECRET_KEY } from "../Config";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [decryptedUser, setDecryptedUser] = useState(null);
+
   const location = useLocation();
+  const { logout } = useAuth();
   const isHomePage = location.pathname === "/";
   useEffect(() => {
-        AOS.init({
-            duration: 1000, // global animation duration
-            once: false, // whether animation should happen only once - default true
-        });
-        AOS.refresh(); // refresh AOS when component mounts or updates
-    }, []);
+    AOS.init({
+      duration: 1000, // global animation duration
+      once: false, // whether animation should happen only once - default true
+    });
+    AOS.refresh(); // refresh AOS when component mounts or updates
+  }, []);
   useEffect(() => {
     const handleSmoothScroll = (e) => {
       const href = e.currentTarget.getAttribute("href");
@@ -85,6 +91,33 @@ const Header = () => {
     setMenuOpen(false);
   };
 
+  const handleLogout = () => {
+    console.log("Logging out...");
+    logout();
+    window.location.reload(); // Refresh to reset state
+  }
+
+
+
+
+  useEffect(() => {
+    setDecryptedUser(decryptUser(localStorage.getItem('user')))
+      ; // Just to verify decryption works
+  }, []);
+  console.log("Decrypted user in Navigation:", decryptedUser?.name);
+
+  const decryptUser = (encryptedData) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return JSON.parse(decrypted);
+    } catch (error) {
+      console.error('Failed to decrypt user:', error);
+      return null;
+    }
+  };
+
+
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
       <div className="max-w-8xl mx-auto px-4 h-20 sm:px-6 lg:px-8">
@@ -118,6 +151,23 @@ const Header = () => {
             )}
             <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
             <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office Use Only</Link>
+            <div className="hidden sm:flex items-center space-x-5">
+              <div className="text-right">
+                <div className="text-sm font-medium text-gray-900">{decryptedUser?.name}</div>
+                <div className="text-xs text-gray-500">{decryptedUser?.role}</div>
+              </div>
+              {decryptedUser && (
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium">
+                  {decryptedUser?.name.split(' ').map(n => n[0]).join('')}
+                </div>
+              )}
+
+              {decryptedUser && (
+                <button onClick={handleLogout} className="">Logout</button>
+
+              )}
+            </div>
+
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -157,6 +207,8 @@ const Header = () => {
           )}
           <Link onClick={handleMenuLinkClick} to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
           <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
+          <button onClick={handleLogout} className="text-gray-700 hover:text-indigo-600 transition duration-300">Logout</button>
+
         </div>
       )}
     </nav>
