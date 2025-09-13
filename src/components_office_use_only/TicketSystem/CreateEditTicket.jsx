@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { useApp } from "./AppProvider";
 import CryptoJS from "crypto-js";
-import { DepartmentOptions ,StatusOptions , PriorityOptions,CategoryOptions , CusmoterImpactedOptions , SelectStyles ,  SECRET_KEY } from "../../Config";
+import { DepartmentOptions, StatusOptions, PriorityOptions, CategoryOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY } from "../../Config";
 import {
   useCreateTicket,
   useEmployeeDetails,
@@ -132,7 +132,7 @@ import LoaderPage from "../NewBooking/LoaderPage";
 // };
 
 export const CreateEditTicket = ({ isEdit = false }) => {
-  const { addTicket, updateTicket, setCurrentView, users, selectedTicket ,modal  } = useApp();
+  const { addTicket, updateTicket, setCurrentView, users, selectedTicket, modal } = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
 
@@ -190,11 +190,11 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
   // Generate dynamic options
   const ManagerOptions = EmployeeDetails?.data
-        ?.filter((emp) => emp?.Name) // Only include if Name is present
-        .map((emp) => ({
-            value: emp.Name,
-            label: `${emp.Name} - ${emp.Department || "N/A"}`,
-        })) || [];
+    ?.filter((emp) => emp?.Name) // Only include if Name is present
+    .map((emp) => ({
+      value: emp.Name,
+      label: `${emp.Name} - ${emp.Department || "N/A"}`,
+    })) || [];
 
 
   const ProperyOptions = property?.data?.map((prop) => ({
@@ -351,7 +351,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">
-        {isEdit ? `View & Edit Ticket : ${selectedTicket.TicketID}` : "Create New Ticket"}
+        {isEdit ? `View & Edit Ticket : ${selectedTicket?.TicketID}` : "Create New Ticket"}
       </h2>
       <div className="bg-white rounded-lg shadow p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -570,8 +570,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
           {/* Buttons */}
           <div className="flex gap-4">
-        
- <button
+
+            <button
               type="submit"
               className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 flex items-center justify-center gap-2"
               disabled={isSubmittingBooking || isUpdatingTicket}
@@ -585,8 +585,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 isEdit ? 'Update Ticket' : 'Create Ticket'
               )}
             </button>
-        
-           
+
+
 
             <button
               type="button"

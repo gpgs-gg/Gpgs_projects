@@ -7,6 +7,9 @@ import * as yup from 'yup';
 import ConfirmationModel from './ConfirmationModel';
 import { useAddBooking, useEmployeeDetails, usePropertyData, usePropertySheetData, useTempPropertySheetData } from './services';
 import LoaderPage from './LoaderPage';
+import { SECRET_KEY } from '../../Config';
+import CryptoJS from 'crypto-js';
+
 
 // Memoized Select Component to prevent unnecessary re-renders
 const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange, styles }) => (
@@ -22,7 +25,7 @@ const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange
 ));
 
 // Memoized Property Form Section
-const   PropertyFormSection = memo(({
+const PropertyFormSection = memo(({
   titlePrefix,
   control,
   errors,
@@ -153,73 +156,73 @@ const   PropertyFormSection = memo(({
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
       {/* Property Code */}
       {activeTab == "permanent" && (
-  <div>
-        <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Property Code</label>
-        <Controller
-          name={`${titlePrefix}PropCode`}
-          control={control}
-          defaultValue={null}
-          render={({ field }) => {
-            const options = propertyList?.data?.map((item) => ({
-              value: `${item["PG Main  Sheet ID"]},${item["Bed Count"]},${item["Property Code"]}`,
-              label: item["Property Code"],
-            })) || [];
+        <div>
+          <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Property Code</label>
+          <Controller
+            name={`${titlePrefix}PropCode`}
+            control={control}
+            defaultValue={null}
+            render={({ field }) => {
+              const options = propertyList?.data?.map((item) => ({
+                value: `${item["PG Main  Sheet ID"]},${item["Bed Count"]},${item["Property Code"]}`,
+                label: item["Property Code"],
+              })) || [];
 
-            return (
-              <MemoizedSelect
-                field={field}
-                options={options}
-                placeholder="Search & Select Property Code"
-                styles={selectStyles}
-                onChange={(selectedOption) => {
-                  field.onChange(selectedOption);
-                  handlePropertyCodeChange(
-                    { target: { value: selectedOption?.value || "" } },
-                    titlePrefix
-                  );
-                }}
-              />
-            );
-          }}
-        />
-        {renderError(`${titlePrefix}PropCode`)}
-      </div>
+              return (
+                <MemoizedSelect
+                  field={field}
+                  options={options}
+                  placeholder="Search & Select Property Code"
+                  styles={selectStyles}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption);
+                    handlePropertyCodeChange(
+                      { target: { value: selectedOption?.value || "" } },
+                      titlePrefix
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          {renderError(`${titlePrefix}PropCode`)}
+        </div>
       )}
-    
 
-       {activeTab == "temporary" && (
-      <div>
-        <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500"> Property Code</label>
-        <Controller
-          name={`TempPropCode`}
-          control={control}
-          defaultValue={null}
-          render={({ field }) => {
-            const options = propertyList?.data?.map((item) => ({
-              value: `${item["PG Main  Sheet ID"]},${item["Bed Count"]},${item["Property Code"]}`,
-              label: item["Property Code"],
-            })) || [];
 
-            return (
-              <MemoizedSelect
-                field={field}
-                options={options}
-                placeholder="Search & Select Property Code"
-                styles={selectStyles}
-                onChange={(selectedOption) => {
-                  field.onChange(selectedOption);
-                  handleTempPropertyCodeChange(
-                    { target: { value: selectedOption?.value || "" } },
-                    titlePrefix
-                  );
-                }}
-              />
-            );
-          }}
-        />
-        {renderError(`${titlePrefix}PropCode`)}
-      </div>
-       )}
+      {activeTab == "temporary" && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500"> Property Code</label>
+          <Controller
+            name={`TempPropCode`}
+            control={control}
+            defaultValue={null}
+            render={({ field }) => {
+              const options = propertyList?.data?.map((item) => ({
+                value: `${item["PG Main  Sheet ID"]},${item["Bed Count"]},${item["Property Code"]}`,
+                label: item["Property Code"],
+              })) || [];
+
+              return (
+                <MemoizedSelect
+                  field={field}
+                  options={options}
+                  placeholder="Search & Select Property Code"
+                  styles={selectStyles}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption);
+                    handleTempPropertyCodeChange(
+                      { target: { value: selectedOption?.value || "" } },
+                      titlePrefix
+                    );
+                  }}
+                />
+              );
+            }}
+          />
+          {renderError(`${titlePrefix}PropCode`)}
+        </div>
+      )}
 
       {/* Bed No */}
       {activeTab == "permanent" && (
@@ -457,18 +460,18 @@ const   PropertyFormSection = memo(({
       )}
 
       {/* Upcoming Rent Hike Amount */}
-        {activeTab !== "temporary" && (
-      <div>
-        <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Upcoming Rent Hike Ammount ( ₹ )</label>
-        <input
-          type="text"
-          {...register(`${titlePrefix}UpcomingRentHikeAmt`)}
-          className={inputClass}
-          disabled
-        />
-        {renderError(`${titlePrefix}UpcomingRentHikeAmt`)}
-      </div>
-        )}
+      {activeTab !== "temporary" && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Upcoming Rent Hike Ammount ( ₹ )</label>
+          <input
+            type="text"
+            {...register(`${titlePrefix}UpcomingRentHikeAmt`)}
+            className={inputClass}
+            disabled
+          />
+          {renderError(`${titlePrefix}UpcomingRentHikeAmt`)}
+        </div>
+      )}
 
       {/* Comments */}
       <div>
@@ -490,20 +493,41 @@ const NewBooking = () => {
   const [activeTab, setActiveTab] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formPreviewData, setFormPreviewData] = useState(null);
-
-   console.log("formPreviewData", formPreviewData)
   const [selectedSheetId, setSelctedSheetId] = useState(null);
   const [selectedTempSheetId, setSelctedTempSheetId] = useState(null);
   const [selectedBedNumber, setSelectedBedNumber] = useState(null);
   const [tempSelectedBedNumber, settempSelectedBedNumber] = useState(null);
   const [permanentPropertyFilledChecked, setPermanentPropertyFilledChecked] = useState()
-    const [applyPermBedRent, setApplyPermBedRent] = useState(true);
+  const [applyPermBedRent, setApplyPermBedRent] = useState(true);
+  const [decryptedUser, setDecryptedUser] = useState(null);
+
+
+  useEffect(() => {
+    setDecryptedUser(decryptUser(localStorage.getItem('user')))
+      ; // Just to verify decryption works
+  }, []);
+  console.log("Decrypted user in Navigation:", decryptedUser?.name);
+
+  const decryptUser = (encryptedData) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return JSON.parse(decrypted);
+    } catch (error) {
+      console.error('Failed to decrypt user:', error);
+      return null;
+    }
+  };
+
+
+
+
+
 
 
   // Validation schema
   const schema = yup.object().shape({
     // Date: yup.date().required('Date is required'),
-    SalesMember: yup.string().required('Sales person is required'),
     ClientFullName: yup.string().required('Client name is required'),
     WhatsAppNo: yup
       .string()
@@ -565,11 +589,13 @@ const NewBooking = () => {
       then: schema => schema.required('Bed number is required'),
       otherwise: schema => schema,
     }),
+
     TempRoomNo: yup.string().when('$showtemporary', {
       is: true,
       then: schema => schema.required('Room number is required'),
       otherwise: schema => schema,
     }),
+
     TempBedRentAmt: yup.string().when('$showtemporary', {
       is: true,
       then: schema => schema.required('Rent amount is required'),
@@ -582,7 +608,7 @@ const NewBooking = () => {
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: singleSheetData, isLoading: isPropertySheetData } = usePropertySheetData(selectedSheetId);
   const { data: singleTempSheetData, isLoading: isTempPropertySheetData } = useTempPropertySheetData(selectedTempSheetId);
-              
+
   const {
     register,
     handleSubmit,
@@ -733,7 +759,7 @@ const NewBooking = () => {
     const matchedRow = singleTempSheetData?.data?.find(
       (row) => row["BedNo"]?.trim() === selectedBedNo
     );
-    console.log("matchedRow", matchedRow , titlePrefix)
+    console.log("matchedRow", matchedRow, titlePrefix)
 
     if (matchedRow) {
       const acNonAc = matchedRow["ACRoom"]?.trim() || "";
@@ -789,8 +815,8 @@ const NewBooking = () => {
 
   const onSubmit = useCallback((data) => {
     // Always include client info
-   
- const TotalAmt =
+
+    const TotalAmt =
       (applyPermBedRent ? Number(data.PermBedRentAmt || 0) : 0) +
       Number(data.PermBedDepositAmt || 0) +
       Number(data.ProcessingFeesAmt || 0) +
@@ -804,8 +830,8 @@ const NewBooking = () => {
         month: "short",
         year: "numeric",
       }),
-      SalesMember: data.SalesMember,
-      AccountMember: data.AccountMember,
+      ID: decryptedUser?.id,
+      EmployeeName: decryptedUser?.name,
       ClientFullName: data.ClientFullName,
       WhatsAppNo: data.WhatsAppNo,
       CallingNo: data.CallingNo,
@@ -875,7 +901,7 @@ const NewBooking = () => {
         });
     }
 
-  
+
     setFormPreviewData(filteredData);
     setShowConfirmModal(true);
   }, [showPermanent, showtemporary]);
@@ -1090,7 +1116,7 @@ const NewBooking = () => {
                   isPropertySheetData={isPropertySheetData}
                   selectedBedNumber={selectedBedNumber}
                   handlePropertyCodeChange={handlePropertyCodeChange}
-                  handleTempPropertyCodeChange = {handleTempPropertyCodeChange}
+                  handleTempPropertyCodeChange={handleTempPropertyCodeChange}
                   handleBedNoChange={handleBedNoChange}
                   activeTab={activeTab}
                   register={register}
@@ -1107,7 +1133,7 @@ const NewBooking = () => {
                   isTempPropertySheetData={isTempPropertySheetData}
                   selectedBedNumber={selectedBedNumber}
                   handlePropertyCodeChange={handlePropertyCodeChange}
-                  handleTempPropertyCodeChange = {handleTempPropertyCodeChange}
+                  handleTempPropertyCodeChange={handleTempPropertyCodeChange}
                   handleTempBedNoChange={handleTempBedNoChange}
                   activeTab={activeTab}
                   register={register}
@@ -1121,7 +1147,7 @@ const NewBooking = () => {
           <div className="flex justify-center bg-gray-50">
             <section className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
               <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-300 text-black p-2 rounded-sm">Send Payment Details ...</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
                 {/* Date Field with default today */}
                 {/* <div>
                   <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Date</label>
@@ -1137,7 +1163,7 @@ const NewBooking = () => {
                 </div> */}
 
                 {/* Sales Dropdown */}
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Sales Member</label>
                   <Controller
                     name="SalesMember"
@@ -1163,8 +1189,8 @@ const NewBooking = () => {
                     }}
                   />
                   {renderError('SalesMember')}
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Account Member</label>
                   <Controller
                     name="AccountMember"
@@ -1191,7 +1217,7 @@ const NewBooking = () => {
                     }}
                   />
                   {renderError('AccountMember')}
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">AskFor ₹</label>
@@ -1237,8 +1263,8 @@ const NewBooking = () => {
         showConfirmModal={showConfirmModal}
         setShowConfirmModal={setShowConfirmModal}
         handleFinalSubmit={handleFinalSubmit}
-        setApplyPermBedRent = {setApplyPermBedRent}
-        applyPermBedRent = {applyPermBedRent}
+        setApplyPermBedRent={setApplyPermBedRent}
+        applyPermBedRent={applyPermBedRent}
 
         formPreviewData={formPreviewData}
       />
