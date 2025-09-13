@@ -10,8 +10,11 @@ export const TicketList = () => {
         setModal
     } = useApp();
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 11052d92bcf368c39bf919f947dccb6b158d015f
     const editTicket = (ticket) => {
         setSelectedTicket(ticket);
         setCurrentView("edit");
