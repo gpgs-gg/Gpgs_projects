@@ -10,13 +10,6 @@ export const TicketList = () => {
         setModal
     } = useApp();
 
-    const handleView = (val) => {
-        // setSelectedTicket(ticket);
-        setModal(val);
-        setCurrentView("edit");
-
-    };
-
     const editTicket = (ticket) => {
         setSelectedTicket(ticket);
         setCurrentView("edit");
@@ -209,7 +202,7 @@ export const TicketList = () => {
                                 <td className="px-5 py-7 h-full flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
 
                                     <button
-                                        onClick={() => handleView("View")}
+                                        onClick={() => editTicket(ticket)}
                                         className="text-red-600 hover:text-red-900"
                                         title="View"
                                     >
