@@ -153,8 +153,13 @@ const Header = () => {
             <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office Use Only</Link>
             <div className="hidden sm:flex items-center space-x-5">
               <div className="text-right">
-                <div className="text-sm font-bold text-gray-900">{decryptedUser?.name}</div>
+                {decryptedUser?.name && (
+                  <>
+                   <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
                 <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
+                  </>
+                )}
+
               </div>
               {decryptedUser && (
                 <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium">
@@ -174,8 +179,13 @@ const Header = () => {
           <div className="md:hidden flex items-center  text-xl mt-3 font-bold">
              <div className="flex items-center mr-4 lg:mr-10 space-x-5">
               <div className="text-right">
-                <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
+               {decryptedUser?.name && (
+                  <>
+                   <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
                 <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
+                  </>
+                )}
+
               </div>
              
             </div>
