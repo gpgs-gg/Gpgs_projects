@@ -218,7 +218,7 @@ const Header = () => {
           )}
           <Link onClick={handleMenuLinkClick} to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
           <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
-           <div className="hidden sm:flex items-center space-x-5">
+           <div className=" sm:flex items-center space-x-5">
             
         
               {decryptedUser && (
