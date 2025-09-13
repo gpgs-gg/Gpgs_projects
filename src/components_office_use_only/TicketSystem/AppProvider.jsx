@@ -40,6 +40,7 @@ useEffect(() => {
     const [users, setUsers] = useState(initialUsers);
     const [currentUser, setCurrentUser] = useState(initialUsers[0]);
     const [currentView, setCurrentView] = useState('dashboard');
+    const [modal, setModal] = useState('');
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
@@ -172,7 +173,9 @@ const updateTicket = (ticketId, updates) => {
         addWorkLog,
         addUser,
         updateUser,
-        deleteUser
+        deleteUser,
+        setModal,
+        modal
     };
 
     return (

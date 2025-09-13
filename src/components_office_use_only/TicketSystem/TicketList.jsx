@@ -7,11 +7,14 @@ export const TicketList = () => {
         setCurrentView,
         setSelectedTicket,
         deleteTicket,
+        setModal
     } = useApp();
 
-    const viewTicket = (ticket) => {
-        setSelectedTicket(ticket);
-        setCurrentView("details");
+    const handleView = (val) => {
+        // setSelectedTicket(ticket);
+        setModal(val);
+        setCurrentView("edit");
+
     };
 
     const editTicket = (ticket) => {
@@ -20,7 +23,7 @@ export const TicketList = () => {
     };
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
-  
+
         // Assuming dateString is in "dd/MM/yyyy, HH:mm:ss" or similar format
         const [datePart, timePart] = dateString.split(",").map((str) => str.trim());
         const [day, month, year] = datePart.split("/");
@@ -187,16 +190,16 @@ export const TicketList = () => {
                                         ) : key === "DateCreated"
                                             // key === "ClosedDate" ||
                                             // key === "UpdatedDateTime"
-                                             ? (
-                                            formatDate(ticket[key])
+                                            ? (
+                                                formatDate(ticket[key])
 
-                                        ) : key === "WorkLogs" ? (
-                                            <div className="text-xs text-gray-700 whitespace-pre-wrap break-words max-w-[1000px]">
-                                                {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
-                                            </div>
-                                        ) : (
-                                            ticket[key] || "N/A"
-                                        )
+                                            ) : key === "WorkLogs" ? (
+                                                <div className="text-xs text-gray-700 whitespace-pre-wrap break-words max-w-[1000px]">
+                                                    {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
+                                                </div>
+                                            ) : (
+                                                ticket[key] || "N/A"
+                                            )
 
                                         }
 
@@ -206,9 +209,9 @@ export const TicketList = () => {
                                 <td className="px-5 py-7 h-full flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
 
                                     <button
-                                        onClick={() => editTicket(ticket)}
+                                        onClick={() => handleView("View")}
                                         className="text-red-600 hover:text-red-900"
-                                        title="Delete"
+                                        title="View"
                                     >
                                         <i className="fa fa-eye"></i>
                                     </button>
