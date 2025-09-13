@@ -172,7 +172,7 @@ const Header = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center  text-xl mt-3 font-bold">
-             <div className="hidden sm:flex items-center mr-10 space-x-5">
+             <div className="flex items-center mr-10 space-x-5">
               <div className="text-right">
                 <div className="text-sm font-medium text-gray-900">{decryptedUser?.name}</div>
                 <div className="text-xs text-gray-500">{decryptedUser?.role}</div>
