@@ -146,8 +146,9 @@ const updateTicket = (ticketId, updates) => {
             const matchesPriority = !filters.Priority || ticket.Priority === filters.Priority;
             const matchesDepartment = !filters.Department || ticket.Department === filters.Department;
             const matchesAssignee = !filters.Assignee || ticket.Assignee === filters.Assignee;
+            const matchesManager = !filters.Manager || ticket.Manager === filters.Manager;
 
-            return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee;
+            return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager ;
         });
     }, [tickets, searchTerm, filters]);
 

@@ -1,72 +1,222 @@
 import { useApp } from "./AppProvider";
+import { useForm, Controller } from "react-hook-form";
+import Select from "react-select";
+import React from "react";
+import { useEmployeeDetails } from "./Services";
+
+// Styled select theme
+const SelectStyles = {
+    control: (base, state) => ({
+        ...base,
+        width: "100%",
+        paddingTop: "0.25rem",
+        paddingBottom: "0.10rem",
+        paddingLeft: "0.75rem",
+        paddingRight: "0.50rem",
+        marginTop: "0.30rem",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: state.isFocused ? "#fb923c" : "#f97316",
+        borderRadius: "0.375rem",
+        boxShadow: state.isFocused
+            ? "0 0 0 2px rgba(251,146,60,0.5)"
+            : "0 1px 2px rgba(0,0,0,0.05)",
+        backgroundColor: "white",
+        minHeight: "40px",
+        "&:hover": { borderColor: "#fb923c" },
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        color: state.isSelected ? "white" : "#fb923c",
+        backgroundColor: state.isSelected ? "#fb923c" : "white",
+        "&:hover": { backgroundColor: "#fed7aa" },
+    }),
+    menu: (provided) => ({
+        ...provided,
+        zIndex: 9999,
+    }),
+};
+
+// Options
+const statusOptions = [
+    { label: "All Status", value: "" },
+    { value: "Open", label: "Open" },
+    { value: "Acknowledged", label: "Acknowledged" },
+    { value: "In Progress", label: "In Progress" },
+    { value: "On Hold", label: "On Hold" },
+    { value: "Resolved", label: "Resolved" },
+    { value: "Closed", label: "Closed" },
+    { value: "Cancelled", label: "Cancelled" },
+    { value: "Re-Open", label: "Re-Open" },
+];
+
+
+
+// const priorityOptions = [
+//     { label: "All Priorities", value: "" },
+//     { label: "Low", value: "Low" },
+//     { label: "Medium", value: "Medium" },
+//     { label: "High", value: "High" },
+//     { label: "Critical", value: "Critical" },
+// ];
+
+const DepartmentOptions = [
+    { value: "", label: "All Departments" },
+    { value: "Management", label: "Management" },
+    { value: "Marketing", label: "Marketing" },
+    { value: "Sales", label: "Sales" },
+    { value: "Maintenance", label: "Maintenance" },
+    { value: "Housekeeping", label: "Housekeeping" },
+    { value: "Admin", label: "Admin" },
+    { value: "Accounts", label: "Accounts" },
+    { value: "Human Resource", label: "Human Resource" },
+];
 
 export const TicketFilters = () => {
-            const { filters, setFilters, users } = useApp();
-               
-            return (
-                <div className="bg-white p-4 rounded-lg shadow mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select
-                                value={filters.Status}
-                                onChange={(e) => setFilters({...filters, Status: e.target.value})}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            >
-                                <option value="">All Status</option>
-                                <option value="Open">Open</option>
-                                <option value="Assigned">Assigned</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Resolved">Resolved</option>
-                                <option value="Closed">Closed</option>
-                            </select>
-                        </div>
+    const { filters, setFilters, users } = useApp();
+    const { data: EmployeeDetails } = useEmployeeDetails();
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                            <select
-                                value={filters.Priority}
-                                onChange={(e) => setFilters({...filters, Priority: e.target.value})}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            >
-                                <option value="">All Priorities</option>
-                                <option value="Low">Low</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
-                                <option value="Critical">Critical</option>
-                            </select>
-                        </div>
+    const assigneeOptions = [
+        { label: "All Assignees", value: "" },
+        ...(EmployeeDetails?.data
+            ?.filter((emp) => emp?.Name)
+            .map((emp) => ({
+                value: emp.Name,
+                label: `${emp.Name} - ${emp.Department || "N/A"}`,
+            })) || [])
+    ];
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                            <select
-                                value={filters.Department}
-                                onChange={(e) => setFilters({...filters, Department: e.target.value})}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            >
-                                <option value="">All Departments</option>
-                                <option value="IT">IT</option>
-                                <option value="HR">HR</option>
-                                <option value="Finance">Finance</option>
-                                <option value="Operations">Operations</option>
-                                <option value="Marketing">Marketing</option>
-                            </select>
-                        </div>
+    const ManagerOptions = [
+        { label: "All managers", value: "" },
+        ...(EmployeeDetails?.data
+            ?.filter((emp) => emp?.Name)
+            .map((emp) => ({
+                value: emp.Name,
+                label: `${emp.Name} - ${emp.Department || "N/A"}`,
+            })) || [])
+    ];
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
-                            <select
-                                value={filters.Assignee}
-                                onChange={(e) => setFilters({...filters, Assignee: e.target.value})}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            >
-                                <option value="">All Assignees</option>
-                                {users.map(user => (
-                                    <option key={user.id} value={user.name}>{user.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
+    const defaultValues = {
+        Status: statusOptions[0],
+        // Priority: priorityOptions[0],
+        Department: DepartmentOptions[0],
+        Assignee: assigneeOptions[0],
+        Manager: ManagerOptions[0],
+    };
+
+    const { control, watch, reset } = useForm({
+        defaultValues: {
+            Status: statusOptions.find((opt) => opt.value === filters.Status) || defaultValues.Status,
+            // Priority: priorityOptions.find((opt) => opt.value === filters.Priority) || defaultValues.Priority,
+            Department: DepartmentOptions.find((opt) => opt.value === filters.Department) || defaultValues.Department,
+            Assignee: assigneeOptions.find((opt) => opt.value === filters.Assignee) || defaultValues.Assignee,
+            Manager: ManagerOptions.find((opt) => opt.value === filters.Manager) || defaultValues.Manager,
+        },
+    });
+
+    const watchedStatus = watch("Status");
+    const watchedDepartment = watch("Department");
+    const watchedAssignee = watch("Assignee");
+    const watchedManager = watch("Manager");
+    // const watchedPriority = watch("Priority"); // Uncomment if Priority is used
+
+    React.useEffect(() => {
+        setFilters({
+            Status: watchedStatus?.value || "",
+            Priority: "", // or watchedPriority?.value || "" if you're using it
+            Department: watchedDepartment?.value || "",
+            Assignee: watchedAssignee?.value || "",
+            Manager: watchedManager?.value || "",
+        });
+    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters]);
+
+    const handleClearFilters = () => {
+        reset(defaultValues);
+        setFilters({
+            Status: "",
+            Priority: "",
+            Department: "",
+            Assignee: "",
+            Manager: "",
+        });
+    };
+
+    return (
+        <div className="bg-white p-4 rounded-lg shadow mb-6">
+
+
+            <div className=" mt-[-10px] text-right">
+                <button
+                    type="button"
+                    onClick={handleClearFilters}
+                    className="text-orange-600 hover:text-orange-800 text-sm font-medium underline"
+                >
+                    Clear Filters
+                </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                {/* Status */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <Controller
+                        name="Status"
+                        control={control}
+                        render={({ field }) => (
+                            <Select {...field} options={statusOptions} styles={SelectStyles} isClearable={false} />
+                        )}
+                    />
                 </div>
-            );
-        };
+
+                {/* Priority */}
+                {/* <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                    <Controller
+                        name="Priority"
+                        control={control}
+                        render={({ field }) => (
+                            <Select {...field} options={priorityOptions} styles={SelectStyles} isClearable={false} />
+                        )}
+                    />
+                </div> */}
+
+                {/* Department */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <Controller
+                        name="Department"
+                        control={control}
+                        render={({ field }) => (
+                            <Select {...field} options={DepartmentOptions} styles={SelectStyles} isClearable={false} />
+                        )}
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Manager</label>
+                    <Controller
+                        name="Manager"
+                        control={control}
+                        render={({ field }) => (
+                            <Select {...field} options={ManagerOptions} styles={SelectStyles} isClearable={false} />
+                        )}
+                    />
+                </div>
+                {/* Assignee */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+                    <Controller
+                        name="Assignee"
+                        control={control}
+                        render={({ field }) => (
+                            <Select {...field} options={assigneeOptions} styles={SelectStyles} isClearable={false} />
+                        )}
+                    />
+                </div>
+
+            </div>
+
+            {/* Clear Filters Button */}
+
+        </div>
+    );
+};

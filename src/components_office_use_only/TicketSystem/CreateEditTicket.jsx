@@ -50,6 +50,9 @@ const CategoryOptions = [
   { value: "Deposit", label: "Deposit" },
   { value: "Notice", label: "Notice" },
   { value: "Agreement", label: "Agreement" },
+  { value: "Handover", label: "Handover" },
+  { value: "Possession", label: "Possession" },
+  { value: "Shifting", label: "Shifting" },
   { value: "New Male PG", label: "New Male PG" },
   { value: "New Female PG", label: "New Female PG" },
   { value: "No Water", label: "No Water" },
@@ -86,6 +89,12 @@ const CategoryOptions = [
   { value: "Cleaning", label: "Cleaning" },
   { value: "Rat", label: "Rat" },
   { value: "Pest Control", label: "Pest Control" },
+];
+
+
+const CusmoterImpactedOptions = [
+  { value: "Yes", label: "Yes" },
+  { value: "No", label: "No" },
 ];
 
 // 🎨 React Select Theme
@@ -133,6 +142,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const [previews, setPreviews] = useState([]);
   const [decryptedUser, setDecryptedUser] = useState(null);
 
+
+  // console.log("Selected Ticket in CreateEditTicket:", selectedTicket);
+
+
   useEffect(() => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
       ; // Just to verify decryption works
@@ -149,11 +162,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       return null;
     }
   };
-
-
-
-
-
 
 
   const {
@@ -181,10 +189,13 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   });
 
   // Generate dynamic options
-  const ManagerOptions = EmployeeDetails?.data?.map((emp) => ({
-    value: emp.Name,
-    label: `${emp.Name} - ${emp.Department || "N/A"}`,
-  })) || [];
+  const ManagerOptions = EmployeeDetails?.data
+        ?.filter((emp) => emp?.Name) // Only include if Name is present
+        .map((emp) => ({
+            value: emp.Name,
+            label: `${emp.Name} - ${emp.Department || "N/A"}`,
+        })) || [];
+
 
   const ProperyOptions = property?.data?.map((prop) => ({
     value: prop["Property Code"],
@@ -204,6 +215,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       setValue("Category", CategoryOptions.find((c) => c.value === selectedTicket.Category));
       setValue("Assignee", ManagerOptions.find((u) => u.value === selectedTicket.Assignee));
       setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
+      setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
+      setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
       setPreviousWlogs(selectedTicket.WorkLogs || "");
 
     }
@@ -263,18 +276,31 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   }
 
 
-
-
-
   const onSubmit = (data) => {
     const attachmentArray = previews || [];
-
     const currentTimestamp = getFormattedTimestamp();
 
     const newWorkLogEntry = data.WorkLogs
       ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
       : "";
+
     const statusValue = isEdit ? data.Status?.value || "" : "Open";
+    const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
+
+    // Compose updated WorkLogs
+    let updatedWorkLogs = "";
+    if (isStatusChanged) {
+      const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name} ]   Status changed from ${selectedTicket.Status} to ${data.Status?.value}`
+      updatedWorkLogs += statusChangeLog;
+    }
+
+    if (newWorkLogEntry) {
+      updatedWorkLogs += `${updatedWorkLogs ? '\n\n' : ''}${newWorkLogEntry}`;
+    }
+
+    if (previousWlogs) {
+      updatedWorkLogs += `${updatedWorkLogs ? '\n\n' : ''}${previousWlogs}`;
+    }
 
     const formattedData = {
       ...data,
@@ -285,12 +311,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Assignee: data.Assignee?.value || "",
       Manager: data.Manager?.value || "",
       Status: statusValue,
+      CustomerImpacted: data.CustomerImpacted?.value || "",
+      Escalated: data.Escalated?.value || "",
       Attachment: attachmentArray,
-      WorkLogs: newWorkLogEntry
-        ? previousWlogs
-          ? `${newWorkLogEntry}\n\n${previousWlogs}`
-          : newWorkLogEntry
-        : previousWlogs || "",
+      WorkLogs: updatedWorkLogs || "",
       ClosedDate: statusValue === "Closed" ? Timestamp() : "",
       ...(isEdit
         ? {
@@ -322,6 +346,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       });
     }
   };
+
 
   return (
     <div className="space-y-6">
@@ -443,25 +468,51 @@ export const CreateEditTicket = ({ isEdit = false }) => {
           {/* Manager & Assignee (edit only) */}
           {isEdit && (
             <>
-              <div>
-                <label className="block text-sm font-medium text-black mb-2">Manager<span className="text-red-500">*</span></label>
-                <Controller
-                  control={control}
-                  name="Manager"
-                  render={({ field }) => (
-                    <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
-                  )}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-black mb-2">Assignee <span className="text-red-500">*</span></label>
-                <Controller
-                  control={control}
-                  name="Assignee"
-                  render={({ field }) => (
-                    <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
-                  )}
-                />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Manager<span className="text-red-500">*</span></label>
+                  <Controller
+                    control={control}
+                    name="Manager"
+                    render={({ field }) => (
+                      <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
+                    )}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Assignee <span className="text-red-500">*</span></label>
+                  <Controller
+                    control={control}
+                    name="Assignee"
+                    render={({ field }) => (
+                      <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
+                    )}
+                  />
+                </div>
+
+
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Customer Impacted <span className="text-red-500">*</span></label>
+                  <Controller
+                    control={control}
+                    name="CustomerImpacted"
+                    render={({ field }) => (
+                      <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} />
+                    )}
+                  />
+                </div>
+
+
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Escalated <span className="text-red-500">*</span></label>
+                  <Controller
+                    control={control}
+                    name="Escalated"
+                    render={({ field }) => (
+                      <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} />
+                    )}
+                  />
+                </div>
               </div>
               <div>
                 <div>
