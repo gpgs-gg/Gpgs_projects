@@ -42,7 +42,8 @@ const PropertyFormSection = memo(({
   activeTab,
   register,
   setValue,
-  propertyList
+  propertyList,
+  employeeSelectStyles
 }) => {
   const inputClass = 'w-full px-3 py-2 mt-1 border-2 border-orange-200 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400';
 
@@ -173,7 +174,7 @@ const PropertyFormSection = memo(({
                   field={field}
                   options={options}
                   placeholder="Search & Select Property Code"
-                  styles={selectStyles}
+                  styles={employeeSelectStyles}
                   onChange={(selectedOption) => {
                     field.onChange(selectedOption);
                     handlePropertyCodeChange(
@@ -208,7 +209,7 @@ const PropertyFormSection = memo(({
                   field={field}
                   options={options}
                   placeholder="Search & Select Property Code"
-                  styles={selectStyles}
+                  styles={employeeSelectStyles}
                   onChange={(selectedOption) => {
                     field.onChange(selectedOption);
                     handleTempPropertyCodeChange(
@@ -226,7 +227,7 @@ const PropertyFormSection = memo(({
 
       {/* Bed No */}
       {activeTab == "permanent" && (
-        <div className="relative">
+        <div className="relative mt-[-5px]">
           <label className="text-sm font-medium text-gray-700 relative after:content-['*'] after:ml-1 after:text-red-500">
             Bed No
           </label>
@@ -263,7 +264,7 @@ const PropertyFormSection = memo(({
                   options={options}
                   isDisabled={isPropertySheetData}
                   placeholder="Search & Select Bed No"
-                  styles={selectStyles}
+                  styles={employeeSelectStyles}
                   onChange={(selectedOption) => {
                     field.onChange(selectedOption);
                     handleBedNoChange(
@@ -280,7 +281,7 @@ const PropertyFormSection = memo(({
       )}
 
       {activeTab == "temporary" && (
-        <div className="relative">
+        <div className="relative mt-[-5px]">
           <label className="text-sm font-medium text-gray-700 relative after:content-['*'] after:ml-1 after:text-red-500">
             Bed No
           </label>
@@ -317,7 +318,7 @@ const PropertyFormSection = memo(({
                   options={options}
                   isDisabled={isTempPropertySheetData}
                   placeholder="Search & Select Bed No"
-                  styles={selectStyles}
+                  styles={employeeSelectStyles}
                   onChange={(selectedOption) => {
                     field.onChange(selectedOption);
                     handleTempBedNoChange(
@@ -488,9 +489,9 @@ const PropertyFormSection = memo(({
 });
 
 const NewBooking = () => {
-  const [showPermanent, setShowPermanent] = useState(false);
+  const [showPermanent, setShowPermanent] = useState(true);
   const [showtemporary, setShowtemporary] = useState(false);
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState('permanent');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formPreviewData, setFormPreviewData] = useState(null);
   const [selectedSheetId, setSelctedSheetId] = useState(null);
@@ -794,7 +795,7 @@ const NewBooking = () => {
     if (!checked && activeTab === 'permanent') {
       if (showtemporary) setActiveTab('temporary');
       else setActiveTab('');
-    } else if (checked && !activeTab) {
+    } else if (checked && !activeTab) { 
       setActiveTab('permanent');
     }
   }, [resetTabFields, activeTab, showtemporary]);
@@ -989,7 +990,7 @@ const NewBooking = () => {
       marginTop: "0.30rem",
       borderWidth: "2px",
       borderStyle: "solid",
-      borderColor: state.isFocused ? "#fb923c" : "#f97316",
+      borderColor: state.isFocused ? "#fb923c" : "#fdba74",
       borderRadius: "0.375rem",
       boxShadow: state.isFocused
         ? "0 0 0 2px rgba(251,146,60,0.5)"
@@ -1040,7 +1041,36 @@ const NewBooking = () => {
                   {renderError(field.name)}
                 </div>
               ))}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">AskFor ₹</label>
+                <Controller
+                  name="AskForBAOrFA"
+                  control={control}
+                  defaultValue={null}
+                  render={({ field }) => {
+                    const options = AskFor?.map((ele) => ({
+                      value: `${ele.value} `,
+                      label: `${ele.label}`,
+                    }));
+
+                    return (
+                      <MemoizedSelect
+                        field={field}
+                        options={options}
+                        placeholder="Search & Select Ask For"
+                        styles={employeeSelectStyles}
+                        onChange={(selectedOption) => field.onChange(selectedOption ? selectedOption.value : "")}
+                      />
+                    );
+                  }}
+                />
+                {renderError('AskForBAOrFA')}
+              </div>
             </div>
+
+
+
           </section>
 
           {/* === CHECKBOXES === */}
@@ -1054,6 +1084,7 @@ const NewBooking = () => {
                 type="checkbox"
                 className="accent-orange-200 w-5 h-5"
                 checked={showPermanent}
+                disabled = {true}
                 onChange={(e) => handlePermanentCheckbox(e.target.checked)}
               />
               <span className="text-lg font-medium text-gray-800 group-hover:text-orange-600">
@@ -1062,7 +1093,7 @@ const NewBooking = () => {
             </label>
 
             {/* temporary Property Card */}
-            {permanentPropertyFilledChecked > 0 && (
+          
 
               <label
                 className={`group cursor-pointer flex items-center gap-4 w-full sm:w-80 p-4 border rounded-xl transition-all duration-300 shadow-sm
@@ -1078,7 +1109,6 @@ const NewBooking = () => {
                   Temporary Property Details
                 </span>
               </label>
-            )}
           </div>
 
           {/* === TABS === */}
@@ -1122,6 +1152,7 @@ const NewBooking = () => {
                   register={register}
                   setValue={setValue}
                   propertyList={propertyList}
+                  employeeSelectStyles={employeeSelectStyles}
                 />
               )}
               {activeTab === 'temporary' && showtemporary && (
@@ -1139,123 +1170,23 @@ const NewBooking = () => {
                   register={register}
                   setValue={setValue}
                   propertyList={propertyList}
+                  employeeSelectStyles={employeeSelectStyles}
+
                 />
               )}
             </div>
           )}
 
-          <div className="flex justify-center bg-gray-50">
-            <section className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
-              <h3 className="text-xl font-semibold mb-4 border-b pb-2 bg-orange-300 text-black p-2 rounded-sm">Send Payment Details ...</h3>
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
-                {/* Date Field with default today */}
-                {/* <div>
-                  <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Date</label>
-                  <input
-                    type="text"
-                    {...register('Date')}
-                    readOnly
-                    className={inputClass}
-                    // defaultValue={}
-                  />
 
-                  {renderError('Date')}
-                </div> */}
-
-                {/* Sales Dropdown */}
-                {/* <div>
-                  <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Sales Member</label>
-                  <Controller
-                    name="SalesMember"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => {
-                      const options = [
-                        { value: "N/A", label: "N/A" }, // Default option at the top
-                        ...(EmployeeDetails?.data?.map((ele) => ({
-                          value: `${ele.Name} (${ele.ID})`,
-                          label: `${ele.Name} — ID: ${ele.ID}`,
-                        })) || []),
-                      ];
-                      return (
-                        <MemoizedSelect
-                          field={field}
-                          options={options}
-                          placeholder="Search & Select Sales Member"
-                          styles={employeeSelectStyles}
-                          onChange={(selectedOption) => field.onChange(selectedOption ? selectedOption.value : "")}
-                        />
-                      );
-                    }}
-                  />
-                  {renderError('SalesMember')}
-                </div> */}
-                {/* <div>
-                  <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">Account Member</label>
-                  <Controller
-                    name="AccountMember"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => {
-                      const options = [
-                        { value: "N/A", label: "N/A" }, // Default option at the top
-                        ...(EmployeeDetails?.data?.map((ele) => ({
-                          value: `${ele.Name} (${ele.ID})`,
-                          label: `${ele.Name} — ID: ${ele.ID}`,
-                        })) || []),
-                      ];
-
-                      return (
-                        <MemoizedSelect
-                          field={field}
-                          options={options}
-                          placeholder="Search & Select Account Member"
-                          styles={employeeSelectStyles}
-                          onChange={(selectedOption) => field.onChange(selectedOption ? selectedOption.value : "")}
-                        />
-                      );
-                    }}
-                  />
-                  {renderError('AccountMember')}
-                </div> */}
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 after:content-['*'] after:ml-1 after:text-red-500">AskFor ₹</label>
-                  <Controller
-                    name="AskForBAOrFA"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => {
-                      const options = AskFor?.map((ele) => ({
-                        value: `${ele.value} `,
-                        label: `${ele.label}`,
-                      }));
-
-                      return (
-                        <MemoizedSelect
-                          field={field}
-                          options={options}
-                          placeholder="Search & Select Ask For"
-                          styles={employeeSelectStyles}
-                          onChange={(selectedOption) => field.onChange(selectedOption ? selectedOption.value : "")}
-                        />
-                      );
-                    }}
-                  />
-                  {renderError('AskForBAOrFA')}
-                </div>
-
-              </div>
-              <div className='flex px-2  mt-5 justify-center'>
-                <button
-                  type="submit"
-                  className="px-5 py-2 text-lg bg-orange-300 text-black rounded-lg hover:bg-orange-400 transition-all shadow-md"
-                >
-                  Submit Booking
-                </button>
-              </div>
-            </section>
+          <div className='flex px-2 justify-center'>
+            <button
+              type="submit"
+              className="px-5 py-2 text-lg bg-orange-300 text-black rounded-lg hover:bg-orange-400 transition-all shadow-md"
+            >
+              Submit Booking
+            </button>
           </div>
+
         </form>
       </div>
 

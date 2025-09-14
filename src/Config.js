@@ -1,8 +1,8 @@
 // Example: src/config.js
 export const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
-   console.log("SECRET_KEY from Config:", SECRET_KEY);
+console.log("SECRET_KEY from Config:", SECRET_KEY);
 
- export const SelectStyles = {
+export const SelectStyles = {
   control: (base, state) => ({
     ...base,
     width: "100%",
@@ -33,8 +33,7 @@ export const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
     zIndex: 9999
   })
 };
-
-  export  const CategoryOptions = [
+export const CategoryOptions = [
   { value: "Others", label: "Others" },
   { value: "Rent Receipt", label: "Rent Receipt" },
   { value: "F&F Settlement", label: "F&F Settlement" },
@@ -57,6 +56,8 @@ export const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
   { value: "Exhaust Fan", label: "Exhaust Fan" },
   { value: "LED Tubelight", label: "LED Tubelight" },
   { value: "LED Bulb", label: "LED Bulb" },
+  { value: "MSEB Meter", label: "MSEB Meter" },
+  { value: "Sub Meter", label: "Sub Meter" },
   { value: "Light Switch", label: "Light Switch" },
   { value: "Three Pin Socket", label: "Three Pin Socket" },
   { value: "Extension Board", label: "Extension Board" },
@@ -83,15 +84,16 @@ export const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
   { value: "Pest Control", label: "Pest Control" },
 ];
 
-  export const DepartmentOptions = [
-  { value: "Management", label: "Management" },
-  { value: "Marketing", label: "Marketing" },
-  { value: "Sales", label: "Sales" },
+export const DepartmentOptions = [
   { value: "Maintenance", label: "Maintenance" },
   { value: "Housekeeping", label: "Housekeeping" },
+  { value: "Accounts", label: "Accounts"},
+  { value: "Sales", label: "Sales" },
+  { value: "Marketing", label: "Marketing"},
   { value: "Admin", label: "Admin" },
-  { value: "Accounts", label: "Accounts" },
   { value: "Human Resource", label: "Human Resource" },
+  { value: "Management", label: "Management" },
+
 ];
 
 
@@ -102,7 +104,7 @@ export const PriorityOptions = [
   { value: "Critical", label: "Critical" },
 ];
 
- export const StatusOptions = [
+export const StatusOptions = [
   { value: "Open", label: "Open" },
   { value: "Acknowledged", label: "Acknowledged" },
   { value: "In Progress", label: "In Progress" },
@@ -117,6 +119,13 @@ export const CusmoterImpactedOptions = [
   { value: "Yes", label: "Yes" },
   { value: "No", label: "No" },
 ];
+
+export const Managers = ["Sr. Manager", "Manager", "Team Leader", "Chairman & Group CEO", "EA to Chairman & Group CEO"]
+
+
+
+
+
 
 
 

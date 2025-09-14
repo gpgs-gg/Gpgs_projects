@@ -15,10 +15,10 @@ export const Navigation = () => {
     { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
     { id: 'tickets', label: 'All Tickets', icon: 'fas fa-ticket-alt' },
     { id: 'create', label: 'Create Ticket', icon: 'fas fa-plus-circle' },
-    { id: 'kanban', label: 'Kanban Board', icon: 'fas fa-columns' },
+    // { id: 'kanban', label: 'Kanban Board', icon: 'fas fa-columns' },
     // { id: 'reports', label: 'Reports', icon: 'fas fa-chart-bar' },
     // { id: 'users', label: 'Users', icon: 'fas fa-users', adminOnly: true },
-    { id: 'settings', label: 'Settings', icon: 'fas fa-cog' }
+    // { id: 'settings', label: 'Settings', icon: 'fas fa-cog' }
   ];
 
   const handleLogout = () => {

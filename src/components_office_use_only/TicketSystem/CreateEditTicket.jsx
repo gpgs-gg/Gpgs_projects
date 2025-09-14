@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { useApp } from "./AppProvider";
 import CryptoJS from "crypto-js";
-import { DepartmentOptions, StatusOptions, PriorityOptions, CategoryOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY } from "../../Config";
+import { DepartmentOptions, StatusOptions, PriorityOptions, CategoryOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY, Managers } from "../../Config";
 import {
   useCreateTicket,
   useEmployeeDetails,
@@ -188,13 +188,44 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     },
   });
 
+
   // Generate dynamic options
+  // const ManagerOptions = EmployeeDetails?.data
+  //   ?.filter((emp) => emp?.Name && emp.Designation.Managers) // Only include if Name is present
+  //   .map((emp) => ({
+  //     value: emp.Name,
+  //     label: `${emp.Name} - ${emp.Department || "N/A"}`,
+  //   })) || [];
+
+
+
+
+
+
   const ManagerOptions = EmployeeDetails?.data
-    ?.filter((emp) => emp?.Name) // Only include if Name is present
+    ?.filter(
+      (emp) =>
+        emp?.Name &&
+        Managers.includes(emp?.Designation)
+    )
     .map((emp) => ({
       value: emp.Name,
-      label: `${emp.Name} - ${emp.Department || "N/A"}`,
+      label: `${emp.Name}`,
     })) || [];
+
+
+  const assigneeOptions = [
+    ...(EmployeeDetails?.data
+      ?.filter((emp) => emp?.Name)
+      .map((emp) => ({
+        value: emp.Name,
+        label: `${emp.Name}`,
+      })) || [])
+  ];
+
+
+
+
 
 
   const ProperyOptions = property?.data?.map((prop) => ({
@@ -207,6 +238,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     if (isEdit && selectedTicket) {
       setValue("Title", selectedTicket.Title);
       setValue("TicketID", selectedTicket.TicketID);
+      setValue("CreatedByName", selectedTicket.CreatedByName);
       setValue("Description", selectedTicket.Description);
       setValue("Priority", PriorityOptions.find((p) => p.value === selectedTicket.Priority));
       setValue("PropertyCode", ProperyOptions.find((p) => p.value === selectedTicket.PropertyCode));
@@ -408,17 +440,44 @@ export const CreateEditTicket = ({ isEdit = false }) => {
           {/* Description */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">Description <span className="text-red-500">*</span></label>
-              <textarea
-                {...register("Description", { required: "Description is required" })}
-                rows={4}
-                disabled={isEdit}
-                placeholder="Enter Your Description here"
-                className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
-              />
-              {errors.Description && (
-                <p className="text-red-500 text-sm">{errors.Description.message}</p>
+            <div className=" flex flex-col justify-between">
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Description <span className="text-red-500">*</span></label>
+                <textarea
+                  {...register("Description", { required: "Description is required" })}
+                  rows={4}
+                  disabled={isEdit}
+                  placeholder="Enter Your Description here"
+                  className="w-full h-[250px] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                />
+                {errors.Description && (
+                  <p className="text-red-500 text-sm">{errors.Description.message}</p>
+                )}
+
+              </div>
+
+
+
+              {isEdit && (
+                <div>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Created By <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      {...register("CreatedByName", { required: "Created By Name is required" })}
+                      disabled={isEdit}
+                      className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                        } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                      placeholder="Enter Created By Name"
+                    />
+                    {errors.Title && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.Title.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
 
@@ -462,35 +521,38 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 </div>
               )}
             </div>
-
-
           </div>
-          {/* Manager & Assignee (edit only) */}
+
+          {/* Manager & Assignee */}
+
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">Manager<span className="text-red-500">*</span></label>
+              <Controller
+                control={control}
+                name="Manager"
+                render={({ field }) => (
+                  <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
+                )}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">Assignee <span className="text-red-500">*</span></label>
+              <Controller
+                control={control}
+                name="Assignee"
+                render={({ field }) => (
+                  <Select {...field} options={assigneeOptions} isClearable styles={SelectStyles} />
+                )}
+              />
+            </div>
+          </div>
+
+
           {isEdit && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">Manager<span className="text-red-500">*</span></label>
-                  <Controller
-                    control={control}
-                    name="Manager"
-                    render={({ field }) => (
-                      <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
-                    )}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">Assignee <span className="text-red-500">*</span></label>
-                  <Controller
-                    control={control}
-                    name="Assignee"
-                    render={({ field }) => (
-                      <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
-                    )}
-                  />
-                </div>
-
-
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">Customer Impacted <span className="text-red-500">*</span></label>
                   <Controller
@@ -534,28 +596,31 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             </>
           )}
 
-          <div className="flex flex-wrap gap-4">
-            {previews.map((file, index) => (
-              <div key={index} className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm">
-                <button
-                  type="button"
-                  onClick={() => handleRemoveFile(index)}
-                  className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
-                >
-                  ✕
-                </button>
-                {file.type.startsWith("image/") ? (
-                  <img src={file.url} className="w-full h-28 object-cover rounded" />
-                ) : file.type === "application/pdf" ? (
-                  <p className="text-center text-sm truncate mt-8">📄 {file.name}</p>
-                ) : (
-                  <video controls className="w-full h-28 object-cover rounded">
-                    <source src={file.url} type={file.type} />
-                  </video>
-                )}
-              </div>
-            ))}
-          </div>
+          {previews.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {previews.map((file, index) => (
+                <div key={index} className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFile(index)}
+                    className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                  >
+                    ✕
+                  </button>
+                  {file.type.startsWith("image/") ? (
+                    <img src={file.url} className="w-full h-28 object-cover rounded" />
+                  ) : file.type === "application/pdf" ? (
+                    <p className="text-center text-sm truncate mt-8">📄 {file.name}</p>
+                  ) : (
+                    <video controls className="w-full h-28 object-cover rounded">
+                      <source src={file.url} type={file.type} />
+                    </video>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Attachments */}
           <div>
             <label className="block text-sm font-medium text-black mb-2">Attachments</label>

@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import React from "react";
 import { useEmployeeDetails } from "./Services";
+import { Managers } from "../../Config";
 
 // Styled select theme
 const SelectStyles = {
@@ -82,19 +83,26 @@ export const TicketFilters = () => {
             ?.filter((emp) => emp?.Name)
             .map((emp) => ({
                 value: emp.Name,
-                label: `${emp.Name} - ${emp.Department || "N/A"}`,
+                label: `${emp.Name}`,
             })) || [])
     ];
 
     const ManagerOptions = [
         { label: "All managers", value: "" },
         ...(EmployeeDetails?.data
-            ?.filter((emp) => emp?.Name)
+            ?.filter((emp) => emp?.Name &&  Managers.includes(emp?.Designation))
             .map((emp) => ({
                 value: emp.Name,
-                label: `${emp.Name} - ${emp.Department || "N/A"}`,
+                label: `${emp.Name}`,
             })) || [])
     ];
+
+
+
+
+
+
+    
 
     const defaultValues = {
         Status: statusOptions[0],
