@@ -153,7 +153,7 @@ const Header = () => {
             <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office</Link>
             <div className="hidden sm:flex items-center space-x-5">
               <div className="text-right">
-               {decryptedUser?.name && (
+                {decryptedUser?.name && (
                   <>
                    <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
                 <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
@@ -177,9 +177,9 @@ const Header = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center  text-xl mt-3 font-bold">
-            <div className="flex items-center mr-4 lg:mr-10 space-x-5">
+             <div className="flex items-center mr-4 lg:mr-10 space-x-5">
               <div className="text-right">
-                {decryptedUser?.name && (
+               {decryptedUser?.name && (
                   <>
                    <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
                 <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
@@ -187,7 +187,7 @@ const Header = () => {
                 )}
 
               </div>
-
+             
             </div>
             <button onClick={handleMobileToggle} className="text-gray-700 focus:outline-none">
               {menuOpen ? (
@@ -223,12 +223,12 @@ const Header = () => {
             </>
           )}
           <Link onClick={handleMenuLinkClick} to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
-          <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office</Link>
-          <div className=" sm:flex items-center space-x-5">
-
-
-            {decryptedUser && (
-              <button onClick={handleLogout} className="">Logout</button>
+          <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
+           <div className=" sm:flex items-center space-x-5">
+            
+        
+              {decryptedUser && (
+                <button onClick={handleLogout} className="">Logout</button>
 
             )}
           </div>
