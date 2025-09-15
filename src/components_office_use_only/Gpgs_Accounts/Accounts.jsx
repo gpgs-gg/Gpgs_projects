@@ -26,7 +26,6 @@ useEffect(() => {
     );
 
 
-    console.log("Valid items count:", validItems);
 
     
     // Build formula string like: "=123 + 456", skipping 0s

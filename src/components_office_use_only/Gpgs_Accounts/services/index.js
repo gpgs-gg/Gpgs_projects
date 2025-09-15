@@ -39,7 +39,6 @@ export const usePropertySheetData = (sheetId, enabled) => {
 
 // POST request to send booking data
 const addBooking = async (data) => {
-     console.log("data", data)
   const response = await api.post("/update-rnr-sheet", data);
   return response.data;
 };

@@ -58,7 +58,6 @@ const ConfirmationModel = ({
       });
     }
   }
-  console.log("endOfDOJMonth", endOfDOJMonth)
 
   let tempEndOfDOJMonth = null;
 
@@ -77,9 +76,7 @@ const ConfirmationModel = ({
       });
     }
   }
-  console.log("tempEndOfDOJMonth", tempEndOfDOJMonth)
 
-  // console.log("endOfDOJMonth", endOfDOJMonth)
 
   const shareOnWhatsApp = () => {
     const {

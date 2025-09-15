@@ -11,7 +11,6 @@ const ProtectedRoute = ({ children }) => {
       setDecryptedUser(decryptUser(localStorage.getItem('user')))
      ; // Just to verify decryption works
     }, []);
-    console.log("Decrypted user in Navigation:", decryptedUser);
   
     const decryptUser = (encryptedData) => {
       try {
@@ -26,7 +25,6 @@ const ProtectedRoute = ({ children }) => {
   // ✅ Check from localStorage directly
   const isAuthenticated = localStorage.getItem('auth') === 'true';
   const user = localStorage.getItem('user');
-  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated, 'user:', user);
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/gpgs-actions/login" replace state={{ from: location }} />;

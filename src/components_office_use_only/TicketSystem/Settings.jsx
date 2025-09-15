@@ -12,7 +12,6 @@ export     const Settings = () => {
                     low: 72
                 }
             });
-           console.log(settings.darkMode)
             const handleToggle = (key) => {
                 setSettings({...settings, [key]: !settings[key]});
             };

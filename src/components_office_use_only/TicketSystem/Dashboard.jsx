@@ -3,7 +3,6 @@ import { useApp } from "./AppProvider";
 
 export const Dashboard = () => {
     const { tickets } = useApp();
-    console.log("tickets in dashboard", tickets);
     const statusChartRef = useRef(null);
     const priorityChartRef = useRef(null);
 
@@ -17,7 +16,6 @@ export const Dashboard = () => {
         Acknowledged: tickets.filter(t => t.Status == 'Acknowledged').length,
         Assigned: tickets.filter(t => t.Status == 'Assigned').length
     };
-    console.log("stats", tickets);
 
     useEffect(() => {
         const statusCtx = document.getElementById('statusChart');

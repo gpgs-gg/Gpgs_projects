@@ -35,7 +35,6 @@ const LoginPage = () => {
 
   // Decrypt password
   const decrypt = (encryptedText) => {
-    console.log("encryptedText", encryptedText);
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedText, SECRET_KEY);
       return bytes.toString(CryptoJS.enc.Utf8); // return decrypted plain text
@@ -52,13 +51,11 @@ const LoginPage = () => {
 
     const user = normalizedUsers.find(u => {
       const decryptedPassword = decrypt(u.password);
-      console.log("decryptedPassword", decryptedPassword);
       return (
         u.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
         decryptedPassword === inputPassword
       );
     });
-  console.log("user found:", user);
     if (user) {
       login(user);
       setError('');

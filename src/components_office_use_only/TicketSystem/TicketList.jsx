@@ -1,3 +1,4 @@
+import React from "react";
 import { useApp } from "./AppProvider";
 import { TicketFilters } from "./TicketFilters";
 
@@ -9,6 +10,8 @@ export const TicketList = () => {
         deleteTicket,
         setModal
     } = useApp();
+
+    const [selectedImage, setSelectedImage] = React.useState(null);
 
     const editTicket = (ticket) => {
         setSelectedTicket(ticket);
@@ -24,7 +27,6 @@ export const TicketList = () => {
         const isoString = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
 
         const date = new Date(isoString);
-        console.log("Parsed date:", date);
         if (isNaN(date)) return "Invalid Date";
 
         const options = {
@@ -129,70 +131,63 @@ export const TicketList = () => {
                                                         : "No Description"}
                                                 </div>
                                             </div>
-                                        ) : key === "Attachment" ? (
-                                            <div className="flex gap-2 ">
-                                                {(() => {
-                                                    let attachments = [];
+                                        ) :
+                                            key === "Attachment" ? (
+                                                <>
+                                                    <div className="grid grid-cols-6 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-4 gap-4">
+                                                        {ticket.Attachment
+                                                            ? ticket.Attachment.split(",").map((url, idx) => {
+                                                                const trimmedUrl = url.trim();
+                                                                const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
 
-                                                    try {
-                                                        attachments =
-                                                            typeof ticket.Attachment === "string"
-                                                                ? JSON.parse(ticket.Attachment)
-                                                                : ticket.Attachment;
+                                                                if (!isImage) return null;
 
-                                                        if (!Array.isArray(attachments)) throw new Error("Not an array");
-                                                    } catch (err) {
-                                                        if (typeof ticket.Attachment === "string") {
-                                                            attachments = ticket.Attachment
-                                                                .split(",")
-                                                                .map((name) => ({
-                                                                    name: name.trim(),
-                                                                    url: null,
-                                                                    type: null,
-                                                                }));
-                                                        } else {
-                                                            attachments = [];
-                                                        }
-                                                    }
+                                                                return (
+                                                                    <div
+                                                                        key={idx}
+                                                                        className="relative w-full aspect-[4/6] border rounded-md overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-blue-400"
+                                                                        title={trimmedUrl}
+                                                                        onClick={() => setSelectedImage(trimmedUrl)}
+                                                                    >
+                                                                        <img
+                                                                            src={trimmedUrl}
+                                                                            alt={`Attachment ${idx + 1}`}
+                                                                            className="w-full h-full object-cover"
+                                                                        />
+                                                                    </div>
+                                                                );
+                                                            })
+                                                            : <p className="text-sm text-gray-500 col-span-full">No Attachments</p>}
+                                                    </div>
 
-                                                    return attachments.map((file, idx) => (
+                                                    {/* Modal for full image view */}
+                                                    {selectedImage && (
                                                         <div
-                                                            key={idx}
-                                                            className="w-14 h-14 relative rounded overflow-hidden border bg-gray-50 text-center text-[10px] flex items-center justify-center"
-                                                            title={file.name}
+                                                            onClick={() => setSelectedImage(null)}
+                                                            className="fixed inset-0 flex items-center justify-center z-50 cursor-pointer backdrop-blur-sm"
                                                         >
-                                                            {file.url && file.type?.startsWith("image/") ? (
-                                                                <img
-                                                                    src={file.url.toString()}
-                                                                    alt={file.name}
-                                                                    className="object-cover w-full h-full"
-                                                                />
-                                                            ) : file.url && file.type?.startsWith("video/") ? (
-                                                                <video
-                                                                    src={file.url}
-                                                                    className="object-cover w-full h-full"
-                                                                    muted
-                                                                />
-                                                            ) : (
-                                                                <span className="p-1 truncate">{file.name}</span>
-                                                            )}
+                                                            <img
+                                                                src={selectedImage}
+                                                                alt="Full View"
+                                                                className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
+                                                            />
                                                         </div>
-                                                    ));
-                                                })()}
-                                            </div>
-                                        ) : key === "DateCreated"
-                                            // key === "ClosedDate" ||
-                                            // key === "UpdatedDateTime"
-                                            ? (
-                                                formatDate(ticket[key])
-
-                                            ) : key === "WorkLogs" ? (
-                                                <div className="text-xs text-gray-700 whitespace-pre-wrap break-words max-w-[1000px]">
-                                                    {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
-                                                </div>
-                                            ) : (
-                                                ticket[key] || "N/A"
+                                                    )}
+                                                </>
                                             )
+                                                : key === "DateCreated"
+                                                    // key === "ClosedDate" ||
+                                                    // key === "UpdatedDateTime"
+                                                    ? (
+                                                        formatDate(ticket[key])
+
+                                                    ) : key === "WorkLogs" ? (
+                                                        <div className="text-xs text-gray-700 whitespace-pre-wrap break-words max-w-[1000px]">
+                                                            {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
+                                                        </div>
+                                                    ) : (
+                                                        ticket[key] || "N/A"
+                                                    )
 
                                         }
 

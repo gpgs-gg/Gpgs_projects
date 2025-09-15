@@ -92,7 +92,6 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    console.log("Logging out...");
     logout();
     window.location.reload(); // Refresh to reset state
   }
@@ -104,7 +103,6 @@ const Header = () => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
       ; // Just to verify decryption works
   }, []);
-  console.log("Decrypted user in Navigation:", decryptedUser?.name);
 
   const decryptUser = (encryptedData) => {
     try {
@@ -185,9 +183,7 @@ const Header = () => {
                 <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
                   </>
                 )}
-
               </div>
-             
             </div>
             <button onClick={handleMobileToggle} className="text-gray-700 focus:outline-none">
               {menuOpen ? (

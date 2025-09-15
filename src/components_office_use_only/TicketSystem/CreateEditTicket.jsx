@@ -143,14 +143,11 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const [decryptedUser, setDecryptedUser] = useState(null);
 
 
-  // console.log("Selected Ticket in CreateEditTicket:", selectedTicket);
-
 
   useEffect(() => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
       ; // Just to verify decryption works
   }, []);
-  console.log("Decrypted user in Navigation:", decryptedUser?.name);
 
   const decryptUser = (encryptedData) => {
     try {
@@ -183,7 +180,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Assignee: null,
       Manager: null,
       Status: null,
-      attachments: [],
+      Attachment: [],
       WorkLogs: ""
     },
   });
@@ -234,52 +231,82 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   })) || [];
 
   // Set default values in edit mode
-  useEffect(() => {
-    if (isEdit && selectedTicket) {
-      setValue("Title", selectedTicket.Title);
-      setValue("TicketID", selectedTicket.TicketID);
-      setValue("CreatedByName", selectedTicket.CreatedByName);
-      setValue("Description", selectedTicket.Description);
-      setValue("Priority", PriorityOptions.find((p) => p.value === selectedTicket.Priority));
-      setValue("PropertyCode", ProperyOptions.find((p) => p.value === selectedTicket.PropertyCode));
-      setValue("Status", StatusOptions.find((s) => s.value === selectedTicket.Status));
-      setValue("Department", DepartmentOptions.find((d) => d.value === selectedTicket.Department));
-      setValue("Category", CategoryOptions.find((c) => c.value === selectedTicket.Category));
-      setValue("Assignee", ManagerOptions.find((u) => u.value === selectedTicket.Assignee));
-      setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
-      setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
-      setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
-      setPreviousWlogs(selectedTicket.WorkLogs || "");
+useEffect(() => {
+  if (isEdit && selectedTicket) {
+    setValue("Title", selectedTicket.Title);
+    setValue("TicketID", selectedTicket.TicketID);
+    setValue("CreatedByName", selectedTicket.CreatedByName);
+    setValue("Description", selectedTicket.Description);
+    setValue("Priority", PriorityOptions.find((p) => p.value === selectedTicket.Priority));
+    setValue("PropertyCode", ProperyOptions.find((p) => p.value === selectedTicket.PropertyCode));
+    setValue("Status", StatusOptions.find((s) => s.value === selectedTicket.Status));
+    setValue("Department", DepartmentOptions.find((d) => d.value === selectedTicket.Department));
+    setValue("Category", CategoryOptions.find((c) => c.value === selectedTicket.Category));
+    setValue("Assignee", ManagerOptions.find((u) => u.value === selectedTicket.Assignee));
+    setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
+    setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
+    setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
 
+    setPreviousWlogs(selectedTicket.WorkLogs || "");
+
+    // ✅ Only set previews once if not already set
+    if (selectedTicket.Attachment && previews.length === 0) {
+      const attachments = selectedTicket.Attachment.split(',').map((url) => ({
+        url,
+        type: '', // Optional: derive MIME type
+        name: url.split('/').pop(),
+        file: null, // Existing files shouldn't be re-uploaded
+      }));
+      setPreviews(attachments);
     }
-  }, [isEdit, selectedTicket, setValue, ProperyOptions, ManagerOptions]);
+  }
+}, [isEdit, selectedTicket, setValue, ProperyOptions, ManagerOptions]);
 
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    const totalFiles = previews.length + selectedFiles.length;
+ const handleFileChange = (e) => {
+  const selectedFiles = Array.from(e.target.files);
 
-    if (totalFiles > 4) {
-      alert("⚠️ You can only upload up to 4 files.");
-      return;
-    }
+  // Filter out files larger than 5MB
+  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+  const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
 
-    const newPreviews = selectedFiles.map((file) => ({
-      url: URL.createObjectURL(file),
-      type: file.type,
-      name: file.name,
-      file,
-    }));
+  if (oversizedFiles.length > 0) {
+    alert(`⚠️ Some files are larger than 5 MB and were not added.`);
+  }
 
-    const updatedPreviews = [...previews, ...newPreviews];
-    setPreviews(updatedPreviews);
+  // Only keep files <= 5MB
+  const validFiles = selectedFiles.filter(file => file.size <= maxSize);
 
-    setValue("attachments", updatedPreviews.map((item) => item.file));
-  };
+const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
+
+// Filter both arrays by extension
+const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
+const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
+
+// Final count
+const totalFiles = filteredPreviews.length + filteredValidFiles.length;
+  if (totalFiles > 10) {
+    alert("⚠️ You can only upload up to 10 files.");
+    return;
+  }
+
+  const newPreviews = validFiles.map((file) => ({
+    url: URL.createObjectURL(file),
+    type: file.type,
+    name: file.name,
+    file,
+  }));
+
+  const updatedPreviews = [...previews, ...newPreviews];
+  setPreviews(updatedPreviews);
+
+  setValue("Attachment", updatedPreviews.map((item) => item.file));
+};
+
 
   const handleRemoveFile = (index) => {
     const updated = previews.filter((_, i) => i !== index);
     setPreviews(updated);
-    setValue("attachments", updated.map((item) => item.file));
+    setValue("Attachment", updated.map((item) => item.file));
   };
 
   // for timeStap function  .............
@@ -308,77 +335,99 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   }
 
 
-  const onSubmit = (data) => {
-    const attachmentArray = previews || [];
-    const currentTimestamp = getFormattedTimestamp();
+const onSubmit = (data) => {
+  const currentTimestamp = getFormattedTimestamp();
 
-    const newWorkLogEntry = data.WorkLogs
-      ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
-      : "";
+  // Format WorkLogs
+  const newWorkLogEntry = data.WorkLogs
+    ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
+    : "";
 
-    const statusValue = isEdit ? data.Status?.value || "" : "Open";
-    const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
+  const statusValue = isEdit ? data.Status?.value || "" : "Open";
+  const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
 
-    // Compose updated WorkLogs
-    let updatedWorkLogs = "";
-    if (isStatusChanged) {
-      const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name} ]   Status changed from ${selectedTicket.Status} to ${data.Status?.value}`
-      updatedWorkLogs += statusChangeLog;
-    }
+  // Compose WorkLogs
+  let updatedWorkLogs = "";
+  if (isStatusChanged) {
+    const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name}] Status changed from ${selectedTicket.Status} to ${data.Status?.value}`;
+    updatedWorkLogs += statusChangeLog;
+  }
+  if (newWorkLogEntry) {
+    updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${newWorkLogEntry}`;
+  }
+  if (previousWlogs) {
+    updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
+  }
 
-    if (newWorkLogEntry) {
-      updatedWorkLogs += `${updatedWorkLogs ? '\n\n' : ''}${newWorkLogEntry}`;
-    }
-
-    if (previousWlogs) {
-      updatedWorkLogs += `${updatedWorkLogs ? '\n\n' : ''}${previousWlogs}`;
-    }
-
-    const formattedData = {
-      ...data,
-      Priority: data.Priority?.value || "",
-      PropertyCode: data.PropertyCode?.value || "",
-      Department: data.Department?.value || "",
-      Category: data.Category?.value || "",
-      Assignee: data.Assignee?.value || "",
-      Manager: data.Manager?.value || "",
-      Status: statusValue,
-      CustomerImpacted: data.CustomerImpacted?.value || "",
-      Escalated: data.Escalated?.value || "",
-      Attachment: attachmentArray,
-      WorkLogs: updatedWorkLogs || "",
-      ClosedDate: statusValue === "Closed" ? Timestamp() : "",
-      ...(isEdit
-        ? {
+  // Format data before sending
+  const formattedData = {
+    ...data,
+    Priority: data.Priority?.value || "",
+    PropertyCode: data.PropertyCode?.value || "",
+    Department: data.Department?.value || "",
+    Category: data.Category?.value || "",
+    Assignee: data.Assignee?.value || "",
+    Manager: data.Manager?.value || "",
+    Status: statusValue,
+    CustomerImpacted: data.CustomerImpacted?.value || "",
+    Escalated: data.Escalated?.value || "",
+    WorkLogs: updatedWorkLogs || "",
+    ClosedDate: statusValue === "Closed" ? Timestamp() : "",
+    ...(isEdit
+      ? {
           UpdatedByName: decryptedUser?.name || "Unknown",
           UpdatedById: decryptedUser?.id || "Unknown",
           UpdatedDateTime: Timestamp(),
+          Attachment : previews.map(ele=>ele.url)
         }
-        : {
+      : {
           CreatedByName: decryptedUser?.name || "Unknown",
           CreatedById: decryptedUser?.id || "Unknown",
         }),
-    };
-
-    if (isEdit && selectedTicket) {
-      updateTicketData(formattedData, {
-        onSuccess: () => {
-          alert("✅ Ticket updated successfully!");
-          reset();
-          setCurrentView("tickets");
-        },
-      });
-    } else {
-      submitBooking(formattedData, {
-        onSuccess: () => {
-          alert("✅ Ticket created successfully!");
-          reset();
-          setCurrentView("tickets");
-        },
-      });
-    }
   };
 
+  const formData = new FormData();
+
+  // 🔁 Append non-file data to FormData
+  for (const key in formattedData) {
+    const value = formattedData[key];
+
+    // Skip appending 'images' key (handled separately)
+    if (key === "images") continue;
+
+    // Stringify objects (selects, nested fields)
+    if (
+      typeof value === "object" &&
+      value !== null &&
+      !(value instanceof File)
+    ) {
+      formData.append(key, JSON.stringify(value));
+    } else {
+      formData.append(key, value ?? "");
+    }
+  }
+
+  // 📸 Append each image file
+  previews.forEach((file) => {
+    formData.append("images", file.file); // 👈 Keep the key same for all files
+  });
+
+  // ✅ Submit
+  const submissionFn = isEdit && selectedTicket ? updateTicketData : submitBooking;
+
+  submissionFn(formData, {
+    onSuccess: () => {
+      alert(`✅ Ticket ${isEdit ? "updated" : "created"} successfully!`);
+      reset();
+      setCurrentView("tickets");
+    },
+  });
+
+  // 🔍 If you want to inspect formData manually:
+  for (let pair of formData.entries()) {
+    console.log(pair[0], pair[1]);
+  }
+};
 
   return (
     <div className="space-y-6">
@@ -596,34 +645,41 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             </>
           )}
 
-          {previews.length > 0 && (
-            <div className="flex flex-wrap gap-4">
-              {previews.map((file, index) => (
-                <div key={index} className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm">
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveFile(index)}
-                    className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
-                  >
-                    ✕
-                  </button>
-                  {file.type.startsWith("image/") ? (
-                    <img src={file.url} className="w-full h-28 object-cover rounded" />
-                  ) : file.type === "application/pdf" ? (
-                    <p className="text-center text-sm truncate mt-8">📄 {file.name}</p>
-                  ) : (
-                    <video controls className="w-full h-28 object-cover rounded">
-                      <source src={file.url} type={file.type} />
-                    </video>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+         {previews.length > 0 && (
+  <div className="flex flex-wrap gap-4">
+    {previews.map((file, index) => {
+      const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+      const isImage = imageExtensions.test(file.name);
 
-          {/* Attachments */}
+      if (!isImage) return null; // Skip non-image files
+
+      return (
+        <div
+          key={index}
+          className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+        >
+          <button
+            type="button"
+            onClick={() => handleRemoveFile(index)}
+            className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+          >
+            ✕
+          </button>
+
+          <img
+            src={file.url}
+            alt={file.name}
+            className="w-full h-28 object-cover rounded"
+          />
+        </div>
+      );
+    })}
+  </div>
+)}
+
+          {/* Attachment */}
           <div>
-            <label className="block text-sm font-medium text-black mb-2">Attachments</label>
+            <label className="block text-sm font-medium text-black mb-2">Attachment</label>
             <input
               type="file"
               multiple

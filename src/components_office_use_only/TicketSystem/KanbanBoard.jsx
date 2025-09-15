@@ -20,7 +20,6 @@ export    const KanbanBoard = () => {
             const handleDragOver = (e) => {
                 e.preventDefault();
             };
-  console.log("tickets", tickets)
             const handleDrop = (e, newStatus) => {
                 e.preventDefault();
                 if (draggedTicket && draggedTicket.Status !== newStatus) {

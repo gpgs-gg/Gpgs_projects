@@ -7,7 +7,6 @@ import LoaderPage from '../components_office_use_only/NewBooking/LoaderPage';
 
 const SignupPage = ({ isOpen, setIsOpen }) => {
 const { mutate: changePassword, isPending } = useChangePassword();
-  console.log("isPending", isPending);
 // Add this to your component state
 const [showPassword, setShowPassword] = useState(false);
 const [showConfirmPassword, setShowConfirmPassword] = useState(false);

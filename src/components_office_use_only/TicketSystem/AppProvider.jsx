@@ -65,7 +65,6 @@ useEffect(() => {
     };
 
 const updateTicket = (ticketId, updates) => {
-    console.log("updates", updates, ticketId);
 
     // Step 1: Find the ticket to update
     const ticketToUpdate = tickets?.find(ticket => ticket.TicketID === ticketId);
@@ -78,7 +77,6 @@ const updateTicket = (ticketId, updates) => {
     // Step 2: Merge updates into the found ticket
     const updatedTicket = { ...ticketToUpdate, ...updates };
 
-    console.log("updatedTicket", updatedTicket);
 
     // Step 3: Send only the updated ticket
     updateTicketData(updatedTicket, {

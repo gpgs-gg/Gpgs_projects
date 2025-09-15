@@ -55,7 +55,6 @@ const PropertyFormSection = memo(({
     control,
     name: `${titlePrefix}BedDOJ`,
   });
-  console.log("watchStartDate", watchStartDate)
   const watchEndDate = useWatch({
     control,
     name: `${titlePrefix}BedLDt`,
@@ -507,7 +506,6 @@ const NewBooking = () => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
       ; // Just to verify decryption works
   }, []);
-  console.log("Decrypted user in Navigation:", decryptedUser?.name);
 
   const decryptUser = (encryptedData) => {
     try {
@@ -638,13 +636,11 @@ const NewBooking = () => {
         String(value).trim() !== ""
       ).length;
     setPermanentPropertyFilledChecked(permCount)
-    console.log("✅ Perm data count:", permCount);
   }, [formData]);
 
 
 
 
-  // console.log(watch().PermBedMonthlyFixRent)
   // Memoized handlers to prevent recreation on each render
   const resetTabFields = useCallback((prefix) => {
     const fieldsToReset = [
@@ -760,7 +756,6 @@ const NewBooking = () => {
     const matchedRow = singleTempSheetData?.data?.find(
       (row) => row["BedNo"]?.trim() === selectedBedNo
     );
-    console.log("matchedRow", matchedRow, titlePrefix)
 
     if (matchedRow) {
       const acNonAc = matchedRow["ACRoom"]?.trim() || "";
@@ -795,7 +790,7 @@ const NewBooking = () => {
     if (!checked && activeTab === 'permanent') {
       if (showtemporary) setActiveTab('temporary');
       else setActiveTab('');
-    } else if (checked && !activeTab) { 
+    } else if (checked && !activeTab) {
       setActiveTab('permanent');
     }
   }, [resetTabFields, activeTab, showtemporary]);
@@ -1084,7 +1079,7 @@ const NewBooking = () => {
                 type="checkbox"
                 className="accent-orange-200 w-5 h-5"
                 checked={showPermanent}
-                disabled = {true}
+                disabled={true}
                 onChange={(e) => handlePermanentCheckbox(e.target.checked)}
               />
               <span className="text-lg font-medium text-gray-800 group-hover:text-orange-600">
@@ -1093,22 +1088,22 @@ const NewBooking = () => {
             </label>
 
             {/* temporary Property Card */}
-          
 
-              <label
-                className={`group cursor-pointer flex items-center gap-4 w-full sm:w-80 p-4 border rounded-xl transition-all duration-300 shadow-sm
+
+            <label
+              className={`group cursor-pointer flex items-center gap-4 w-full sm:w-80 p-4 border rounded-xl transition-all duration-300 shadow-sm
       ${showtemporary ? ' border-orange-200 ring-2 ring-orange-200' : 'bg-white hover:shadow-lg'}`}
-              >
-                <input
-                  type="checkbox"
-                  className="accent-orange-200 w-5 h-5"
-                  checked={showtemporary}
-                  onChange={(e) => handletemporaryCheckbox(e.target.checked)}
-                />
-                <span className="text-lg font-medium text-gray-800 group-hover:text-orange-600">
-                  Temporary Property Details
-                </span>
-              </label>
+            >
+              <input
+                type="checkbox"
+                className="accent-orange-200 w-5 h-5"
+                checked={showtemporary}
+                onChange={(e) => handletemporaryCheckbox(e.target.checked)}
+              />
+              <span className="text-lg font-medium text-gray-800 group-hover:text-orange-600">
+                Temporary Property Details
+              </span>
+            </label>
           </div>
 
           {/* === TABS === */}

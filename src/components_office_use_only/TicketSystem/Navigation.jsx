@@ -30,7 +30,6 @@ export const Navigation = () => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
    ; // Just to verify decryption works
   }, []);
-  console.log("Decrypted user in Navigation:", decryptedUser?.name);
 
   const decryptUser = (encryptedData) => {
     try {
