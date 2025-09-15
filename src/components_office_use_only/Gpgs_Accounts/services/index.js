@@ -8,7 +8,7 @@ const api = axios.create({
 }); 
 
 // Function to fetch data from the API
-const fetchSingleSheetData = async () => {
+const fetchSingleSheetData = async () => {  
   const { data } = await api.get('/properties-data');
   return data;
 };
@@ -29,7 +29,7 @@ const fetchPropertySheetData = async (sheetId) => {
   }
 };
 
-export const usePropertySheetData = (sheetId, enabled) => {
+export const usePropertySheetData = (sheetId, enabled) => { 
   return useQuery({
     queryKey: ["property-sheet-data-for-accounts", sheetId],
     queryFn: () => fetchPropertySheetData(sheetId),

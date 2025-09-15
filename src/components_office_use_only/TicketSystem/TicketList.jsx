@@ -52,6 +52,7 @@ export const TicketList = () => {
         { label: "Attachment", key: "Attachment" },
         { label: "Customer Impacted", key: "CustomerImpacted" },
         { label: "Escalated", key: "Escalated" },
+        { label: "Target Date", key: "TargetDate" },
         { label: "Category", key: "Category" },
         { label: "Status", key: "Status" },
         { label: "Priority", key: "Priority" },

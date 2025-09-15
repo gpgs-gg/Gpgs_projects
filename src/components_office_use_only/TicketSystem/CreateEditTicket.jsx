@@ -166,6 +166,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors },
     reset,
   } = useForm({
@@ -184,8 +185,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       WorkLogs: ""
     },
   });
-
-
   // Generate dynamic options
   // const ManagerOptions = EmployeeDetails?.data
   //   ?.filter((emp) => emp?.Name && emp.Designation.Managers) // Only include if Name is present
@@ -193,11 +192,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   //     value: emp.Name,
   //     label: `${emp.Name} - ${emp.Department || "N/A"}`,
   //   })) || [];
-
-
-
-
-
 
   const ManagerOptions = EmployeeDetails?.data
     ?.filter(
@@ -231,76 +225,77 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   })) || [];
 
   // Set default values in edit mode
-useEffect(() => {
-  if (isEdit && selectedTicket) {
-    setValue("Title", selectedTicket.Title);
-    setValue("TicketID", selectedTicket.TicketID);
-    setValue("CreatedByName", selectedTicket.CreatedByName);
-    setValue("Description", selectedTicket.Description);
-    setValue("Priority", PriorityOptions.find((p) => p.value === selectedTicket.Priority));
-    setValue("PropertyCode", ProperyOptions.find((p) => p.value === selectedTicket.PropertyCode));
-    setValue("Status", StatusOptions.find((s) => s.value === selectedTicket.Status));
-    setValue("Department", DepartmentOptions.find((d) => d.value === selectedTicket.Department));
-    setValue("Category", CategoryOptions.find((c) => c.value === selectedTicket.Category));
-    setValue("Assignee", ManagerOptions.find((u) => u.value === selectedTicket.Assignee));
-    setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
-    setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
-    setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
+  useEffect(() => {
+    if (isEdit && selectedTicket) {
+      setValue("Title", selectedTicket.Title);
+      setValue("TicketID", selectedTicket.TicketID);
+      setValue("TargetDate", selectedTicket.TargetDate);
+      setValue("CreatedByName", selectedTicket.CreatedByName);
+      setValue("Description", selectedTicket.Description);
+      setValue("Priority", PriorityOptions.find((p) => p.value === selectedTicket.Priority));
+      setValue("PropertyCode", ProperyOptions.find((p) => p.value === selectedTicket.PropertyCode));
+      setValue("Status", StatusOptions.find((s) => s.value === selectedTicket.Status));
+      setValue("Department", DepartmentOptions.find((d) => d.value === selectedTicket.Department));
+      setValue("Category", CategoryOptions.find((c) => c.value === selectedTicket.Category));
+      setValue("Assignee", ManagerOptions.find((u) => u.value === selectedTicket.Assignee));
+      setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
+      setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
+      setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
 
-    setPreviousWlogs(selectedTicket.WorkLogs || "");
+      setPreviousWlogs(selectedTicket.WorkLogs || "");
 
-    // ✅ Only set previews once if not already set
-    if (selectedTicket.Attachment && previews.length === 0) {
-      const attachments = selectedTicket.Attachment.split(',').map((url) => ({
-        url,
-        type: '', // Optional: derive MIME type
-        name: url.split('/').pop(),
-        file: null, // Existing files shouldn't be re-uploaded
-      }));
-      setPreviews(attachments);
+      // ✅ Only set previews once if not already set
+      if (selectedTicket.Attachment && previews.length === 0) {
+        const attachments = selectedTicket.Attachment.split(',').map((url) => ({
+          url,
+          type: '', // Optional: derive MIME type
+          name: url.split('/').pop(),
+          file: null, // Existing files shouldn't be re-uploaded
+        }));
+        setPreviews(attachments);
+      }
     }
-  }
-}, [isEdit, selectedTicket, setValue, ProperyOptions, ManagerOptions]);
+  }, [isEdit, selectedTicket, setValue, ProperyOptions, ManagerOptions]);
 
- const handleFileChange = (e) => {
-  const selectedFiles = Array.from(e.target.files);
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
 
-  // Filter out files larger than 5MB
-  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-  const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
+    // Filter out files larger than 5MB
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
 
-  if (oversizedFiles.length > 0) {
-    alert(`⚠️ Some files are larger than 5 MB and were not added.`);
-  }
+    if (oversizedFiles.length > 0) {
+      alert(`⚠️ Some files are larger than 5 MB and were not added.`);
+    }
 
-  // Only keep files <= 5MB
-  const validFiles = selectedFiles.filter(file => file.size <= maxSize);
+    // Only keep files <= 5MB
+    const validFiles = selectedFiles.filter(file => file.size <= maxSize);
 
-const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
+    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
 
-// Filter both arrays by extension
-const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
-const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
+    // Filter both arrays by extension
+    const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
+    const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
 
-// Final count
-const totalFiles = filteredPreviews.length + filteredValidFiles.length;
-  if (totalFiles > 10) {
-    alert("⚠️ You can only upload up to 10 files.");
-    return;
-  }
+    // Final count
+    const totalFiles = filteredPreviews.length + filteredValidFiles.length;
+    if (totalFiles > 10) {
+      alert("⚠️ You can only upload up to 10 files.");
+      return;
+    }
 
-  const newPreviews = validFiles.map((file) => ({
-    url: URL.createObjectURL(file),
-    type: file.type,
-    name: file.name,
-    file,
-  }));
+    const newPreviews = validFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type,
+      name: file.name,
+      file,
+    }));
 
-  const updatedPreviews = [...previews, ...newPreviews];
-  setPreviews(updatedPreviews);
+    const updatedPreviews = [...previews, ...newPreviews];
+    setPreviews(updatedPreviews);
 
-  setValue("Attachment", updatedPreviews.map((item) => item.file));
-};
+    setValue("Attachment", updatedPreviews.map((item) => item.file));
+  };
 
 
   const handleRemoveFile = (index) => {
@@ -335,99 +330,102 @@ const totalFiles = filteredPreviews.length + filteredValidFiles.length;
   }
 
 
-const onSubmit = (data) => {
-  const currentTimestamp = getFormattedTimestamp();
+  const onSubmit = (data) => {
+    const currentTimestamp = getFormattedTimestamp();
 
-  // Format WorkLogs
-  const newWorkLogEntry = data.WorkLogs
-    ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
-    : "";
+    // Format WorkLogs
+    const newWorkLogEntry = data.WorkLogs
+      ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
+      : "";
 
-  const statusValue = isEdit ? data.Status?.value || "" : "Open";
-  const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
+    const statusValue = isEdit ? data.Status?.value || "" : "Open";
+    const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
 
-  // Compose WorkLogs
-  let updatedWorkLogs = "";
-  if (isStatusChanged) {
-    const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name}] Status changed from ${selectedTicket.Status} to ${data.Status?.value}`;
-    updatedWorkLogs += statusChangeLog;
-  }
-  if (newWorkLogEntry) {
-    updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${newWorkLogEntry}`;
-  }
-  if (previousWlogs) {
-    updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
-  }
+    // Compose WorkLogs
+    let updatedWorkLogs = "";
+    if (isStatusChanged) {
+      const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name}] Status changed from ${selectedTicket.Status} to ${data.Status?.value}`;
+      updatedWorkLogs += statusChangeLog;
+    }
+    if (newWorkLogEntry) {
+      updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${newWorkLogEntry}`;
+    }
+    if (previousWlogs) {
+      updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
+    }
 
-  // Format data before sending
-  const formattedData = {
-    ...data,
-    Priority: data.Priority?.value || "",
-    PropertyCode: data.PropertyCode?.value || "",
-    Department: data.Department?.value || "",
-    Category: data.Category?.value || "",
-    Assignee: data.Assignee?.value || "",
-    Manager: data.Manager?.value || "",
-    Status: statusValue,
-    CustomerImpacted: data.CustomerImpacted?.value || "",
-    Escalated: data.Escalated?.value || "",
-    WorkLogs: updatedWorkLogs || "",
-    ClosedDate: statusValue === "Closed" ? Timestamp() : "",
-    ...(isEdit
-      ? {
+    // Format data before sending
+    const formattedData = {
+      ...data,
+      Priority: data.Priority?.value || "",
+      PropertyCode: data.PropertyCode?.value || "",
+      Department: data.Department?.value || "",
+      Category: data.Category?.value || "",
+      Assignee: data.Assignee?.value || "",
+      Manager: data.Manager?.value || "",
+      TargetDate:getFormattedTimestamp(data.TargetDate)|| "",
+      Status: statusValue,
+      CustomerImpacted: data.CustomerImpacted?.value || "",
+      Escalated: data.Escalated?.value || "",
+      WorkLogs: updatedWorkLogs || "",
+      CreatedByName: decryptedUser?.name || "Unknown",
+      CreatedById: decryptedUser?.id || "Unknown",
+      ClosedDate: statusValue === "Closed" ? Timestamp() : "",
+      ...(isEdit
+        ? {
           UpdatedByName: decryptedUser?.name || "Unknown",
           UpdatedById: decryptedUser?.id || "Unknown",
           UpdatedDateTime: Timestamp(),
-          Attachment : previews.map(ele=>ele.url)
+          Attachment: previews.map(ele => ele.url),
+
         }
-      : {
-          CreatedByName: decryptedUser?.name || "Unknown",
-          CreatedById: decryptedUser?.id || "Unknown",
+        : {
+          // CreatedByName: decryptedUser?.name || "Unknown",
+          // CreatedById: decryptedUser?.id || "Unknown",
         }),
-  };
+    };
+    const formData = new FormData();
 
-  const formData = new FormData();
+    // 🔁 Append non-file data to FormData
+    for (const key in formattedData) {
+      const value = formattedData[key];
 
-  // 🔁 Append non-file data to FormData
-  for (const key in formattedData) {
-    const value = formattedData[key];
+      // Skip appending 'images' key (handled separately)
+      if (key === "images") continue;
 
-    // Skip appending 'images' key (handled separately)
-    if (key === "images") continue;
-
-    // Stringify objects (selects, nested fields)
-    if (
-      typeof value === "object" &&
-      value !== null &&
-      !(value instanceof File)
-    ) {
-      formData.append(key, JSON.stringify(value));
-    } else {
-      formData.append(key, value ?? "");
+      // Stringify objects (selects, nested fields)
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !(value instanceof File)
+      ) {
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value ?? "");
+      }
     }
-  }
 
-  // 📸 Append each image file
-  previews.forEach((file) => {
-    formData.append("images", file.file); // 👈 Keep the key same for all files
-  });
+    // 📸 Append each image file
+    previews.forEach((file) => {
+      formData.append("images", file.file); // 👈 Keep the key same for all files
+    });
 
-  // ✅ Submit
-  const submissionFn = isEdit && selectedTicket ? updateTicketData : submitBooking;
+    // ✅ Submit
+    const submissionFn = isEdit && selectedTicket ? updateTicketData : submitBooking;
 
-  submissionFn(formData, {
-    onSuccess: () => {
-      alert(`✅ Ticket ${isEdit ? "updated" : "created"} successfully!`);
-      reset();
-      setCurrentView("tickets");
-    },
-  });
+    submissionFn(formData, {
+      onSuccess: () => {
+        alert(`✅ Ticket ${isEdit ? "updated" : "created"} successfully!`);
+        reset();
+        setCurrentView("tickets");
+      },
+    });
 
-  // 🔍 If you want to inspect formData manually:
-  for (let pair of formData.entries()) {
-    console.log(pair[0], pair[1]);
-  }
-};
+    // 🔍 If you want to inspect formData manually:
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -575,9 +573,9 @@ const onSubmit = (data) => {
           {/* Manager & Assignee */}
 
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <div>
-              <label className="block text-sm font-medium text-black mb-2">Manager<span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-black mb-2">Manager</label>
               <Controller
                 control={control}
                 name="Manager"
@@ -587,7 +585,7 @@ const onSubmit = (data) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-black mb-2">Assignee <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-black mb-2">Assignee </label>
               <Controller
                 control={control}
                 name="Assignee"
@@ -596,14 +594,43 @@ const onSubmit = (data) => {
                 )}
               />
             </div>
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">
+                Target Date
+              </label>
+              <Controller
+                control={control}
+                name="TargetDate"
+                defaultValue=""
+                render={({ field }) => (
+                  <div className="relative w-full">
+                    <input
+                      type="date"
+                      {...field}
+                      value={field.value || ""}
+                      className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                    />
+                    {field.value && (
+                      <button
+                        type="button"
+                        onClick={() => field.onChange("")}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
+                      >
+                        &#10005;
+                      </button>
+                    )}
+                  </div>
+                )}
+              />
+            </div>
 
+          </div>
 
           {isEdit && (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">Customer Impacted <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-black mb-2">Customer Impacted </label>
                   <Controller
                     control={control}
                     name="CustomerImpacted"
@@ -615,7 +642,7 @@ const onSubmit = (data) => {
 
 
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">Escalated <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-black mb-2">Escalated </label>
                   <Controller
                     control={control}
                     name="Escalated"
@@ -645,37 +672,37 @@ const onSubmit = (data) => {
             </>
           )}
 
-         {previews.length > 0 && (
-  <div className="flex flex-wrap gap-4">
-    {previews.map((file, index) => {
-      const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
-      const isImage = imageExtensions.test(file.name);
+          {previews.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {previews.map((file, index) => {
+                const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+                const isImage = imageExtensions.test(file.name);
 
-      if (!isImage) return null; // Skip non-image files
+                if (!isImage) return null; // Skip non-image files
 
-      return (
-        <div
-          key={index}
-          className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
-        >
-          <button
-            type="button"
-            onClick={() => handleRemoveFile(index)}
-            className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
-          >
-            ✕
-          </button>
+                return (
+                  <div
+                    key={index}
+                    className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFile(index)}
+                      className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                    >
+                      ✕
+                    </button>
 
-          <img
-            src={file.url}
-            alt={file.name}
-            className="w-full h-28 object-cover rounded"
-          />
-        </div>
-      );
-    })}
-  </div>
-)}
+                    <img
+                      src={file.url}
+                      alt={file.name}
+                      className="w-full h-28 object-cover rounded"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Attachment */}
           <div>

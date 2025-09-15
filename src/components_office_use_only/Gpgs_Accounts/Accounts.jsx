@@ -12,6 +12,8 @@ const Accounts = () => {
   const [rnrSheetData, setRnrSheetData] = useState({})
   // Fetch all properties
   const { data: fetchSingleSheetData, error, isError } = useFetchSingleSheetData();
+
+  console.log("result", result / 2)
   // Fetch property sheet data for selected property + month
   const { data: propertySheetData, isLoading, isSuccess } = usePropertySheetData(sheetId, !!sheetId);
 
@@ -19,123 +21,136 @@ const Accounts = () => {
   const selectedMonth = watch("selectedMonth");
   const selectedProperty = watch("selectedProperty");
 
-useEffect(() => {
-  if (isSuccess && propertySheetData?.data) {
-    const validItems = propertySheetData.data.filter(
-      item => typeof item.FullName === "string" && item.FullName.trim() !== "" 
-    );
+  useEffect(() => {
+    if (isSuccess && propertySheetData?.data) {
+      const validItems = propertySheetData.data.filter(
+        item => typeof item.FullName === "string" && item.FullName.trim() !== ""
+      );
 
+      // Build formula string like: "=123 + 456", skipping 0s
+      const buildFormulaString = (values) => {
+        const filtered = values
+          .map(v => Number(v))
+          .filter(v => !isNaN(v) && v > 0);
 
+        return filtered.length > 0 ? `= ${filtered.join(" + ")}` : "";
+      };
 
-    
-    // Build formula string like: "=123 + 456", skipping 0s
-    const buildFormulaString = (values) => {
-      const filtered = values
-        .map(v => Number(v))
-        .filter(v => !isNaN(v) && v > 0);
+      // Helper function for custom currentDue calculation
+      const calculateCurrentDue = (item) => {
+        const cur = Number(item.CurDueAmt);
+        const pre = Number(item.PreDueAmt);
 
-      return filtered.length > 0 ? `= ${filtered.join(" + ")}` : "";
-    };
+        if (isNaN(cur) && isNaN(pre)) return 0;
+        if (isNaN(pre)) return cur;
+        if (!isNaN(cur)) return pre < 0 ? cur + pre : cur;
 
-    // Helper function for custom currentDue calculation
-    const calculateCurrentDue = (item) => {
-      const cur = Number(item.CurDueAmt);
-      const pre = Number(item.PreDueAmt);
+        return 0;
+      };
 
-      if (isNaN(cur) && isNaN(pre)) return 0;
-      if (isNaN(pre)) return cur;
-      if (!isNaN(cur)) return pre < 0 ? cur + pre : cur;
+      // Helper function for custom previousDue calculation
+      const calculatePreviousDue = (item) => {
+        const pre = Number(item.PreDueAmt);
+        const cur = Number(item.CurDueAmt);
 
-      return 0;
-    };
+        if (isNaN(pre) && isNaN(cur)) return 0;
+        if (isNaN(cur)) return pre;
+        if (!isNaN(pre)) return cur < 0 ? pre + cur : pre;
 
-    // Get FullNames with calculated current due > 0
-    const getNamesByCalculatedCurrentDue = () =>
-      validItems
-        .filter(item => calculateCurrentDue(item) > 0)
-        .map(item => item.FullName.trim())
-        .join("\n");
+        return 0;
+      };
 
-    // Other due name filters (simple > 0 checks)
-    const getNamesByDueCondition = (key) =>
-      validItems
-        .filter(item => Number(item[key]) > 0)
-        .map(item => item.FullName.trim())
-        .join("\n");
+      // Get FullNames with calculated current due > 0
+      const getNamesByCalculatedCurrentDue = () =>
+        validItems
+          .filter(item => calculateCurrentDue(item) > 0)
+          .map(item => item.FullName.trim())
+          .join("\n");
 
-    const ClientNameCurrentDue = getNamesByCalculatedCurrentDue();
-    const ClientNameDepositDue = getNamesByDueCondition("DADue");
-    const ClientNamePreviousDue = getNamesByDueCondition("PreDueAmt");
+      // Get FullNames with calculated previous due > 0
+      const getNamesByCalculatedPreviousDue = () =>
+        validItems
+          .filter(item => calculatePreviousDue(item) > 0)
+          .map(item => item.FullName.trim())
+          .join("\n");
 
-    // Build total formula strings
-    const currentDue = buildFormulaString(
-      validItems.map(calculateCurrentDue)
-    );
+      // Other due name filters (simple > 0 checks)
+      const getNamesByDueCondition = (key) =>
+        validItems
+          .filter(item => Number(item[key]) > 0)
+          .map(item => item.FullName.trim())
+          .join("\n");
 
-    const daDue = buildFormulaString(validItems.map(item => item.DADue));
-    const preDue = buildFormulaString(validItems.map(item => item.PreDueAmt));
+      const ClientNameCurrentDue = getNamesByCalculatedCurrentDue();
+      const ClientNameDepositDue = getNamesByDueCondition("DADue");
+      const ClientNamePreviousDue = getNamesByCalculatedPreviousDue();
 
-    // Final object
-    const transformed = [
-      {
-        PropertyCode: selectedProperty.label,
-        ClientNameCurrentDue: ClientNameCurrentDue || "None",
-        ClientNameDepositDue: ClientNameDepositDue || "None",
-        ClientNamePreviousDue: ClientNamePreviousDue || "None",
-        CurrentDue: currentDue,
-        DepositDue: daDue,
-        PreviousDue: preDue,
-      }
-    ];
+      // Build total formula strings
+      const currentDue = buildFormulaString(validItems.map(calculateCurrentDue));
+      const daDue = buildFormulaString(validItems.map(item => item.DADue));
+      const preDue = buildFormulaString(validItems.map(calculatePreviousDue));
 
-    setRnrSheetData(transformed);
-  }
-}, [isSuccess, propertySheetData]);
+      // Final object
+      const transformed = [
+        {
+          PropertyCode: selectedProperty.label,
+          ClientNameCurrentDue: ClientNameCurrentDue || "None",
+          ClientNameDepositDue: ClientNameDepositDue || "None",
+          ClientNamePreviousDue: ClientNamePreviousDue || "None",
+          CurrentDue: currentDue,
+          DepositDue: daDue,
+          PreviousDue: preDue,
+        }
+      ];
+
+      setRnrSheetData(transformed);
+    }
+  }, [isSuccess, propertySheetData]);
 
   const { mutate: submitBooking, isLoading: isBookingLoading } = useAddBooking();
 
   // When property is selected, build sheetId and fetch data automatically
   useEffect(() => {
-    if (selectedMonth && selectedProperty) {
-      const newSheetId = `${selectedProperty.value},${selectedMonth.value}`;
-      setSheetId(newSheetId);
-
-      // Example calculation
-      const selectedData = fetchSingleSheetData?.data?.find(
+    if (selectedMonth && selectedProperty && fetchSingleSheetData?.data) {
+      const selectedData = fetchSingleSheetData.data.find(
         (item) => item["PG Main  Sheet ID"] === selectedProperty.value
       );
 
-      if (selectedData) {
-        const calculatedValue = selectedData["Bed Count"]
-          ? parseInt(selectedData["Bed Count"]) * 2
-          : 0;
-        setResult(calculatedValue);
-      }
+      const calculatedValue = selectedData?.["Bed Count"]
+        ? parseInt(selectedData["Bed Count"]) * 2
+        : 0;
+
+      setResult(calculatedValue);
+
+      const newSheetId = `${selectedProperty.value},${selectedMonth.value},${calculatedValue / 2}`;
+      setSheetId(newSheetId);
+
+      console.log("sheetId", newSheetId);
     }
   }, [selectedMonth, selectedProperty, fetchSingleSheetData]);
 
   // Manual submit action
-const onSubmit = (data) => {
-  submitBooking(
-    {
-      rnrSheetData: rnrSheetData[0],
-      selectedMonth: selectedMonth?.value,
-    },
-    {
-      onSuccess: () => {
-        alert("✅ Data successfully sent to Google Sheet!");
+  const onSubmit = (data) => {
+    submitBooking(
+      {
+        rnrSheetData: rnrSheetData[0],
+        selectedMonth: selectedMonth?.value,
       },
-      onError: (error) => {
-        // Try to extract error message from response
-        console.error("Submission error:", error);
-        const message =
-          error?.response?.data?.error || error.message || "❌ Unknown error occurred while submitting data.";
+      {
+        onSuccess: () => {
+          alert("✅ Data successfully sent to Google Sheet!");
+        },
+        onError: (error) => {
+          // Try to extract error message from response
+          console.error("Submission error:", error);
+          const message =
+            error?.response?.data?.error || error.message || "❌ Unknown error occurred while submitting data.";
 
-        alert(`❌ Failed to submit data:\n${message}`);
-      },
-    }
-  );
-};
+          alert(`❌ Failed to submit data:\n${message}`);
+        },
+      }
+    );
+  };
 
   // Property options
   const propertyOptions =
