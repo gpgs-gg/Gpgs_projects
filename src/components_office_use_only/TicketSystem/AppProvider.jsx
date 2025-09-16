@@ -18,7 +18,7 @@ export const AppProvider = ({ children }) => {
 
 // Start with an empty array
 const [tickets, setTickets] = useState([]);
-
+   console.log("ticket" , tickets)
 useEffect(() => {
   if (Array.isArray(data?.data)) {
     setTickets([...data.data]);
@@ -146,8 +146,9 @@ const updateTicket = (ticketId, updates) => {
             const matchesDepartment = !filters.Department || ticket.Department === filters.Department;
             const matchesAssignee = !filters.Assignee || ticket.Assignee === filters.Assignee;
             const matchesManager = !filters.Manager || ticket.Manager === filters.Manager;
+            const matchesTargetDate = !filters.TargetDate || ticket.TargetDate === filters.TargetDate;
 
-            return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager ;
+            return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager && matchesTargetDate ;
         });
     }, [tickets, searchTerm, filters]);
 

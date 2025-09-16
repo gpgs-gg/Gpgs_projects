@@ -237,7 +237,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       setValue("Status", StatusOptions.find((s) => s.value === selectedTicket.Status));
       setValue("Department", DepartmentOptions.find((d) => d.value === selectedTicket.Department));
       setValue("Category", CategoryOptions.find((c) => c.value === selectedTicket.Category));
-      setValue("Assignee", ManagerOptions.find((u) => u.value === selectedTicket.Assignee));
+      setValue("Assignee", assigneeOptions.find((u) => u.value === selectedTicket.Assignee));
       setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
       setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
       setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
@@ -322,6 +322,22 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     return `${day} ${month} ${year} ${hours}:${minutes}${ampm}`;
   }
+  function getFormattedTimestampForTargetDate() {
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = now.toLocaleString('en-US', { month: 'short' }); // "Sep"
+    const year = now.getFullYear();
+
+    // let hours = now.getHours();
+    // const minutes = String(now.getMinutes()).padStart(2, '0');
+    // const ampm = hours >= 12 ? 'pm' : 'am';
+
+    // hours = hours % 12;
+    // hours = hours ? hours : 12; // 0 → 12
+
+    return `${day} ${month} ${year} `;
+  }
 
 
   function Timestamp() {
@@ -363,7 +379,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Category: data.Category?.value || "",
       Assignee: data.Assignee?.value || "",
       Manager: data.Manager?.value || "",
-      TargetDate:getFormattedTimestamp(data.TargetDate)|| "",
+      TargetDate:getFormattedTimestampForTargetDate(data.TargetDate)|| "",
       Status: statusValue,
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",

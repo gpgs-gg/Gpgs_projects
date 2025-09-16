@@ -63,19 +63,23 @@ const statusOptions = [
 
 const DepartmentOptions = [
     { value: "", label: "All Departments" },
-    { value: "Management", label: "Management" },
-    { value: "Marketing", label: "Marketing" },
-    { value: "Sales", label: "Sales" },
     { value: "Maintenance", label: "Maintenance" },
     { value: "Housekeeping", label: "Housekeeping" },
-    { value: "Admin", label: "Admin" },
     { value: "Accounts", label: "Accounts" },
+    { value: "Sales", label: "Sales" },
+    { value: "Marketing", label: "Marketing" },
+    { value: "Admin", label: "Admin" },
     { value: "Human Resource", label: "Human Resource" },
+    { value: "Management", label: "Management" },
+
 ];
 
 export const TicketFilters = () => {
     const { filters, setFilters, users } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
+
+    console.log("filters", filters)
+
 
     const assigneeOptions = [
         { label: "All Assignees", value: "" },
@@ -90,19 +94,13 @@ export const TicketFilters = () => {
     const ManagerOptions = [
         { label: "All managers", value: "" },
         ...(EmployeeDetails?.data
-            ?.filter((emp) => emp?.Name &&  Managers.includes(emp?.Designation))
+            ?.filter((emp) => emp?.Name && Managers.includes(emp?.Designation))
             .map((emp) => ({
                 value: emp.Name,
                 label: `${emp.Name}`,
             })) || [])
     ];
 
-
-
-
-
-
-    
 
     const defaultValues = {
         Status: statusOptions[0],
@@ -112,6 +110,21 @@ export const TicketFilters = () => {
         Manager: ManagerOptions[0],
     };
 
+
+   function formatDateToDDMMMYYYY(dateString) {
+  const date = new Date(dateString);
+  if (isNaN(date)) return "";
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+
+  return `${day} ${month} ${year}`;
+}
+
+
+
+
     const { control, watch, reset } = useForm({
         defaultValues: {
             Status: statusOptions.find((opt) => opt.value === filters.Status) || defaultValues.Status,
@@ -119,6 +132,8 @@ export const TicketFilters = () => {
             Department: DepartmentOptions.find((opt) => opt.value === filters.Department) || defaultValues.Department,
             Assignee: assigneeOptions.find((opt) => opt.value === filters.Assignee) || defaultValues.Assignee,
             Manager: ManagerOptions.find((opt) => opt.value === filters.Manager) || defaultValues.Manager,
+            TargetDate:filters.TargetDate || "",
+
         },
     });
 
@@ -126,8 +141,8 @@ export const TicketFilters = () => {
     const watchedDepartment = watch("Department");
     const watchedAssignee = watch("Assignee");
     const watchedManager = watch("Manager");
+    const watchedTargetDate = watch("TargetDate");
     // const watchedPriority = watch("Priority"); // Uncomment if Priority is used
-
     React.useEffect(() => {
         setFilters({
             Status: watchedStatus?.value || "",
@@ -135,8 +150,9 @@ export const TicketFilters = () => {
             Department: watchedDepartment?.value || "",
             Assignee: watchedAssignee?.value || "",
             Manager: watchedManager?.value || "",
+            TargetDate: formatDateToDDMMMYYYY(watchedTargetDate)|| "",
         });
-    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters]);
+    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate]);
 
     const handleClearFilters = () => {
         reset(defaultValues);
@@ -146,6 +162,7 @@ export const TicketFilters = () => {
             Department: "",
             Assignee: "",
             Manager: "",
+            TargetDate: ""
         });
     };
 
@@ -162,7 +179,7 @@ export const TicketFilters = () => {
                     Clear Filters
                 </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
 
                 {/* Status */}
                 <div>
@@ -220,6 +237,36 @@ export const TicketFilters = () => {
                         )}
                     />
                 </div>
+                <div>
+                    <label className="block text-sm font-medium text-black mb-2">
+                        Target Date
+                    </label>
+                    <Controller
+                        control={control}
+                        name="TargetDate"
+                        defaultValue=""
+                        render={({ field }) => (
+                            <div className="relative w-full">
+                                <input
+                                    type="date"
+                                    {...field}
+                                    value={field.value || ""}
+                                    className="w-full border mt-[-3px] border-orange-500 rounded px-3 py-[8px] pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                                />
+                                {field.value && (
+                                    <button
+                                        type="button"
+                                        onClick={() => field.onChange("")}
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
+                                    >
+                                        &#10005;
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    />
+                </div>
+
 
             </div>
 

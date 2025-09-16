@@ -43,6 +43,10 @@ export const TicketList = () => {
         return `${dPart}, ${tPart.toUpperCase()}`;
     };
 
+
+
+
+
     // Header labels mapping to actual ticket object keys
     const headers = [
         { label: "TicketID", key: "TicketID" },
@@ -135,9 +139,9 @@ export const TicketList = () => {
                                         ) :
                                             key === "Attachment" ? (
                                                 <>
-                                                    <div className="grid grid-cols-6 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-4 gap-4">
-                                                        {ticket.Attachment
-                                                            ? ticket.Attachment.split(",").map((url, idx) => {
+                                                    <div className="flex  gap-2 mt-1 max-h-48 overflow-auto">
+                                                        {ticket.Attachment ? (
+                                                            ticket.Attachment.split(",").map((url, idx) => {
                                                                 const trimmedUrl = url.trim();
                                                                 const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
 
@@ -146,7 +150,7 @@ export const TicketList = () => {
                                                                 return (
                                                                     <div
                                                                         key={idx}
-                                                                        className="relative w-full aspect-[4/6] border rounded-md overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-blue-400"
+                                                                        className="w-10 h-10 border rounded-md overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-blue-400"
                                                                         title={trimmedUrl}
                                                                         onClick={() => setSelectedImage(trimmedUrl)}
                                                                     >
@@ -158,14 +162,16 @@ export const TicketList = () => {
                                                                     </div>
                                                                 );
                                                             })
-                                                            : <p className="text-sm text-gray-500 col-span-full">No Attachments</p>}
+                                                        ) : (
+                                                            <p className="text-sm text-gray-500">No Attachments</p>
+                                                        )}
                                                     </div>
 
-                                                    {/* Modal for full image view */}
+                                                    {/* Fullscreen Modal Preview */}
                                                     {selectedImage && (
                                                         <div
                                                             onClick={() => setSelectedImage(null)}
-                                                            className="fixed inset-0 flex items-center justify-center z-50 cursor-pointer backdrop-blur-sm"
+                                                            className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 cursor-pointer"
                                                         >
                                                             <img
                                                                 src={selectedImage}
