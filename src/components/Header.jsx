@@ -5,6 +5,8 @@ import 'aos/dist/aos.css';
 import { useAuth } from "../context/AuthContext";
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from "../Config";
+import gpgsLogo from "../logo/Gpgs-logo.jpg"
+
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -118,12 +120,13 @@ const Header = () => {
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
-      <div className="max-w-8xl mx-auto px-4 h-20 sm:px-6 lg:px-8">
+      <div className="max-w-8xl mx-auto px-4 h-24 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center  justify-center">
             <img
-              className="w-[250px] md:w-[280px] mt-3"
-              src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png"
+              className="w-[250px] md:w-[340px] mt-8"
+              // src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png"
+              src= {gpgsLogo} 
               alt="GPGS Logo"
             />
           </div>
