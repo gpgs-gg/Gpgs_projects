@@ -24,7 +24,7 @@ const Home = () => {
 
     return (
         <>
-            <section id="home" className="gradient-bg text-white py-20 pt-32">
+            <section id="home" className="gradient-bg text-black py-[50px] pt-32">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center fade-in">
                         {/* Typing animation on heading */}
@@ -34,7 +34,7 @@ const Home = () => {
                         </h1>
 
                         {/* Subheading */}
-                        <p className="text-xl md:text-2xl mb-8 opacity-90">
+                        <p className="text-xl md:text-2xl mb-4 opacity-90">
                             <ReactTyped
                                 strings={[
                                     //   "We Serve Beyond Business",
@@ -49,22 +49,22 @@ const Home = () => {
                         </p>
 
                         {/* Description */}
-                        <p className="text-xl mb-4 max-w-3xl mx-auto opacity-80">
+                        {/* <p className="text-xl mb-4 max-w-xl mx-auto opacity-80">
                             At Gopal’s Paying Guest Services, We provide fully furnished, secure and
                             comfortable PG accommodations for men and women separately in Navi
                             Mumbai. Designed for your convenience, with a decade of curated
                             experience in professional and student accommodation.
-                        </p>
+                        </p> */}
 
 
-                        <h1 className='text-xl mb-5 text-[#3730a3]'>
+                        <h1 className='text-xl font-bold mb-5 text-[#3730a3]'>
                             Book Your Stay With Us Today
                         </h1>
 
                         {/* Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
-                                <i className="fas fa-phone mr-2"></i>Call Now: 9326262292
+                                <i className="fas fa-phone mr-2"></i> 9326262292
                             </button>
                             <button onClick={handleMap} className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
                                 <i className="fas fa-map-marker-alt mr-2"></i>Office Location

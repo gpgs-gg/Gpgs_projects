@@ -131,30 +131,31 @@ const Header = () => {
             {isHomePage ? (
               <>
                 <a href="#home" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</a>
-                <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</a>
-                <a href="#about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</a>
-                <a href="#pricing" className="text-gray-700 hover:text-indigo-600 transition duration-300">Pricing</a>
+                <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services & Facilities</a>
                 <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</a>
+                <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
+                <a href="#about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</a>
                 <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</a>
+
               </>
             ) : (
               <>
                 <Link to="/" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</Link>
-                <Link to="/services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services</Link>
-                <Link to="/about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</Link>
-                <Link to="/pricing" className="text-gray-700 hover:text-indigo-600 transition duration-300">Pricing</Link>
+                <Link to="/services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services & Facilities</Link>
                 <Link to="/location" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</Link>
+                <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
+
+                <Link to="/about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</Link>
                 <Link to="/contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</Link>
               </>
             )}
-            <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
             <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office</Link>
             <div className="hidden sm:flex items-center space-x-5">
               <div className="text-right">
                 {decryptedUser?.name && (
                   <>
-                   <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
-                <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
+                    <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
+                    <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
                   </>
                 )}
 
@@ -175,12 +176,12 @@ const Header = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center  text-xl mt-3 font-bold">
-             <div className="flex items-center mr-4 lg:mr-10 space-x-5">
+            <div className="flex items-center mr-4 lg:mr-10 space-x-5">
               <div className="text-right">
-               {decryptedUser?.name && (
+                {decryptedUser?.name && (
                   <>
-                   <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
-                <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
+                    <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
+                    <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
                   </>
                 )}
               </div>
@@ -202,7 +203,7 @@ const Header = () => {
           {isHomePage ? (
             <>
               <a onClick={handleMenuLinkClick} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
-              <a onClick={handleMenuLinkClick} href="#services" className="block text-gray-700 hover:text-indigo-600">Services</a>
+              <a onClick={handleMenuLinkClick} href="#services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</a>
               <a onClick={handleMenuLinkClick} href="#about" className="block text-gray-700 hover:text-indigo-600">About us</a>
               <a onClick={handleMenuLinkClick} href="#pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</a>
               <a onClick={handleMenuLinkClick} href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
@@ -211,7 +212,7 @@ const Header = () => {
           ) : (
             <>
               <Link onClick={handleMenuLinkClick} to="/" className="block text-gray-700 hover:text-indigo-600">Home</Link>
-              <Link onClick={handleMenuLinkClick} to="/services" className="block text-gray-700 hover:text-indigo-600">Services</Link>
+              <Link onClick={handleMenuLinkClick} to="/services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</Link>
               <Link onClick={handleMenuLinkClick} to="/about" className="block text-gray-700 hover:text-indigo-600">About us</Link>
               <Link onClick={handleMenuLinkClick} to="/pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</Link>
               <Link onClick={handleMenuLinkClick} to="/location" className="block text-gray-700 hover:text-indigo-600">Locations</Link>
@@ -219,12 +220,12 @@ const Header = () => {
             </>
           )}
           <Link onClick={handleMenuLinkClick} to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
-          <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office Use Only</Link>
-           <div className=" sm:flex items-center space-x-5">
-            
-        
-              {decryptedUser && (
-                <button onClick={handleLogout} className="">Logout</button>
+          <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office</Link>
+          <div className=" sm:flex items-center space-x-5">
+
+
+            {decryptedUser && (
+              <button onClick={handleLogout} className="">Logout</button>
 
             )}
           </div>

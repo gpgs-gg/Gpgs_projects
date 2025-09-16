@@ -113,7 +113,7 @@ function App() {
             <Home />
             <Services />
             <About />
-            <Pricing />
+            {/* <Pricing /> */}
             <Location />
             <Contact />
           </>

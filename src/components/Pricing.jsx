@@ -23,26 +23,7 @@ const Pricing = () => {
           </div>
 
           <div  className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="card-hover bg-white rounded-xl shadow-lg overflow-hidden border">
-              <div className="price-card p-6 text-white text-center">
-                <h3 className="text-2xl font-bold mb-2">Double Sharing</h3>
-                <p className="opacity-90">Non-AC Facility</p>
-                <div className="mt-4">
-                  <span className="text-3xl font-bold">₹6,500</span>
-                  <span className="text-lg opacity-90"> - ₹11,000</span>
-                </div>
-                <p className="text-sm opacity-80 mt-2">per person per month</p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3 text-gray-600">
-                  <li><i className="fas fa-check text-green-500 mr-3"></i>Shared room with 1 other person</li>
-                  <li><i className="fas fa-check text-green-500 mr-3"></i>All amenities included</li>
-                  <li><i className="fas fa-check text-green-500 mr-3"></i>WiFi, housekeeping, maintenance</li>
-                  <li><i className="fas fa-check text-green-500 mr-3"></i>Prime location</li>
-                </ul>
-              </div>
-            </div>
-
+       
             <div className="card-hover bg-white rounded-xl shadow-lg overflow-hidden border">
               <div className="price-card p-6 text-white text-center">
                 <h3 className="text-2xl font-bold mb-2">Double Sharing</h3>

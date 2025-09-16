@@ -501,11 +501,10 @@ const NewBooking = () => {
   const [applyPermBedRent, setApplyPermBedRent] = useState(true);
   const [decryptedUser, setDecryptedUser] = useState(null);
 
-
   useEffect(() => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
       ; // Just to verify decryption works
-  }, []);
+  }, [decryptedUser]);
 
   const decryptUser = (encryptedData) => {
     try {
@@ -850,7 +849,7 @@ const NewBooking = () => {
           ? 0
           : TotalAmt - Number(data.PermBedMonthlyFixRent),
     };
-
+  console.log("filteredData", filteredData)
     // Include ONLY active tab fields
     const dateFields = ["PermBedDOJ", "PermBedLDt", "TempBedDOJ", "TempBedLDt"];
     if (showPermanent) {
@@ -907,7 +906,7 @@ const NewBooking = () => {
       onSuccess: () => {
         alert("✅ Data successfully sent to Google Sheet!");
 
-
+  console.log("formPreviewData", formPreviewData)
         setShowConfirmModal(false);
 
         // Reset the entire form
@@ -955,12 +954,11 @@ const NewBooking = () => {
         setValue(`AskForBAOrFA`, "SelectAskFor");
 
         // Reset checkboxes and tabs
-        setShowPermanent(false);
         setShowtemporary(false);
-        setActiveTab('');
+        // setActiveTab('');
         setSelctedSheetId(null);
         setSelectedBedNumber(null);
-        window.location.reload()
+        // window.location.reload()
       },
       onError: () => {
         alert("❌ Failed to submit. Try again.");

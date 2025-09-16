@@ -69,10 +69,10 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-primary-light">
+      <div className="flex items-center bg-gray-50 justify-center min-h-screen bg-primary-light">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
+          className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
         >
           <h2 className="text-2xl font-bold mb-6 text-orange-500 text-center">
             Employee Login

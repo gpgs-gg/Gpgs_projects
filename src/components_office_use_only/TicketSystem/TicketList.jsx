@@ -189,9 +189,19 @@ export const TicketList = () => {
                                                         formatDate(ticket[key])
 
                                                     ) : key === "WorkLogs" ? (
-                                                        <div className="text-xs text-gray-700 whitespace-pre-wrap break-words max-w-[1000px]">
-                                                            {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
+                                                        <div className="relative group">
+
+                                                            <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
+                                                                {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
+                                                            </div>
+                                                            {/* Tooltip on Hover */}
+                                                            {ticket.WorkLogs && (
+                                                                <div className="absolute z-50 hidden group-hover:block bg-white border p-3 rounded shadow-md w-96 max-h-96 overflow-y-auto cursor-pointer top-full mt-1 left-0 whitespace-pre-wrap break-words text-sm">
+                                                                    {ticket.WorkLogs}
+                                                                </div>
+                                                            )}
                                                         </div>
+
                                                     ) : (
                                                         ticket[key] || "N/A"
                                                     )
