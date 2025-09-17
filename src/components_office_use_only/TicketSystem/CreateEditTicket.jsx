@@ -384,8 +384,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",
       WorkLogs: updatedWorkLogs || "",
-      CreatedByName: decryptedUser?.name || "Unknown",
-      CreatedById: decryptedUser?.id || "Unknown",
+      // CreatedByName: decryptedUser?.name || "Unknown",
+      // CreatedById: decryptedUser?.id || "Unknown",
       ClosedDate: statusValue === "Closed" ? Timestamp() : "",
       ...(isEdit
         ? {
@@ -396,12 +396,12 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
         }
         : {
-          // CreatedByName: decryptedUser?.name || "Unknown",
-          // CreatedById: decryptedUser?.id || "Unknown",
+          CreatedByName: decryptedUser?.name || "Unknown",
+          CreatedById: decryptedUser?.id || "Unknown",
         }),
     };
     const formData = new FormData();
-
+      console.log("formattedData", formattedData)
     // 🔁 Append non-file data to FormData
     for (const key in formattedData) {
       const value = formattedData[key];
