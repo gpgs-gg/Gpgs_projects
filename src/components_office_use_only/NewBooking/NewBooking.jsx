@@ -563,6 +563,7 @@ const NewBooking = () => {
   useEffect(() => {
     const encrypted = localStorage.getItem("user");
     const decrypted = decryptUser(encrypted);
+    console.log("Decrypted user object:", decrypted);
     decryptedUserRef.current = decrypted;
   }, []);
 
@@ -867,9 +868,9 @@ const NewBooking = () => {
     // Always include client info
 
     if (!decryptedUserRef.current) {
-      alert("User info not loaded yet.");
-      return;
-    }
+        alert("User info not loaded yet.");
+        return;
+      }
 
 
 
@@ -887,8 +888,8 @@ const NewBooking = () => {
         month: "short",
         year: "numeric",
       }),
-      ID: decryptedUserRef.current?.id,
-      EmployeeName: decryptedUserRef.current?.name,
+       ID: decryptedUserRef.current?.id,
+        EmployeeName: decryptedUserRef.current?.name,
       ClientFullName: data.ClientFullName,
       WhatsAppNo: data.WhatsAppNo,
       CallingNo: data.CallingNo,

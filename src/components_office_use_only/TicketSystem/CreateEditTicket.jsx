@@ -321,8 +321,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     return `${day} ${month} ${year} ${hours}:${minutes}${ampm}`;
   }
-
-  function getFormattedTimestampForTargetDate(dateStr) {
+   function getFormattedTimestampForTargetDate(dateStr) {
     const date = new Date(dateStr); // Convert string to Date object
 
     const day = String(date.getDate()).padStart(2, '0');
@@ -376,7 +375,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Escalated: data.Escalated?.value || "",
       WorkLogs: updatedWorkLogs || "",
       // CreatedByName: decryptedUser?.name || "Unknown",
-      CreatedById: selectedTicket?.CreatedById || "Unknown",
+      // CreatedById: selectedTicket?.CreatedById || "Unknown",
       ClosedDate: statusValue === "Closed" ? Timestamp() : "",
       ...(isEdit
         ? {
@@ -394,6 +393,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
         }),
     };
     const formData = new FormData();
+    console.log("formattedData", formattedData)
     // 🔁 Append non-file data to FormData
     for (const key in formattedData) {
       const value = formattedData[key];
