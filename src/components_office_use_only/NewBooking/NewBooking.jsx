@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, memo, useEffect } from 'react';
+import React, { useState, useCallback, memo, useEffect, useRef } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import Select from "react-select";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -499,29 +499,26 @@ const NewBooking = () => {
   const [tempSelectedBedNumber, settempSelectedBedNumber] = useState(null);
   const [permanentPropertyFilledChecked, setPermanentPropertyFilledChecked] = useState()
   const [applyPermBedRent, setApplyPermBedRent] = useState(true);
-  const [decryptedUser, setDecryptedUser] = useState(null);
+  const decryptedUserRef = useRef(null);
 
   useEffect(() => {
-    setDecryptedUser(decryptUser(localStorage.getItem('user')))
-      ; // Just to verify decryption works
-  }, [decryptedUser]);
+    const encrypted = localStorage.getItem("user");
+    const decrypted = decryptUser(encrypted);
+    console.log("Decrypted user object:", decrypted);
+    decryptedUserRef.current = decrypted;
+  }, []);
 
+  // 🧩 Decryption Function
   const decryptUser = (encryptedData) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
       return JSON.parse(decrypted);
     } catch (error) {
-      console.error('Failed to decrypt user:', error);
+      console.error("❌ Failed to decrypt user:", error);
       return null;
     }
   };
-
-
-
-
-
-
 
   // Validation schema
   const schema = yup.object().shape({
@@ -811,6 +808,13 @@ const NewBooking = () => {
   const onSubmit = useCallback((data) => {
     // Always include client info
 
+    if (!decryptedUserRef.current) {
+        alert("User info not loaded yet.");
+        return;
+      }
+
+
+
     const TotalAmt =
       (applyPermBedRent ? Number(data.PermBedRentAmt || 0) : 0) +
       Number(data.PermBedDepositAmt || 0) +
@@ -825,8 +829,8 @@ const NewBooking = () => {
         month: "short",
         year: "numeric",
       }),
-      ID: decryptedUser?.id,
-      EmployeeName: decryptedUser?.name,
+       ID: decryptedUserRef.current?.id,
+        EmployeeName: decryptedUserRef.current?.name,
       ClientFullName: data.ClientFullName,
       WhatsAppNo: data.WhatsAppNo,
       CallingNo: data.CallingNo,
@@ -849,7 +853,6 @@ const NewBooking = () => {
           ? 0
           : TotalAmt - Number(data.PermBedMonthlyFixRent),
     };
-  console.log("filteredData", filteredData)
     // Include ONLY active tab fields
     const dateFields = ["PermBedDOJ", "PermBedLDt", "TempBedDOJ", "TempBedLDt"];
     if (showPermanent) {
@@ -958,7 +961,7 @@ const NewBooking = () => {
         // setActiveTab('');
         setSelctedSheetId(null);
         setSelectedBedNumber(null);
-        // window.location.reload()
+        window.location.reload()
       },
       onError: () => {
         alert("❌ Failed to submit. Try again.");
