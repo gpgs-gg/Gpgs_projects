@@ -6,8 +6,11 @@ import CryptoJS from 'crypto-js';
 
 export const Navigation = () => {
   const { currentView, setCurrentView, currentUser } = useApp();
+
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const { logout } = useAuth();
+  
   const [ decryptedUser , setDecryptedUser] = useState(null);
 
 
@@ -43,7 +46,7 @@ export const Navigation = () => {
   };
 
   return (
-    <div className="bg-white shadow-sm border-b border-gray-200 mb-6 no-print">
+    <div className="bg-gray-50 shadow-sm border-b border-gray-200 mb-6 no-print">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 sm:px-6">
         <div className="flex items-center space-x-2">
@@ -58,7 +61,7 @@ export const Navigation = () => {
     <nav className="px-4 sm:px-6">
   <div
     className={`
-      grid grid-cols-2 gap-2 mt-6 
+      grid grid-cols-2 gap-2 mt-10 
       sm:flex sm:flex-row sm:space-x-6 sm:space-y-0
     `}
   >

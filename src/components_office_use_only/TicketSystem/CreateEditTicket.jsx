@@ -132,7 +132,7 @@ import LoaderPage from "../NewBooking/LoaderPage";
 // };
 
 export const CreateEditTicket = ({ isEdit = false }) => {
-  const { addTicket, updateTicket, setCurrentView, users, selectedTicket, modal } = useApp();
+  const { addTicket, updateTicket, setCurrentView, users, selectedTicket,currentView,  modal } = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
 
@@ -223,13 +223,12 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     value: prop["Property Code"],
     label: prop["Property Code"],
   })) || [];
-
   // Set default values in edit mode
   useEffect(() => {
     if (isEdit && selectedTicket) {
       setValue("Title", selectedTicket.Title);
       setValue("TicketID", selectedTicket.TicketID);
-      setValue("TargetDate", selectedTicket.TargetDate);
+      setValue("TargetDate", new Date(selectedTicket.TargetDate).toLocaleDateString('en-CA'));
       setValue("CreatedByName", selectedTicket.CreatedByName);
       setValue("Description", selectedTicket.Description);
       setValue("Priority", PriorityOptions.find((p) => p.value === selectedTicket.Priority));
@@ -322,29 +321,21 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     return `${day} ${month} ${year} ${hours}:${minutes}${ampm}`;
   }
-  function getFormattedTimestampForTargetDate() {
-    const now = new Date();
 
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = now.toLocaleString('en-US', { month: 'short' }); // "Sep"
-    const year = now.getFullYear();
+  function getFormattedTimestampForTargetDate(dateStr) {
+    const date = new Date(dateStr); // Convert string to Date object
 
-    // let hours = now.getHours();
-    // const minutes = String(now.getMinutes()).padStart(2, '0');
-    // const ampm = hours >= 12 ? 'pm' : 'am';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' }); // "Sep"
+    const year = date.getFullYear();
 
-    // hours = hours % 12;
-    // hours = hours ? hours : 12; // 0 → 12
-
-    return `${day} ${month} ${year} `;
+    return `${day} ${month} ${year}`;
   }
-
 
   function Timestamp() {
     const now = new Date();
     return `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
   }
-
 
   const onSubmit = (data) => {
     const currentTimestamp = getFormattedTimestamp();
@@ -369,7 +360,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     if (previousWlogs) {
       updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
     }
-
+  
     // Format data before sending
     const formattedData = {
       ...data,
@@ -379,13 +370,13 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Category: data.Category?.value || "",
       Assignee: data.Assignee?.value || "",
       Manager: data.Manager?.value || "",
-      TargetDate:getFormattedTimestampForTargetDate(data.TargetDate)|| "",
+      TargetDate: getFormattedTimestampForTargetDate(data.TargetDate) || "",
       Status: statusValue,
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",
       WorkLogs: updatedWorkLogs || "",
-      CreatedByName: decryptedUser?.name || "Unknown",
-      CreatedById: decryptedUser?.id || "Unknown",
+      // CreatedByName: decryptedUser?.name || "Unknown",
+      CreatedById: selectedTicket?.CreatedById || "Unknown",
       ClosedDate: statusValue === "Closed" ? Timestamp() : "",
       ...(isEdit
         ? {
@@ -393,15 +384,16 @@ export const CreateEditTicket = ({ isEdit = false }) => {
           UpdatedById: decryptedUser?.id || "Unknown",
           UpdatedDateTime: Timestamp(),
           Attachment: previews.map(ele => ele.url),
+          CreatedById: selectedTicket?.CreatedById || "Unknown",
+
 
         }
         : {
-          // CreatedByName: decryptedUser?.name || "Unknown",
-          // CreatedById: decryptedUser?.id || "Unknown",
+          CreatedByName: decryptedUser?.name || "Unknown",
+          CreatedById: decryptedUser?.id || "Unknown",
         }),
     };
     const formData = new FormData();
-
     // 🔁 Append non-file data to FormData
     for (const key in formattedData) {
       const value = formattedData[key];
@@ -443,6 +435,11 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     }
   };
 
+
+  useEffect(()=>{
+    reset()
+    setPreviews("")
+  },[currentView])
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">

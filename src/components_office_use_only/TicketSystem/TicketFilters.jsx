@@ -78,7 +78,6 @@ export const TicketFilters = () => {
     const { filters, setFilters, users } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
 
-    console.log("filters", filters)
 
 
     const assigneeOptions = [

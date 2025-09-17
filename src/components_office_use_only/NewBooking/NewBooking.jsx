@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, memo, useEffect } from 'react';
+import React, { useState, useCallback, memo, useEffect, useRef } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import Select from "react-select";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -82,17 +82,74 @@ const PropertyFormSection = memo(({
       const dailyRent = parseFloat(watchMonthlyRent) / 30;
       let totalRent = 0;
 
+      // Custom function to calculate days with 31-day months changed to 30
+      const getCustomDiffDays = (startDate, endDate) => {
+
+        // const perDayRent = watchMonthlyRent / 30;
+        // // console.log("perDayRent", perDayRent)
+
+        // let rentAmount = 0;
+        // let rentCalculationStartDate = doj;
+        // // get month end full date here 
+        // let rentCalculationLastDate = new Date(doj.getFullYear(), doj.getMonth() + 1, 0);
+        // let rentCalulatedUpToDate = doj;
+
+        // // do {
+
+        //     console.log("before if ", clientStayLastDate , rentCalculationLastDate)
+
+        //   // this is full date camparision
+        //   if (rentCalculationLastDate <= clientStayLastDate) {
+
+        //     // this gets no of days rent to be calculated here 
+        //     const rentForNoOfDays = (rentCalculationLastDate.getDate() - rentCalculationStartDate.getDate()) + 1;
+
+        //     rentAmount = perDayRent * rentForNoOfDays;
+        //     console.log("rentAmount", rentAmount)
+
+        //     // this is full date .
+        //     rentCalulatedUpToDate.setDate(rentCalculationLastDate.getDate());
+
+        //     // this is the 1st date for the rent calcultion for the next month ..
+        //     rentCalculationStartDate.setDate(rentCalculationLastDate.getDate() + 1);
+        //     rentCalculationLastDate = new Date(rentCalculationStartDate.getFullYear(), rentCalculationStartDate.getMonth() + 1, 0);
+        //     console.log("rentCalculationstartDate", rentCalculationStartDate, rentCalculationLastDate)
+        //     // rentCalulatedUpToDate = rentCalculationLastDate + 1;
+
+        //     // console.log("rentAmount", rentAmount, rentForNoOfDays, perDayRent, rentCalulatedUpToDate)
+        //   }
+        // // } while (rentCalulatedUpToDate <= clientStayLastDate)
+
+    let current = new Date(startDate);
+        let totalDays = 0;
+
+        while (current <= endDate) {
+          const year = current.getFullYear();
+          const month = current.getMonth();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const isFullMonth = current.getDate() === 1 && (new Date(year, month, daysInMonth).getTime() <= endDate.getTime());
+          if (isFullMonth) {
+            totalDays += Math.min(30, daysInMonth);
+            current.setMonth(current.getMonth() + 1);
+            current.setDate(1);
+          } else {
+            totalDays += 1;
+            // console.log("totalDays", totalDays)
+            current.setDate(current.getDate() + 1);
+          }
+        }
+        return totalDays;
+      };
+
       if (end && !isNaN(end.getTime())) {
-        // ✅ Case: start to end date (inclusive)
-        const diffDays = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        // ✅ Case: start to actual end date (inclusive)
+        const diffDays = getCustomDiffDays(start, end);
         totalRent = Math.round(dailyRent * diffDays);
       } else {
-        // ✅ Case: start to end of that month
-        const lastDayOfMonth = new Date(start.getFullYear(), start.getMonth() + 1, 0);
-        lastDayOfMonth.setHours(0, 0, 0, 0);
-
-        const diffDays = Math.floor((lastDayOfMonth.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-        totalRent = Math.round(dailyRent * diffDays);
+        // ✅ Case: No end date — assume 30-day month
+        const startDay = start.getDate();
+        const remainingDays = 30 - startDay + 1; // include start day
+        totalRent = Math.round(dailyRent * remainingDays);
       }
 
       setValue(`${titlePrefix}BedRentAmt`, totalRent);
@@ -100,6 +157,8 @@ const PropertyFormSection = memo(({
       setValue(`${titlePrefix}BedRentAmt`, "");
     }
   }, [watchStartDate, watchEndDate, watchMonthlyRent, setValue, titlePrefix]);
+
+
 
   // Select styles defined outside render to prevent recreation
   const selectStyles = {
@@ -499,29 +558,25 @@ const NewBooking = () => {
   const [tempSelectedBedNumber, settempSelectedBedNumber] = useState(null);
   const [permanentPropertyFilledChecked, setPermanentPropertyFilledChecked] = useState()
   const [applyPermBedRent, setApplyPermBedRent] = useState(true);
-  const [decryptedUser, setDecryptedUser] = useState(null);
+  const decryptedUserRef = useRef(null);
 
   useEffect(() => {
-    setDecryptedUser(decryptUser(localStorage.getItem('user')))
-      ; // Just to verify decryption works
-  }, [decryptedUser]);
+    const encrypted = localStorage.getItem("user");
+    const decrypted = decryptUser(encrypted);
+    decryptedUserRef.current = decrypted;
+  }, []);
 
+  // 🧩 Decryption Function
   const decryptUser = (encryptedData) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
       return JSON.parse(decrypted);
     } catch (error) {
-      console.error('Failed to decrypt user:', error);
+      console.error("❌ Failed to decrypt user:", error);
       return null;
     }
   };
-
-
-
-
-
-
 
   // Validation schema
   const schema = yup.object().shape({
@@ -811,6 +866,13 @@ const NewBooking = () => {
   const onSubmit = useCallback((data) => {
     // Always include client info
 
+    if (!decryptedUserRef.current) {
+      alert("User info not loaded yet.");
+      return;
+    }
+
+
+
     const TotalAmt =
       (applyPermBedRent ? Number(data.PermBedRentAmt || 0) : 0) +
       Number(data.PermBedDepositAmt || 0) +
@@ -825,8 +887,8 @@ const NewBooking = () => {
         month: "short",
         year: "numeric",
       }),
-      ID: decryptedUser?.id,
-      EmployeeName: decryptedUser?.name,
+      ID: decryptedUserRef.current?.id,
+      EmployeeName: decryptedUserRef.current?.name,
       ClientFullName: data.ClientFullName,
       WhatsAppNo: data.WhatsAppNo,
       CallingNo: data.CallingNo,
@@ -849,7 +911,6 @@ const NewBooking = () => {
           ? 0
           : TotalAmt - Number(data.PermBedMonthlyFixRent),
     };
-  console.log("filteredData", filteredData)
     // Include ONLY active tab fields
     const dateFields = ["PermBedDOJ", "PermBedLDt", "TempBedDOJ", "TempBedLDt"];
     if (showPermanent) {
@@ -906,7 +967,6 @@ const NewBooking = () => {
       onSuccess: () => {
         alert("✅ Data successfully sent to Google Sheet!");
 
-  console.log("formPreviewData", formPreviewData)
         setShowConfirmModal(false);
 
         // Reset the entire form
@@ -958,7 +1018,7 @@ const NewBooking = () => {
         // setActiveTab('');
         setSelctedSheetId(null);
         setSelectedBedNumber(null);
-        // window.location.reload()
+        window.location.reload()
       },
       onError: () => {
         alert("❌ Failed to submit. Try again.");

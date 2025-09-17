@@ -18,7 +18,6 @@ export const AppProvider = ({ children }) => {
 
 // Start with an empty array
 const [tickets, setTickets] = useState([]);
-   console.log("ticket" , tickets)
 useEffect(() => {
   if (Array.isArray(data?.data)) {
     setTickets([...data.data]);

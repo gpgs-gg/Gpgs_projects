@@ -5,8 +5,7 @@ import 'aos/dist/aos.css';
 import { useAuth } from "../context/AuthContext";
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from "../Config";
-import gpgsLogo from "../logo/Gpgs-logo.jpg"
-
+import gpgsLogo from "../logo/Gpgs-logo.jpg";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,95 +14,36 @@ const Header = () => {
   const location = useLocation();
   const { logout } = useAuth();
   const isHomePage = location.pathname === "/";
+
   useEffect(() => {
     AOS.init({
-      duration: 1000, // global animation duration
-      once: false, // whether animation should happen only once - default true
+      duration: 1000,
+      once: false,
     });
-    AOS.refresh(); // refresh AOS when component mounts or updates
+    AOS.refresh();
   }, []);
+
+  // Close mobile menu when window is resized to desktop size
   useEffect(() => {
-    const handleSmoothScroll = (e) => {
-      const href = e.currentTarget.getAttribute("href");
-      if (href?.startsWith("#")) {
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-          setMenuOpen(false); // Close mobile menu on link click
-        }
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && menuOpen) { // md breakpoint ~768px
+        setMenuOpen(false);
       }
     };
-
-    const anchors = document.querySelectorAll('a[href^="#"]');
-    anchors.forEach((anchor) =>
-      anchor.addEventListener("click", handleSmoothScroll)
-    );
-
-    const nav = document.querySelector("nav");
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        nav?.classList.add("bg-white", "shadow-lg");
-      } else {
-        nav?.classList.remove("shadow-lg");
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-
-    const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("fade-in");
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll(".card-hover").forEach((card) => {
-      observer.observe(card);
-    });
-
-    const telLinks = document.querySelectorAll('a[href^="tel:"]');
-    const handleTelClick = function () {
-      this.style.transform = "scale(0.95)";
-      setTimeout(() => {
-        this.style.transform = "scale(1)";
-      }, 150);
-    };
-    telLinks.forEach((link) => {
-      link.addEventListener("click", handleTelClick);
-    });
-
-    return () => {
-      anchors.forEach((anchor) =>
-        anchor.removeEventListener("click", handleSmoothScroll)
-      );
-      window.removeEventListener("scroll", handleScroll);
-      telLinks.forEach((link) =>
-        link.removeEventListener("click", handleTelClick)
-      );
-    };
-  }, []);
-
-  const handleMobileToggle = () => {
-    setMenuOpen((prev) => !prev);
-  };
-
-  const handleMenuLinkClick = () => {
-    setMenuOpen(false);
-  };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [menuOpen]);
 
   const handleLogout = () => {
     logout();
-    window.location.reload(); // Refresh to reset state
-  }
-
-
-
+    window.location.reload();
+  };
 
   useEffect(() => {
-    setDecryptedUser(decryptUser(localStorage.getItem('user')))
-      ; // Just to verify decryption works
+    const encrypted = localStorage.getItem('user');
+    if (encrypted) {
+      setDecryptedUser(decryptUser(encrypted));
+    }
   }, []);
 
   const decryptUser = (encryptedData) => {
@@ -117,126 +57,111 @@ const Header = () => {
     }
   };
 
-
   return (
-    <nav className="bg-white shadow-lg fixed w-full z-50">
-      <div className="max-w-8xl mx-auto px-4 h-24 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center  justify-center">
-            <img
-              className="w-[250px] md:w-[340px] mt-8"
-              // src="https://gpgs.in/wp-content/themes/paying_guest/images/logo.png"
-              src= {gpgsLogo} 
-              alt="GPGS Logo"
-            />
+    <header className="fixed top-0 w-full z-50 bg-white shadow-lg">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20"> 
+          
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/">
+              <img
+                className="h-12 sm:h-16 md:h-20 w-auto"
+                src={gpgsLogo}
+                alt="GPGS Logo"
+              />
+            </Link>
           </div>
-          <div className="hidden md:flex items-center space-x-8 text-lg mt-3 font-bold">
+
+          {/* Desktop nav links */}
+          <nav className="hidden md:flex space-x-8 items-center">
             {isHomePage ? (
               <>
-                <a href="#home" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</a>
-                <a href="#services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services & Facilities</a>
-                <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</a>
-                <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
-                <a href="#about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</a>
-                <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</a>
-
+                <a href="#home" className="text-gray-700 hover:text-indigo-600 transition">Home</a>
+                <a href="#services" className="text-gray-700 hover:text-indigo-600 transition">Services & Facilities</a>
+                <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition">Locations</a>
+                <Link to="/gallery" className="text-gray-700 hover:text-indigo-600 transition">Gallery</Link>
+                <a href="#about" className="text-gray-700 hover:text-indigo-600 transition">About Us</a>
+                <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition">Contact Us</a>
               </>
             ) : (
               <>
-                <Link to="/" className="text-gray-700 hover:text-indigo-600 transition duration-300">Home</Link>
-                <Link to="/services" className="text-gray-700 hover:text-indigo-600 transition duration-300">Services & Facilities</Link>
-                <Link to="/location" className="text-gray-700 hover:text-indigo-600 transition duration-300">Locations</Link>
-                <Link to="/gallary" className="text-gray-700 hover:text-indigo-600 transition duration-300">Gallery</Link>
-
-                <Link to="/about" className="text-gray-700 hover:text-indigo-600 transition duration-300">About us</Link>
-                <Link to="/contact" className="text-gray-700 hover:text-indigo-600 transition duration-300">Contact Us</Link>
+                <Link to="/" className="text-gray-700 hover:text-indigo-600 transition">Home</Link>
+                <Link to="/services" className="text-gray-700 hover:text-indigo-600 transition">Services & Facilities</Link>
+                <Link to="/locations" className="text-gray-700 hover:text-indigo-600 transition">Locations</Link>
+                <Link to="/gallery" className="text-gray-700 hover:text-indigo-600 transition">Gallery</Link>
+                <Link to="/about" className="text-gray-700 hover:text-indigo-600 transition">About Us</Link>
+                <Link to="/contact" className="text-gray-700 hover:text-indigo-600 transition">Contact Us</Link>
               </>
             )}
-            <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition duration-300">Office</Link>
-            <div className="hidden sm:flex items-center space-x-5">
-              <div className="text-right">
-                {decryptedUser?.name && (
-                  <>
-                    <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
-                    <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
-                  </>
-                )}
+            <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition">Office</Link>
 
-              </div>
-              {decryptedUser && (
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium">
-                  {decryptedUser?.name.split(' ').map(n => n[0]).join('')}
+            {/* User info + logout on desktop */}
+            {decryptedUser && (
+              <div className="flex items-center space-x-4 ml-6">
+                <div className="text-right">
+                  <div className="text-sm font-bold text-gray-900">{decryptedUser.name}</div>
+                  <div className="text-xs text-gray-500">({decryptedUser.role})</div>
                 </div>
-              )}
-
-              {decryptedUser && (
-                <button onClick={handleLogout} className="">Logout</button>
-
-              )}
-            </div>
-
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex items-center  text-xl mt-3 font-bold">
-            <div className="flex items-center mr-4 lg:mr-10 space-x-5">
-              <div className="text-right">
-                {decryptedUser?.name && (
-                  <>
-                    <div className="text-xs font-bold text-gray-900">{decryptedUser?.name}</div>
-                    <div className="text-xs text-gray-500">({decryptedUser?.role})</div>
-                  </>
-                )}
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                  {decryptedUser.name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <button onClick={handleLogout} className="text-gray-700 hover:text-indigo-600 transition text-sm">Logout</button>
               </div>
-            </div>
-            <button onClick={handleMobileToggle} className="text-gray-700 focus:outline-none">
+            )}
+          </nav>
+
+          {/* Mobile menu toggle */}
+          <div className="md:hidden flex items-center">
+            {decryptedUser && (
+              <div className="mr-3 text-center">
+                <div className="text-sm font-bold text-gray-900">{decryptedUser.name}</div>
+                <div className="text-xs text-gray-500">({decryptedUser.role})</div>
+              </div>
+            )}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"
+              aria-label="Toggle menu"
+            >
               {menuOpen ? (
-                <i className="fas fa-times text-2xl md:text-xl"></i>
+                <span className="text-2xl">×</span>
               ) : (
-                <i className="fas fa-bars text-2xl md:text-xl"></i>
+                <span className="text-2xl">&#9776;</span>
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu panel */}
       {menuOpen && (
-        <div data-aos="fade-left" data-aos-offset="100" data-aos-easing="ease-in-sine" data-aos-duration="500" className="md:hidden bg-white border-t border-gray-200 px-4 pt-4 pb-6  text-lg mt-3 font-bold space-y-5">
+        <div className="md:hidden bg-white border-t border-gray-200 px-4 pb-6 space-y-5">
           {isHomePage ? (
             <>
-              <a onClick={handleMenuLinkClick} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
-              <a onClick={handleMenuLinkClick} href="#services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</a>
-              <a onClick={handleMenuLinkClick} href="#about" className="block text-gray-700 hover:text-indigo-600">About us</a>
-              <a onClick={handleMenuLinkClick} href="#pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</a>
-              <a onClick={handleMenuLinkClick} href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
-              <a onClick={handleMenuLinkClick} href="#contact" className="block text-gray-700 hover:text-indigo-600">Contact</a>
+              <a onClick={() => setMenuOpen(false)} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
+              <a onClick={() => setMenuOpen(false)} href="#services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</a>
+              <a onClick={() => setMenuOpen(false)} href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
+              <a onClick={() => setMenuOpen(false)} href="#about" className="block text-gray-700 hover:text-indigo-600">About Us</a>
+              <a onClick={() => setMenuOpen(false)} href="#contact" className="block text-gray-700 hover:text-indigo-600">Contact Us</a>
             </>
           ) : (
             <>
-              <Link onClick={handleMenuLinkClick} to="/" className="block text-gray-700 hover:text-indigo-600">Home</Link>
-              <Link onClick={handleMenuLinkClick} to="/services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</Link>
-              <Link onClick={handleMenuLinkClick} to="/about" className="block text-gray-700 hover:text-indigo-600">About us</Link>
-              <Link onClick={handleMenuLinkClick} to="/pricing" className="block text-gray-700 hover:text-indigo-600">Pricing</Link>
-              <Link onClick={handleMenuLinkClick} to="/location" className="block text-gray-700 hover:text-indigo-600">Locations</Link>
-              <Link onClick={handleMenuLinkClick} to="/contact" className="block text-gray-700 hover:text-indigo-600">Contact</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/" className="block text-gray-700 hover:text-indigo-600">Home</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/locations" className="block text-gray-700 hover:text-indigo-600">Locations</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/gallery" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/about" className="block text-gray-700 hover:text-indigo-600">About Us</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/contact" className="block text-gray-700 hover:text-indigo-600">Contact Us</Link>
             </>
           )}
-          <Link onClick={handleMenuLinkClick} to="/gallary" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
-          <Link onClick={handleMenuLinkClick} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office</Link>
-          <div className=" sm:flex items-center space-x-5">
-
-
-            {decryptedUser && (
-              <button onClick={handleLogout} className="">Logout</button>
-
-            )}
-          </div>
-
-
+          <Link onClick={() => setMenuOpen(false)} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office</Link>
+          {decryptedUser && (
+            <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="block w-full text-left text-gray-700 hover:text-indigo-600">Logout</button>
+          )}
         </div>
       )}
-    </nav>
+    </header>
   );
 };
 

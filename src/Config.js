@@ -40,6 +40,7 @@ export const CategoryOptions = [
   { value: "Deposit", label: "Deposit" },
   { value: "Notice", label: "Notice" },
   { value: "Agreement", label: "Agreement" },
+  { value: "Police NOC", label: "Police NOC"},
   { value: "Handover", label: "Handover" },
   { value: "Possession", label: "Possession" },
   { value: "Shifting", label: "Shifting" },

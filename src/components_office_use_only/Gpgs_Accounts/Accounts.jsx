@@ -13,7 +13,6 @@ const Accounts = () => {
   // Fetch all properties
   const { data: fetchSingleSheetData, error, isError } = useFetchSingleSheetData();
 
-  console.log("result", result / 2)
   // Fetch property sheet data for selected property + month
   const { data: propertySheetData, isLoading, isSuccess } = usePropertySheetData(sheetId, !!sheetId);
 
@@ -125,7 +124,6 @@ const Accounts = () => {
       const newSheetId = `${selectedProperty.value},${selectedMonth.value},${calculatedValue / 2}`;
       setSheetId(newSheetId);
 
-      console.log("sheetId", newSheetId);
     }
   }, [selectedMonth, selectedProperty, fetchSingleSheetData]);
 
