@@ -322,21 +322,14 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     return `${day} ${month} ${year} ${hours}:${minutes}${ampm}`;
   }
-  function getFormattedTimestampForTargetDate() {
-    const now = new Date();
+   function getFormattedTimestampForTargetDate(dateStr) {
+    const date = new Date(dateStr); // Convert string to Date object
 
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = now.toLocaleString('en-US', { month: 'short' }); // "Sep"
-    const year = now.getFullYear();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' }); // "Sep"
+    const year = date.getFullYear();
 
-    // let hours = now.getHours();
-    // const minutes = String(now.getMinutes()).padStart(2, '0');
-    // const ampm = hours >= 12 ? 'pm' : 'am';
-
-    // hours = hours % 12;
-    // hours = hours ? hours : 12; // 0 → 12
-
-    return `${day} ${month} ${year} `;
+    return `${day} ${month} ${year}`;
   }
 
 
