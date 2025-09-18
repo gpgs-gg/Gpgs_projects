@@ -118,6 +118,9 @@ function App() {
             <Contact />
           </>
         } />
+   <Route path="*" element={<div className='flex justify-center items-center h-screen'>
+               PAGE NOT FOUND ON THIS ROUTE
+                </div>} />
         <Route path="/home" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
