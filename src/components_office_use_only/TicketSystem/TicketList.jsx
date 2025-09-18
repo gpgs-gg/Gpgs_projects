@@ -129,7 +129,7 @@ export const TicketList = () => {
                                     >
                                         {key === "Title" ? (
                                             <div>
-                                                <div className="font-medium">{ticket.Title || "N/A"}</div>
+                                                <div className="font-medium">{`${ticket.Title.substring(0, 25)}...` || "N/A"}</div>
                                                 <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden   text-ellipsis">
                                                     {ticket.Description
                                                         ? `${ticket.Description.substring(0, 60)}...`
