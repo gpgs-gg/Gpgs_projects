@@ -30,7 +30,7 @@ const Home = () => {
     
     {/* Left side: content */}
     <div className="flex-1 text-start  fade-in">
-      <h1 className="text-2xl font-bold text-[#407105] md:text-3xl mb-5 leading-snug">
+      <h1 className="text-[20px] font-bold text-[#407105] md:text-3xl mb-5 leading-snug">
         Our goal is to make you feel at home <br /> 
         in our paying guest facilities with all <br /> 
         the quality services
