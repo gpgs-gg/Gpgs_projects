@@ -2,6 +2,7 @@ import { ReactTyped } from 'react-typed'
 import React, { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import video1 from "../videos/PV1NL21-privateRoom.mp4"
 
 const Home = () => {
     useEffect(() => {
@@ -24,58 +25,67 @@ const Home = () => {
 
     return (
         <>
-            <section id="home" className="gradient-bg text-black py-[50px] pt-32">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center fade-in">
-                        {/* Typing animation on heading */}
-                        <h1 className="text-2xl font-bold  text-[#3730a3] md:text-3xl mb-5">
-                            Our goal is to make you feel at home in our paying guest <br /> facilities with all the quality services
+          <section id="home" className="gradient-bg text-black py-[50px] pt-32">
+  <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 gap-8">
+    
+    {/* Left side: content */}
+    <div className="flex-1 text-start  fade-in">
+      <h1 className="text-2xl font-bold text-[#407105] md:text-3xl mb-5 leading-snug">
+        Our goal is to make you feel at home <br /> 
+        in our paying guest facilities with all <br /> 
+        the quality services
+      </h1>
+      {/* <h1 className="text-2xl font-normal text-[#3730a3] md:text-3xl mb-5 leading-snug">
+        Our goal is to make you feel at home <br /> 
+        in our paying guest facilities with all <br /> 
+        the quality services
+      </h1> */}
 
-                        </h1>
+      <p className="text-xl md:text-2xl mb-6 opacity-90">
+        <ReactTyped
+          strings={[
+            "Enjoy Luxurious Stay at Best Price",
+          ]}
+          typeSpeed={20}
+          backSpeed={20}
+          loop
+        />
+      </p>
 
-                        {/* Subheading */}
-                        <p className="text-xl md:text-2xl mb-4 opacity-90">
-                            <ReactTyped
-                                strings={[
-                                    //   "We Serve Beyond Business",
-                                    //   "Enjoy Luxury Living",
-                                    //   "Comfort & Community Await You",
-                                    "Enjoy Luxury at the Best Price",
-                                ]}
-                                typeSpeed={20}
-                                backSpeed={20}
-                                loop
-                            />
-                        </p>
+      <div className="flex flex-wrap sm:flex-nowrap gap-4 justify-start">
+          <button className="bg-white text-[#3730a3] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+          <h1 className='text-xl'>10+</h1>
+          <p>Years Experience</p>
+        </button>
+        <button className="bg-white text-[#3730a3] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+          <h1 className='text-xl'>4k+</h1>
+          <p>Customers</p>
+        </button>
+        <button className="bg-white text-[#3730a3] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 text-center">
+          <h1 className='text-xl'>500+</h1>
+          <p>Reviews</p>
+        </button>
+     
+      </div>
+    </div>
 
-                        {/* Description */}
-                        {/* <p className="text-xl mb-4 max-w-xl mx-auto opacity-80">
-                            At Gopal’s Paying Guest Services, We provide fully furnished, secure and
-                            comfortable PG accommodations for men and women separately in Navi
-                            Mumbai. Designed for your convenience, with a decade of curated
-                            experience in professional and student accommodation.
-                        </p> */}
+    {/* Right side: video */}
+    <div className="flex-1   flex justify-center md:justify-end">
+      <video
+        className="lg:h-96 w-full object-cover rounded-lg "
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src={video1} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    
+  </div>
+</section>
 
-
-                        <h1 className='text-xl font-bold mb-5 text-[#3730a3]'>
-                            Book Your Stay With Us Today
-                        </h1>
-
-                        {/* Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
-                                <i className="fas fa-phone mr-2"></i> 9326262292
-                            </button>
-                            <button onClick={handleMap} className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
-                                <i className="fas fa-map-marker-alt mr-2"></i>Office Location
-                            </button>
-                            {/* <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-300">
-                                <i className="fas fa-map-marker-alt mr-2"></i>Office Locations
-                            </button> */}
-                        </div>
-                    </div>
-                </div>
-            </section>
         </>
     )
 }

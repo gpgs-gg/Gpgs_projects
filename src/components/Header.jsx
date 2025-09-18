@@ -66,7 +66,7 @@ const Header = () => {
           <div className="flex-shrink-0">
             <Link to="/">
               <img
-                className="h-12 sm:h-16 md:h-20 w-auto"
+                className=" h-16  lg:h-15 sm:h-16 md:h-20 w-auto"
                 src={gpgsLogo}
                 alt="GPGS Logo"
               />

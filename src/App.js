@@ -122,10 +122,10 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
         <Route path="/pricing" element={<Pricing />} />
-        <Route path="/location" element={<Location />} />
+        <Route path="/locations" element={<Location />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/gpgs-actions/tickets" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>} />
-        <Route path="/gallary" element={<Gallary />} />
+        <Route path="/gallery" element={<Gallary />} />
         <Route path="/gpgs-actions/beds-avilable" element={<ProtectedRoute><BedsAvilable /></ProtectedRoute>} />
         <Route path="/gpgs-actions/new-booking" element={<ProtectedRoute><NewBooking /></ProtectedRoute>} />
         <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute> } />

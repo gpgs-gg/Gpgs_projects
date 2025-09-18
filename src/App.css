@@ -10,7 +10,8 @@ body {
 
 /* Existing styles */
 .gradient-bg {
-  background: linear-gradient(135deg, #FACC15 50%, #f3d955 50%);
+  /* background: linear-gradient(135deg, #FACC15 50%, #f3d955 50%); */
+  background: linear-gradient(135deg, #e5e4e341 0%, #edd458 40%);
 }
 .gradient-bg-contact {
   background: linear-gradient(135deg, #689b40f0 50%, #689b40f0 50%);

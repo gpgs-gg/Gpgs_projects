@@ -41,41 +41,46 @@ const ConfirmationModel = ({
   };
 
 
-  let endOfDOJMonth = null;
 
-  if (formPreviewData?.PermBedDOJ) {
-    const dojDate = new Date(formPreviewData.PermBedDOJ);
+let endOfDOJMonth = null;
 
-    if (!isNaN(dojDate)) {
-      endOfDOJMonth = new Date(
-        dojDate.getFullYear(),
-        dojDate.getMonth() + 1,
-        0
-      ).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
-    }
+if (formPreviewData?.PermBedDOJ) {
+  const dojDate = new Date(formPreviewData.PermBedDOJ);
+
+  if (!isNaN(dojDate)) {
+    const year = dojDate.getFullYear();
+    const month = dojDate.getMonth();
+    // Get the actual last day of the month
+    const actualLastDay = new Date(year, month + 1, 0).getDate();
+    // Use 30 if month has more than 30 days, otherwise use actual last day (like Feb)
+    const customEndDay = actualLastDay >= 30 ? 30 : actualLastDay;
+    const customEndDate = new Date(year, month, customEndDay);
+    endOfDOJMonth = customEndDate.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   }
+}
 
-  let tempEndOfDOJMonth = null;
-
-  if (formPreviewData?.TempBedDOJ) {
-    const dojDate = new Date(formPreviewData.TempBedDOJ);
-
-    if (!isNaN(dojDate)) {
-      tempEndOfDOJMonth = new Date(
-        dojDate.getFullYear(),
-        dojDate.getMonth() + 1,
-        0
-      ).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
-    }
+let tempEndOfDOJMonth = null;
+if (formPreviewData?.TempBedDOJ) {
+  const dojDate = new Date(formPreviewData.TempBedDOJ);
+  if (!isNaN(dojDate)) {
+    const year = dojDate.getFullYear();
+    const month = dojDate.getMonth();
+    // Get the actual last day of the month
+    const actualLastDay = new Date(year, month + 1, 0).getDate();
+    // Use 30 if month has more than 30 days, otherwise use actual last day (e.g., February)
+    const customEndDay = actualLastDay >= 30 ? 30 : actualLastDay;
+    const customEndDate = new Date(year, month, customEndDay);
+    tempEndOfDOJMonth = customEndDate.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   }
+}
 
 
   const shareOnWhatsApp = () => {

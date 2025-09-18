@@ -45,8 +45,26 @@ import gbed10 from "../images_of_female_pg/photo10.jpeg"
 import gbed11 from "../images_of_female_pg/photo11.jpeg"
 import gbed12 from "../images_of_female_pg/photo12.jpeg"
 import gbed13 from "../images_of_female_pg/photo13.jpeg"
+import gbed14 from "../images_of_female_pg/photo14.jpeg"
+import gbed15 from "../images_of_female_pg/photo15.jpeg"
+import gbed16 from "../images_of_female_pg/photo16.jpeg"
+import gbed17 from "../images_of_female_pg/photo17.jpeg"
+import gbed18 from "../images_of_female_pg/photo18.jpeg"
+import gbed19 from "../images_of_female_pg/photo19.jpeg"
+import gbed20 from "../images_of_female_pg/photo20.jpeg"
+import gbed21 from "../images_of_female_pg/photo21.jpeg"
+import gbed22 from "../images_of_female_pg/photo22.jpeg"
+import gbed23 from "../images_of_female_pg/photo23.jpeg"
+import gbed24 from "../images_of_female_pg/photo24.jpeg"
+import gbed25 from "../images_of_female_pg/photo25.jpeg"
+import gbed26 from "../images_of_female_pg/photo26.jpeg"
+import gbed27 from "../images_of_female_pg/photo27.jpeg"
+import gbed28 from "../images_of_female_pg/photo28.jpeg"
+import gbed29 from "../images_of_female_pg/photo29.jpeg"
+import gbed30 from "../images_of_female_pg/photo30.jpeg"
 
-const girlsimages_of_male_pg = [
+
+const images_of_male_pg = [
   bed1,
   bed2,
   bed3,
@@ -80,7 +98,7 @@ const girlsimages_of_male_pg = [
 
 ];
 
-const boysimages_of_male_pg = [
+const images_of_female_pg = [
 gbed1,
 gbed2,
 gbed3,
@@ -94,7 +112,23 @@ gbed10,
 gbed11,
 gbed12,
 gbed13,
-
+gbed14,
+gbed15,
+gbed16,
+gbed17,
+gbed18,
+gbed19,
+gbed20,
+gbed21,
+gbed22,
+gbed23,
+gbed24,
+gbed25,
+gbed26,
+gbed27,
+gbed28,
+gbed29,
+gbed30,
 
 
 ];
@@ -104,11 +138,11 @@ const Gallary = () => {
     <div className="p-6 space-y-12 ">
       {/* Girls PG Section */}
       <section className='mt-20'>
-        <h2 className="text-2xl md:text-3xl font-bold  text-blue-700 text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold  text-[#407105] text-center mb-6">
           Male PG Photos
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {girlsimages_of_male_pg.map((src, index) => (
+          {images_of_male_pg.map((src, index) => (
             <div
               key={index}
               className="w-full h-[400px] rounded-lg shadow-md overflow-hidden"
@@ -126,11 +160,11 @@ const Gallary = () => {
 
    
       <section className='mt-20'>
-        <h2 className="text-2xl md:text-3xl font-bold  text-blue-700 text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold  text-[#407105] text-center mb-6">
           Female PG Photos
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {boysimages_of_male_pg.map((src, index) => (
+          {images_of_female_pg.map((src, index) => (
             <div
               key={index}
               className="w-full h-[400px] rounded-lg shadow-md overflow-hidden"
