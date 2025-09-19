@@ -7,6 +7,8 @@ import { useEmployeeDetails } from './services';
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from '../Config'; // Make sure this is defined and matches backend
 import SignupPage from './SignupPage';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -58,12 +60,21 @@ const LoginPage = () => {
     });
     if (user) {
       login(user);
+       toast.success("Logged in successfully!", {
+          toastId: "login-success" // Optional: prevents duplicate toasts
+        });
+    
       setError('');
       navigate('/gpgs-actions');
       reset();
-      window.location.reload(); // To refresh state across the app
+        setTimeout(() => {
+           window.location.reload();
+      }, 1000);
+   // To refresh state across the app
     } else {
-      setError('Invalid Login ID or Password');
+      setError('');
+      toast.error('Invalid Login ID or Password')
+
     }
   };
 

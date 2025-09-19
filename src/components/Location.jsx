@@ -27,7 +27,7 @@ const Location = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#407105] mb-4">Prime Locations</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2c4d04] mb-4">Prime Locations</h2>
           <p className="text-base md:text-xl text-gray-600">
             Strategically located PG facilities across Mumbai & Navi Mumbai
           </p>
@@ -87,7 +87,7 @@ const Location = () => {
                 { title: "CBD Belapur", sectors: ["Sector 14", "Sector 19", "Sector 20"] },
                 { title: "Kharghar", sectors: ["Sector 3", "Sector 10", "Sector 12"] },
                 { title: "Kopar Khairane", sectors: ["Sector 3"] },
-                { title: "Kopar Khairane", sectors: ["Sector 16"] },
+                { title: "Ghansoli", sectors: ["Sector 16"] },
               ].map((location, index) => (
                 <div key={index} className="relative group w-full h-32 [perspective:1000px]">
                   <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">

@@ -77,11 +77,20 @@ const DepartmentOptions = [
 export const TicketFilters = () => {
     const { filters, setFilters, users } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
-
+     console.log("filters", filters)
 
 
     const assigneeOptions = [
         { label: "All Assignees", value: "" },
+        ...(EmployeeDetails?.data
+            ?.filter((emp) => emp?.Name)
+            .map((emp) => ({
+                value: emp.Name,
+                label: `${emp.Name}`,
+            })) || [])
+    ];
+    const assigneeOptionsForCreatedBy = [
+        { label: "All CreatedBy", value: "" },
         ...(EmployeeDetails?.data
             ?.filter((emp) => emp?.Name)
             .map((emp) => ({
@@ -107,6 +116,7 @@ export const TicketFilters = () => {
         Department: DepartmentOptions[0],
         Assignee: assigneeOptions[0],
         Manager: ManagerOptions[0],
+        CreatedByName: assigneeOptionsForCreatedBy[0],
     };
 
 
@@ -131,6 +141,7 @@ export const TicketFilters = () => {
             Department: DepartmentOptions.find((opt) => opt.value === filters.Department) || defaultValues.Department,
             Assignee: assigneeOptions.find((opt) => opt.value === filters.Assignee) || defaultValues.Assignee,
             Manager: ManagerOptions.find((opt) => opt.value === filters.Manager) || defaultValues.Manager,
+            CreatedByName: assigneeOptionsForCreatedBy.find((opt) => opt.value === filters.CreatedByName) || defaultValues.CreatedByName,
             TargetDate:filters.TargetDate || "",
 
         },
@@ -141,6 +152,7 @@ export const TicketFilters = () => {
     const watchedAssignee = watch("Assignee");
     const watchedManager = watch("Manager");
     const watchedTargetDate = watch("TargetDate");
+    const watchedCreatedByName = watch("CreatedByName");
     // const watchedPriority = watch("Priority"); // Uncomment if Priority is used
     React.useEffect(() => {
         setFilters({
@@ -149,9 +161,10 @@ export const TicketFilters = () => {
             Department: watchedDepartment?.value || "",
             Assignee: watchedAssignee?.value || "",
             Manager: watchedManager?.value || "",
+            CreatedByName: watchedCreatedByName?.value || "",
             TargetDate: formatDateToDDMMMYYYY(watchedTargetDate)|| "",
         });
-    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate]);
+    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate , watchedCreatedByName]);
 
     const handleClearFilters = () => {
         reset(defaultValues);
@@ -161,7 +174,8 @@ export const TicketFilters = () => {
             Department: "",
             Assignee: "",
             Manager: "",
-            TargetDate: ""
+            TargetDate: "",
+            CreatedByName:""
         });
     };
 
@@ -178,7 +192,7 @@ export const TicketFilters = () => {
                     Clear Filters
                 </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
 
                 {/* Status */}
                 <div>
@@ -262,6 +276,17 @@ export const TicketFilters = () => {
                                     </button>
                                 )}
                             </div>
+                        )}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Created By</label>
+                    <Controller
+                        name="CreatedByName"
+                        control={control}
+                        render={({ field }) => (
+                            <Select {...field} options={assigneeOptionsForCreatedBy} styles={SelectStyles} isClearable={false} />
                         )}
                     />
                 </div>

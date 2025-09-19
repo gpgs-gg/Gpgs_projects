@@ -15,8 +15,10 @@ import BedsAvilable from './components_office_use_only/Gpgps_Bedsavilable/BedsAv
 import Accounts from './components_office_use_only/Gpgs_Accounts/Accounts';
 import AdminLayout from './components_office_use_only/TicketSystem/AdminLayout';
 import NewBooking from './components_office_use_only/NewBooking/NewBooking';
-import ProtectedRoute from './components/ProtectedRoutes';
+import ProtectedRoute from './AuthRoutes/ProtectedRoutes';
 import LoginPage from './auth/LoginPage';
+import { divIcon } from 'leaflet';
+import PublicRoute from './AuthRoutes/PublicRoute';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -106,7 +108,7 @@ function App() {
   return (
     <>
       {/* Show Header only if not in admin route */}
-<Header />
+      <Header />
       <Routes>
         <Route path="/" element={
           <>
@@ -118,6 +120,8 @@ function App() {
             <Contact />
           </>
         } />
+
+
         <Route path="/home" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
@@ -128,13 +132,9 @@ function App() {
         <Route path="/gallery" element={<Gallary />} />
         <Route path="/gpgs-actions/beds-avilable" element={<ProtectedRoute><BedsAvilable /></ProtectedRoute>} />
         <Route path="/gpgs-actions/new-booking" element={<ProtectedRoute><NewBooking /></ProtectedRoute>} />
-        <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute> } />
-        <Route path="/gpgs-actions/login" element={<LoginPage />} />
-        <Route path="/gpgs-actions" element={
-          <ProtectedRoute>
-            <Gpgsaction />
-          </ProtectedRoute>
-        } />
+        <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
+        <Route path="/gpgs-actions/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/gpgs-actions" element={<ProtectedRoute><Gpgsaction /></ProtectedRoute>} />
 
 
 
@@ -143,7 +143,9 @@ function App() {
 
 
 
-
+        <Route path="*" element={<div className='flex justify-center items-center h-screen'>
+          PAGE NOT FOUND ON THIS ROUTE
+        </div>} />
         {/* Admin routes */}
         {/* <Route path="/gpgs-actions/tickets" element={
             <AdminLayout />

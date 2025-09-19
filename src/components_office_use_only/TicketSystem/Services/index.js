@@ -7,7 +7,6 @@ const apiClient = axios.create({
   // baseURL: "http://localhost:3000/api", // For local development
 });
 
-
 // ✅ Create Ticket
 const CreateTicket = async (data) => {
   const response = await apiClient.post("/ticket-created", data);

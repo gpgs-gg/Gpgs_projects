@@ -7,7 +7,7 @@ const Contact = () => {
  text-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-4xl text-[#407105]  font-bold mb-4">Get In Touch</h2>
+            <h2 className="text-4xl text-[#2c4d04]  font-bold mb-4">Connect with us</h2>
             {/* <p className="text-xl text-[#3730a3] font-bold  opacity-90">Ready to find your perfect accommodation? Contact our team today!</p> */}
           </div>
 
@@ -33,7 +33,7 @@ const Contact = () => {
                 <i className="fas  text-[#3730a3] fa-headset text-2xl"></i>
               </div> */}
               <h3 className="text-xl text-[#3730a3] font-bold mb-4">Sales Team</h3>
-              <a href="tel:9326262292" className="text-2xl text-[#3730a3] font-bold hover:text-[#3730a10] transition duration-300 block mb-2">
+              <a href="tel:7021368623" className="text-2xl text-[#3730a3] font-bold hover:text-[#3730a10] transition duration-300 block mb-2">
                 <i className="fas text-[#3730a3] fa-phone mr-2"></i>7021368623
               </a>
               {/* <p className="opacity-80 text-[#3730a3] font-bold">Primary contact for all inquiries</p> */}
@@ -47,7 +47,7 @@ const Contact = () => {
                 <i className="fas  text-[#3730a3] fa-headset text-2xl"></i>
               </div> */}
               <h3 className="text-xl text-[#3730a3] font-bold mb-4">Customer Care</h3>
-              <a href="tel:9326262292" className="text-2xl text-[#3730a3] font-bold hover:text-[#3730a10] transition duration-300 block mb-2">
+              <a href="tel:8928191814" className="text-2xl text-[#3730a3] font-bold hover:text-[#3730a10] transition duration-300 block mb-2">
                 <i className="fas text-[#3730a3] fa-phone mr-2"></i>8928191814
               </a>
               {/* <p className="opacity-80 text-[#3730a3] font-bold">Primary contact for customer support</p> */}

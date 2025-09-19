@@ -40,7 +40,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#407105] mb-4">About Us</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#2c4d04] mb-4">About Us</h2>
         </div>
 
         {/* Content Grid */}
@@ -81,7 +81,7 @@ const About = () => {
                       <i className="fas fa-star text-yellow-500 mr-2"></i> Why Choose Us?
                     </h4>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 list-disc list-inside text-sm text-gray-800">
-                      <li>Non-Compromising Service <span  className='ml-5'>Quality</span></li>
+                      <li>Non-Compromising Service Quality</li>
                       <li>Daily Housekeeping</li>
                       <li>Prime Residential Locations</li>
                       <li>In-house Maintenance Team</li>
@@ -89,8 +89,8 @@ const About = () => {
                       <li>In-house Customer Support Team</li>
                       <li>Branded Furniture & Appliances</li>
                       <li>Scheduled Appliances Servicing</li>
-                      <li>Transparent Pricing</li>
-                      <li>Quarterly Deep Cleaning & Pest <span  className='ml-5'>Control</span></li>
+                      <li>Transparent Pricing- No hidden charges, No brokerage</li>
+                      <li>Quarterly Deep Cleaning & Pest Control </li>
                     </ul>
                   </div>
                 </div>
@@ -138,13 +138,13 @@ const About = () => {
             </div>
 
               <div data-aos="fade-up" className='mt-10'>
-            <div className="bg-white p-6 rounded-lg border-l-4 border-indigo-500 shadow">
+            {/* <div className="bg-white p-6 rounded-lg border-l-4 border-indigo-500 shadow">
               <p className="text-gray-700 italic text-base sm:text-lg">
                 "We believe that a comfortable home environment is essential for success, whether you're a
                 student or a working professional. That's why we go beyond business to create spaces that feel
                 like home"
               </p>
-            </div>
+            </div> */}
           </div>
           </div>
           {/* Right Box: Quote */}

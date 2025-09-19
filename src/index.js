@@ -9,7 +9,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from './components_office_use_only/TicketSystem/AppProvider';
 import { AuthProvider } from './context/AuthContext';
-
+  import { ToastContainer } from 'react-toastify';
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
 
@@ -21,6 +21,7 @@ root.render(
       <BrowserRouter>
         <AppProvider>
           <AuthProvider>
+            <ToastContainer/>
             <App />
           </AuthProvider>
         </AppProvider>

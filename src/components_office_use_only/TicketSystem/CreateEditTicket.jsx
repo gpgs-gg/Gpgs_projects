@@ -11,7 +11,8 @@ import {
 } from "./Services";
 import { useEffect, useState } from "react";
 import LoaderPage from "../NewBooking/LoaderPage";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // Select dropdown options
 // const PriorityOptions = [
 //   { value: "Low", label: "Low" },
@@ -132,7 +133,7 @@ import LoaderPage from "../NewBooking/LoaderPage";
 // };
 
 export const CreateEditTicket = ({ isEdit = false }) => {
-  const { addTicket, updateTicket, setCurrentView, users, selectedTicket,currentView,  modal } = useApp();
+  const { addTicket, updateTicket, setCurrentView, users, selectedTicket, currentView, modal } = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
 
@@ -142,7 +143,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const [previews, setPreviews] = useState([]);
   const [decryptedUser, setDecryptedUser] = useState(null);
 
-
+  console.log("currentView", currentView)
 
   useEffect(() => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
@@ -321,7 +322,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     return `${day} ${month} ${year} ${hours}:${minutes}${ampm}`;
   }
-   function getFormattedTimestampForTargetDate(dateStr) {
+  function getFormattedTimestampForTargetDate(dateStr) {
     const date = new Date(dateStr); // Convert string to Date object
 
     const day = String(date.getDate()).padStart(2, '0');
@@ -359,7 +360,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     if (previousWlogs) {
       updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
     }
-  
+
     // Format data before sending
     const formattedData = {
       ...data,
@@ -415,7 +416,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     // 📸 Append each image file
     previews.forEach((file) => {
-      formData.append("images", file.file); // 👈 Keep the key same for all files
+      formData.append("images", file.file); //  Keep the key same for all files
     });
 
     // ✅ Submit
@@ -423,7 +424,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     submissionFn(formData, {
       onSuccess: () => {
-        alert(`✅ Ticket ${isEdit ? "updated" : "created"} successfully!`);
+        toast.success(`Ticket ${isEdit ? "updated" : "created"} successfully!`);
+        // toast.error("Error message!");
         reset();
         setCurrentView("tickets");
       },

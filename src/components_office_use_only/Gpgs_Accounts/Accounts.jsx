@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import { useAddBooking, useFetchSingleSheetData, usePropertySheetData } from "./services/index";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import useFetchSingleSheetData, { useAddBooking, usePropertySheetData } from "./services/index";
 // import { useAddBooking, useFetchSingleSheetData, usePropertySheetData } from "./Server/index";
 
@@ -136,10 +138,11 @@ const Accounts = () => {
       },
       {
         onSuccess: () => {
-          alert("✅ Data successfully sent to Google Sheet!");
+          toast.success("Data successfully sent to Google Sheet!");
         },
         onError: (error) => {
           // Try to extract error message from response
+          toast.error(error)
           console.error("Submission error:", error);
           const message =
             error?.response?.data?.error || error.message || "❌ Unknown error occurred while submitting data.";

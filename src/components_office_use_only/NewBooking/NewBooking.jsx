@@ -9,6 +9,8 @@ import { useAddBooking, useEmployeeDetails, usePropertyData, usePropertySheetDat
 import LoaderPage from './LoaderPage';
 import { SECRET_KEY } from '../../Config';
 import CryptoJS from 'crypto-js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 // Memoized Select Component to prevent unnecessary re-renders
@@ -120,7 +122,7 @@ const PropertyFormSection = memo(({
         //   }
         // // } while (rentCalulatedUpToDate <= clientStayLastDate)
 
-    let current = new Date(startDate);
+        let current = new Date(startDate);
         let totalDays = 0;
 
         while (current <= endDate) {
@@ -868,9 +870,9 @@ const NewBooking = () => {
     // Always include client info
 
     if (!decryptedUserRef.current) {
-        alert("User info not loaded yet.");
-        return;
-      }
+      alert("User info not loaded yet.");
+      return;
+    }
 
 
 
@@ -888,8 +890,8 @@ const NewBooking = () => {
         month: "short",
         year: "numeric",
       }),
-       ID: decryptedUserRef.current?.id,
-        EmployeeName: decryptedUserRef.current?.name,
+      ID: decryptedUserRef.current?.id,
+      EmployeeName: decryptedUserRef.current?.name,
       ClientFullName: data.ClientFullName,
       WhatsAppNo: data.WhatsAppNo,
       CallingNo: data.CallingNo,
@@ -966,8 +968,8 @@ const NewBooking = () => {
   const handleFinalSubmit = useCallback(() => {
     submitBooking(formPreviewData, {
       onSuccess: () => {
-        alert("✅ Data successfully sent to Google Sheet!");
-
+        // alert("✅ Data successfully sent to Google Sheet!");
+        toast.success("Data successfully sent to Google Sheet!")
         setShowConfirmModal(false);
 
         // Reset the entire form
