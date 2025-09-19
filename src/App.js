@@ -120,8 +120,6 @@ function App() {
             <Contact />
           </>
         } />
-
-
         <Route path="/home" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />

@@ -23,18 +23,19 @@ const Home = () => {
 
 
 
-  return (
-    <>
-      <section id="home" className="gradient-bg text-black py-[50px] pt-32">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 gap-8">
-
-          {/* Left side: content */}
-          <div className="flex-1 text-start  fade-in">
-            <h1 className="text-[20px] font-bold text-[#2c4d04] md:text-3xl mb-5 leading-snug">
-              Our goal is to make you feel at home <br />
-              with all the premium facilities and <br /> quality services
-            </h1>
-            {/* <h1 className="text-2xl font-normal text-[#3730a3] md:text-3xl mb-5 leading-snug">
+    return (
+        <>
+          <section id="home" className="gradient-bg text-black py-[50px] pt-32">
+  <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 gap-8">
+    
+    {/* Left side: content */}
+    <div className="flex-1 text-start  fade-in">
+      <h1 className="text-[20px] font-bold text-[#407105] md:text-3xl mb-5 leading-snug">
+        Our goal is to make you feel at home <br /> 
+        in our paying guest facilities with all <br /> 
+        the quality services
+      </h1>
+      {/* <h1 className="text-2xl font-normal text-[#3730a3] md:text-3xl mb-5 leading-snug">
         Our goal is to make you feel at home <br /> 
         in our paying guest facilities with all <br /> 
         the quality services
