@@ -19,13 +19,12 @@ import ProtectedRoute from './AuthRoutes/ProtectedRoutes';
 import LoginPage from './auth/LoginPage';
 import { divIcon } from 'leaflet';
 import PublicRoute from './AuthRoutes/PublicRoute';
+import PageNotFound from './components/PageNotFound';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
-  const location = useLocation();
 
-  const isAdminRoute = location.pathname.startsWith("/gpgs-actions/tickets");
 
   // Smooth scroll
   useEffect(() => {
@@ -135,15 +134,7 @@ function App() {
         <Route path="/gpgs-actions" element={<ProtectedRoute><Gpgsaction /></ProtectedRoute>} />
 
 
-
-
-
-
-
-
-        <Route path="*" element={<div className='flex justify-center items-center h-screen'>
-          PAGE NOT FOUND ON THIS ROUTE
-        </div>} />
+        <Route path="*" element={<PageNotFound/>} />
         {/* Admin routes */}
         {/* <Route path="/gpgs-actions/tickets" element={
             <AdminLayout />

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -189,6 +189,7 @@ const Services = () => {
     },
   ]
 
+  const [swiperInstance, setSwiperInstance] = useState(null);
 
 
   return (
@@ -205,97 +206,69 @@ const Services = () => {
             className="h-20 w-auto ml-1 bg-gray-50"
           />
         </h1>
-
-
-        <Swiper
-          effect={'coverflow'}
-          grabCursor={true}
-          centeredSlides={true}
-          slidesPerView={'auto'}
-          loop={true}
-          coverflowEffect={{
-            rotate: 0,
-            stretch: 0,
-            depth: 50,
-            modifier: 10,
-            slideShadows: true,
-          }}
-          pagination={true}
-          modules={[EffectCoverflow, Pagination]}
-          className="mySwiper"
+        <div
+          onMouseEnter={() => swiperInstance?.autoplay?.stop()}
+          onMouseLeave={() => swiperInstance?.autoplay?.start()}
         >
-
-          {TestemonialContent?.map((ele) => {
-            return <SwiperSlide className='text-black mt-[-50px] hover:scale-90 bg-white border rounded-xl border-green-900 shadow-xl'>
-              <Link to={ele.link} target="_blank">
-                <div className='flex flex-col p-5 rounded-xl'>
-
-                  <div className='flex gap-2 items-center'>
-                    <div className=' h-10 w-10 rounded-full'>
-
+          <Swiper
+            effect={"coverflow"}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={"auto"}
+            loop={true}
+            autoplay={{
+              delay: 1000,
+              disableOnInteraction: false,
+            }}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 0,
+              depth: 50,
+              modifier: 10,
+              slideShadows: true,
+            }}
+            pagination={{ clickable: true }}
+            modules={[EffectCoverflow, Pagination, Autoplay]}
+            onSwiper={(swiper) => setSwiperInstance(swiper)}
+            className="mySwiper"
+          >
+            {TestemonialContent.map((ele, i) => (
+              <SwiperSlide
+                key={i}
+                className="text-black mt-[-50px] hover:scale-95 transition-transform duration-300 bg-white border rounded-xl border-green-900 shadow-xl w-72 sm:w-80"
+              >
+                <a href={ele.link} target="_blank" rel="noopener noreferrer">
+                  <div className="flex flex-col p-5 rounded-xl">
+                    <div className="flex gap-2 items-center mb-2">
                       <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                        {ele.name.split(' ').map(n => n[0]).join('')}
+                        {ele.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()}
                       </div>
-
-
-
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        {Array(ele.rating)
-                          .fill('⭐')
-                          .map((star, i) => (
-                            <span key={i}>{star}</span>
-                          ))}
-
+                      <div>
+                        <div className="flex items-center gap-1 mb-1 text-yellow-500 text-sm">
+                          {Array(ele.rating)
+                            .fill("⭐")
+                            .map((star, i) => (
+                              <span key={i}>{star}</span>
+                            ))}
+                        </div>
+                        <h1 className="text-base font-semibold capitalize">
+                          {ele.name}
+                        </h1>
                       </div>
-                      <h1 className='text-xl Capitlize'>{ele.name}</h1>
                     </div>
-
+                    <p className="capitalize text-sm mt-1 text-gray-700">
+                      {ele.reviewText}
+                    </p>
                   </div>
-
-                  <p className='Capitlize text-sm mt-1'>
-                    {ele.reviewText}
-                  </p>
-
-                </div>
-              </Link>
-            </SwiperSlide>
-
-
-
-
-
-
-
-          })}
-
-
-          {/* <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-          </SwiperSlide> */}
-        </Swiper>
+                </a>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </section>
 
 
@@ -372,7 +345,7 @@ const Services = () => {
                   key={index}
                   className="card-hover bg-white rounded-xl shadow-lg overflow-hidden border flex flex-col justify-between"
                 >
-                  <div className="p-6 text-center price-card  text-white">
+                  <div className="p-6 text-center ombre-container  text-white">
                     <h3 className="text-xl font-bold mb-2">{room.title}</h3>
                     <p className="text-sm">{room.subtitle}</p>
                   </div>

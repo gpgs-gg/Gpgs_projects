@@ -47,7 +47,7 @@ const About = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Left Box: Gradient Background Section */}
           <div className="relative">
-            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 sm:p-10">
+            <div className="ombre-container rounded-xl p-6 sm:p-10">
               <div className="space-y-6 text-white">
 
                 {/* Who are we */}

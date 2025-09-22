@@ -15,18 +15,16 @@ const Header = () => {
   const { logout } = useAuth();
   const isHomePage = location.pathname === "/";
 
+  // AOS Animation Init
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-    });
+    AOS.init({ duration: 1000, once: false });
     AOS.refresh();
   }, []);
 
-  // Close mobile menu when window is resized to desktop size
+  // Responsive menu: close on resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768 && menuOpen) { // md breakpoint ~768px
+      if (window.innerWidth >= 768 && menuOpen) {
         setMenuOpen(false);
       }
     };
@@ -34,11 +32,13 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [menuOpen]);
 
+  // Handle logout
   const handleLogout = () => {
     logout();
     window.location.reload();
   };
 
+  // Decrypt user from localStorage
   useEffect(() => {
     const encrypted = localStorage.getItem('user');
     if (encrypted) {
@@ -57,107 +57,110 @@ const Header = () => {
     }
   };
 
+  // Nav Links
+  const navLinks = isHomePage ? (
+    <>
+      <a href="#home" className="nav-link">Home</a>
+      <a href="#services" className="nav-link">Services & Facilities</a>
+      <a href="#locations" className="nav-link">Locations</a>
+      <a href="#about" className="nav-link">About Us</a>
+      <a href="#contact" className="nav-link">Contact Us</a>
+    </>
+  ) : (
+    <>
+      <Link to="/" className="nav-link">Home</Link>
+      <Link to="/services" className="nav-link">Services & Facilities</Link>
+      <Link to="/locations" className="nav-link">Locations</Link>
+      <Link to="/gallery" className="nav-link">Gallery</Link>
+      <Link to="/about" className="nav-link">About Us</Link>
+      <Link to="/contact" className="nav-link">Contact Us</Link>
+    </>
+  );
+
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-lg">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20"> 
+        <div className="flex justify-between items-center h-20 md:h-24">
           
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex items-center">
             <Link to="/">
               <img
-                className=" h-16  lg:h-15 sm:h-16 md:h-20 w-auto"
                 src={gpgsLogo}
                 alt="GPGS Logo"
+                className="h-14 w-auto md:h-20"
               />
             </Link>
           </div>
 
-          {/* Desktop nav links */}
-          <nav className="hidden md:flex space-x-8 items-center">
-            {isHomePage ? (
-              <>
-                <a href="#home" className="text-gray-700 hover:text-indigo-600 transition">Home</a>
-                <a href="#services" className="text-gray-700 hover:text-indigo-600 transition">Services & Facilities</a>
-                <a href="#locations" className="text-gray-700 hover:text-indigo-600 transition">Locations</a>
-                <Link to="/gallery" className="text-gray-700 hover:text-indigo-600 transition">Gallery</Link>
-                <a href="#about" className="text-gray-700 hover:text-indigo-600 transition">About Us</a>
-                <a href="#contact" className="text-gray-700 hover:text-indigo-600 transition">Contact Us</a>
-              </>
-            ) : (
-              <>
-                <Link to="/" className="text-gray-700 hover:text-indigo-600 transition">Home</Link>
-                <Link to="/services" className="text-gray-700 hover:text-indigo-600 transition">Services & Facilities</Link>
-                <Link to="/locations" className="text-gray-700 hover:text-indigo-600 transition">Locations</Link>
-                <Link to="/gallery" className="text-gray-700 hover:text-indigo-600 transition">Gallery</Link>
-                <Link to="/about" className="text-gray-700 hover:text-indigo-600 transition">About Us</Link>
-                <Link to="/contact" className="text-gray-700 hover:text-indigo-600 transition">Contact Us</Link>
-              </>
-            )}
-            <Link to="/gpgs-actions" className="text-gray-700 hover:text-indigo-600 transition">Office</Link>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-6 lg:space-x-10">
+            {navLinks}
+            <Link to="/gallery" className="nav-link">Gallery</Link>
+            <Link to="/gpgs-actions" className="nav-link">Office</Link>
 
-            {/* User info + logout on desktop */}
             {decryptedUser && (
               <div className="flex items-center space-x-4 ml-6">
                 <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">{decryptedUser.name}</div>
+                  <div className="text-sm font-semibold text-gray-800">{decryptedUser.name}</div>
                   <div className="text-xs text-gray-500">({decryptedUser.role})</div>
                 </div>
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
                   {decryptedUser.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <button onClick={handleLogout} className="text-gray-700 hover:text-indigo-600 transition text-sm">Logout</button>
+                <button onClick={handleLogout} className="text-sm text-gray-700 hover:text-indigo-600">Logout</button>
               </div>
             )}
           </nav>
 
-          {/* Mobile menu toggle */}
-          <div className="md:hidden flex items-center">
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center space-x-2">
             {decryptedUser && (
-              <div className="mr-3 text-center">
-                <div className="text-sm font-bold text-gray-900">{decryptedUser.name}</div>
+              <div className="text-right mr-2">
+                <div className="text-sm font-semibold text-gray-800">{decryptedUser.name}</div>
                 <div className="text-xs text-gray-500">({decryptedUser.role})</div>
               </div>
             )}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"
-              aria-label="Toggle menu"
+              className="text-gray-700 hover:text-indigo-600 text-2xl focus:outline-none"
+              aria-label="Toggle Menu"
             >
-              {menuOpen ? (
-                <span className="text-2xl">×</span>
-              ) : (
-                <span className="text-2xl">&#9776;</span>
-              )}
+              {menuOpen ? '×' : '☰'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu panel */}
+      {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 px-4 pb-6 space-y-5">
+        <div className="md:hidden flex flex-col bg-white border-t border-gray-200 px-4 py-4 space-y-4">
           {isHomePage ? (
             <>
-              <a onClick={() => setMenuOpen(false)} href="#home" className="block text-gray-700 hover:text-indigo-600">Home</a>
-              <a onClick={() => setMenuOpen(false)} href="#services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</a>
-              <a onClick={() => setMenuOpen(false)} href="#locations" className="block text-gray-700 hover:text-indigo-600">Locations</a>
-              <a onClick={() => setMenuOpen(false)} href="#about" className="block text-gray-700 hover:text-indigo-600">About Us</a>
-              <a onClick={() => setMenuOpen(false)} href="#contact" className="block text-gray-700 hover:text-indigo-600">Contact Us</a>
+              <a onClick={() => setMenuOpen(false)} href="#home" className="mobile-link">Home</a>
+              <a onClick={() => setMenuOpen(false)} href="#services" className="mobile-link">Services & Facilities</a>
+              <a onClick={() => setMenuOpen(false)} href="#locations" className="mobile-link">Locations</a>
+              <a onClick={() => setMenuOpen(false)} href="#about" className="mobile-link">About Us</a>
+              <a onClick={() => setMenuOpen(false)} href="#contact" className="mobile-link">Contact Us</a>
             </>
           ) : (
             <>
-              <Link onClick={() => setMenuOpen(false)} to="/" className="block text-gray-700 hover:text-indigo-600">Home</Link>
-              <Link onClick={() => setMenuOpen(false)} to="/services" className="block text-gray-700 hover:text-indigo-600">Services & Facilities</Link>
-              <Link onClick={() => setMenuOpen(false)} to="/locations" className="block text-gray-700 hover:text-indigo-600">Locations</Link>
-              <Link onClick={() => setMenuOpen(false)} to="/gallery" className="block text-gray-700 hover:text-indigo-600">Gallery</Link>
-              <Link onClick={() => setMenuOpen(false)} to="/about" className="block text-gray-700 hover:text-indigo-600">About Us</Link>
-              <Link onClick={() => setMenuOpen(false)} to="/contact" className="block text-gray-700 hover:text-indigo-600">Contact Us</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/" className="mobile-link">Home</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/services" className="mobile-link">Services & Facilities</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/locations" className="mobile-link">Locations</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/gallery" className="mobile-link">Gallery</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/about" className="mobile-link">About Us</Link>
+              <Link onClick={() => setMenuOpen(false)} to="/contact" className="mobile-link">Contact Us</Link>
             </>
           )}
-          <Link onClick={() => setMenuOpen(false)} to="/gpgs-actions" className="block text-gray-700 hover:text-indigo-600">Office</Link>
+          <Link onClick={() => setMenuOpen(false)} to="/gpgs-actions" className="mobile-link">Office</Link>
           {decryptedUser && (
-            <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="block w-full text-left text-gray-700 hover:text-indigo-600">Logout</button>
+            <button
+              onClick={() => { handleLogout(); setMenuOpen(false); }}
+              className="mobile-link text-left w-full"
+            >
+              Logout
+            </button>
           )}
         </div>
       )}

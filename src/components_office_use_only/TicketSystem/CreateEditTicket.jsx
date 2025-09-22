@@ -143,7 +143,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const [previews, setPreviews] = useState([]);
   const [decryptedUser, setDecryptedUser] = useState(null);
 
-  console.log("currentView", currentView)
 
   useEffect(() => {
     setDecryptedUser(decryptUser(localStorage.getItem('user')))
@@ -394,7 +393,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
         }),
     };
     const formData = new FormData();
-    console.log("formattedData", formattedData)
     // 🔁 Append non-file data to FormData
     for (const key in formattedData) {
       const value = formattedData[key];

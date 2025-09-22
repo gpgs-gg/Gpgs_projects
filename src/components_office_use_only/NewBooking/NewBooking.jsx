@@ -565,7 +565,6 @@ const NewBooking = () => {
   useEffect(() => {
     const encrypted = localStorage.getItem("user");
     const decrypted = decryptUser(encrypted);
-    console.log("Decrypted user object:", decrypted);
     decryptedUserRef.current = decrypted;
   }, []);
 

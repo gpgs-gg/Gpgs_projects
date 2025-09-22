@@ -11,11 +11,32 @@ body {
 /* Existing styles */
 .gradient-bg {
   /* background: linear-gradient(135deg, #FACC15 50%, #f3d955 50%); */
-  background: linear-gradient(135deg, #e5e4e341 0%, #edd458 40%);
+  /* background: linear-gradient(135deg, #e5e4e341 50%, #edd458 40%); */
+  /* background: linear-gradient(135deg, #e5e4e341 50%, #ffc800cd 40%); */
+    background: linear-gradient(135deg, #e5e4e341 50%, #fedd59 40%);
+     /* blinkit color  */
+   /* background: linear-gradient(135deg, #e5e4e341 50%, #edcf58 40%);   */
+  /* background: linear-gradient(135deg, #e5e4e341 00%, #d6ebcc 40%); */
+    /* background: linear-gradient(to right, #a9dc92 , #368254 );  */
+
+  /* background: linear-gradient(135deg, #e5e4e341 0%, #edd458 40%); */
 }
-.gradient-bg-contact {
+.gradient-bg-contact{
+  /* background: linear-gradient(135deg, #FACC15 50%, #f3d955 50%); */
+  /* background: linear-gradient(135deg, #e5e4e341 50%, #edd458 40%); */
+  /* background: linear-gradient(135deg, #e5e4e341 50%, #ffc800cd 40%); */
+    /* background: linear-gradient(135deg, #fedd59 50% , #e5e4e341 40%);  ulta */
+     /* blinkit color  */
+     background: linear-gradient(135deg, #e5e4e341 50% ,  #fedd59 40% );
+   /* background: linear-gradient(135deg, #e5e4e341 50%, #edcf58 40%);   */
+  /* background: linear-gradient(135deg, #e5e4e341 00%, #d6ebcc 40%); */
+    /* background: linear-gradient(to right, #a9dc92 , #368254 );  */
+
+  /* background: linear-gradient(135deg, #e5e4e341 0%, #edd458 40%); */
+}
+/* .gradient-bg-contact {
   background: linear-gradient(135deg, #689b40f0 50%, #689b40f0 50%);
-}
+} */
 
 .card-hover {
   transition: all 0.3s ease;
@@ -43,10 +64,31 @@ body {
 }
 
 .price-card {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  /* background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); */
+  /* background: linear-gradient(135deg, #6f9c5a 0%, #6f9c5a 40%); */
+  /* background: linear-gradient(75deg, #c6efa0 10%, #6f9c5a 80%); */
+  background: linear-gradient(60deg, #a9dc92 30%, #14532d 80%);
+  /* background: linear-gradient(135deg, #e5e4e341 0%, #dada80 40%); */
+  /* background:linear-gradient(135deg, #e5e4e341 0%, #92d076 40%); */
+  /* background: linear-gradient(135deg, #e5e4e341 1%, #AF9B60 20%); */
 }
 
 .feature-icon {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
   /* background: linear-gradient(135deg, #fecf4f 0%, #00f2fe 100%); */
+}
+
+
+.ombre-container {
+  background: linear-gradient(to right, #a9dc92, #14532d); 
+   /* background: linear-gradient(to right, #d6ebcc, #14532d); */
+  /* Example: purple to pink */
+  /* min-height: 100vh; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* color: white; */
+  /* font-size: 2em; */
+    /* background: linear-gradient(60deg, #a9dc92 30%, #14532d 80%); */
+
 }
