@@ -5,13 +5,11 @@ import { Link } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from "../Config";
 
-
 const Gpgsaction = () => {
   const [showSalesOptions, setShowSalesOptions] = useState(false);
   const [decryptedUser, setDecryptedUser] = useState(null);
 
-
- useEffect(() => {
+  useEffect(() => {
     const encrypted = localStorage.getItem('user');
     if (encrypted) {
       setDecryptedUser(decryptUser(encrypted));
@@ -29,102 +27,96 @@ const Gpgsaction = () => {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
-if(decryptedUser?.role === "client"){
-  return  <div className='flex border border-red-500 justify-center text-center items-center h-screen'>
 
-      <Link to="/gpgs-actions/tickets">
-          <div
-            className="bg-white  w-64 shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 border flex flex-col items-center"
-          
-          >
-            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-green-100 text-green-600 mb-4">
+  const cardClasses = "bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 border flex flex-col items-center text-center";
+  const iconClasses = "h-14 w-14 flex items-center justify-center rounded-full mb-4";
+  const titleClasses = "text-xl font-semibold text-gray-800 mb-4";
+  const btnClasses = "w-full text-white py-2 rounded-md font-medium transition";
+  const subBtnClasses = "py-2 px-4 rounded-md text-center transition text-sm";
+
+  if (decryptedUser?.role.toLowerCase() === "client") {
+    return (
+      <div className="flex justify-center items-center min-h-screen px-4">
+        <Link to="/gpgs-actions/tickets">
+          <div className={cardClasses}>
+            <div className={`${iconClasses} bg-green-100 text-green-600`}>
               <i className="fa-solid fa-ticket text-xl"></i>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">TICKETS SYSTEM</h3>
-            <button className="w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition">
+            <h3 className={titleClasses}>TICKETS SYSTEM</h3>
+            <button className={`${btnClasses} bg-indigo-600 hover:bg-indigo-700`}>
               Go For Tickets System
             </button>
           </div>
         </Link>
-  </div>
-  
-
-
-}
-
-
+      </div>
+    );
+  }
 
   return (
-    <section className="bg-gray-200  mt-20 md:mt-0  min-h-screen py-10 px-4 md:px-6 flex items-start justify-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6 w-full h-screen justify-center items-center max-w-6xl">
-        {/* 🟢 TICKETS SYSTEM */}
+    <section className="bg-gray-200 min-h-screen py-10 px-4 md:px-6 flex items-center justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+
+        {/* TICKETS SYSTEM */}
         <Link to="/gpgs-actions/tickets">
-          <div
-            className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 border flex flex-col items-center"
-            data-aos="fade-up"
-          >
-            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-green-100 text-green-600 mb-4">
+          <div className={cardClasses} data-aos="fade-up">
+            <div className={`${iconClasses} bg-green-100 text-green-600`}>
               <i className="fa-solid fa-ticket text-xl"></i>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">TICKETS SYSTEM</h3>
-            <button className="w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition">
+            <h3 className={titleClasses}>TICKETS SYSTEM</h3>
+            <button className={`${btnClasses} bg-indigo-600 hover:bg-indigo-700`}>
               Go For Tickets System
             </button>
           </div>
         </Link>
 
-        {/* 🟡 SALES */}
+        {/* SALES */}
         <div
-          className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 border flex flex-col items-center"
-          data-aos="fade-up"
+          className={`${cardClasses} cursor-pointer`}
+          // data-aos="fade-up"
           onClick={() => setShowSalesOptions(prev => !prev)}
         >
-          <div className="h-14 w-14 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-600 mb-4">
+          <div className={`${iconClasses} bg-yellow-100 text-yellow-600`}>
             <i className="fa-solid fa-chart-line text-xl"></i>
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">SALES</h3>
-          <button className="w-full bg-yellow-500 text-white py-2 rounded-md font-medium hover:bg-yellow-600 transition mb-4">
+          <h3 className={titleClasses}>SALES</h3>
+          <button className={`${btnClasses} bg-yellow-500 hover:bg-yellow-600 mb-4`}>
             {showSalesOptions ? 'Hide Sales Options' : 'Show Sales Options'}
           </button>
 
-          {/* Sales nested options */}
           {showSalesOptions && (
             <div className="w-full flex flex-col gap-3">
-                <Link
+              <Link
                 to="/gpgs-actions/beds-avilable"
-                className="bg-green-100 text-green-800 py-2 px-4 rounded-md text-center hover:bg-green-200 transition text-sm"
+                className={`${subBtnClasses} bg-green-100 text-green-800 hover:bg-green-200`}
               >
                 🛏️ Bed Status
               </Link>
               <Link
                 to="/gpgs-actions/new-booking"
-                className="bg-indigo-100 text-indigo-800 py-2 px-4 rounded-md text-center hover:bg-indigo-200 transition text-sm"
+                className={`${subBtnClasses} bg-indigo-100 text-indigo-800 hover:bg-indigo-200`}
               >
                 ➕ New Booking
               </Link>
-            
             </div>
           )}
         </div>
 
-        {/* 🟢 ACCOUNTS */}
+        {/* ACCOUNTS */}
         <Link to="/gpgs-actions/accounts">
-          <div
-            className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 border flex flex-col items-center"
-            data-aos="fade-up"
-          >
-            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-green-100 text-green-600 mb-4">
+          <div className={cardClasses} data-aos="fade-up">
+            <div className={`${iconClasses} bg-green-100 text-green-600`}>
               <i className="fa-solid fa-file-invoice text-xl"></i>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">ACCOUNTS</h3>
-            <button className="w-full bg-green-600 text-white py-2 rounded-md font-medium hover:bg-green-700 transition">
+            <h3 className={titleClasses}>ACCOUNTS</h3>
+            <button className={`${btnClasses} bg-green-600 hover:bg-green-700`}>
               Go For Accounts
             </button>
           </div>
         </Link>
+
       </div>
     </section>
   );
