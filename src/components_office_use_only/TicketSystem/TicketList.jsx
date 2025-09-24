@@ -6,12 +6,17 @@ import { TicketFilters } from "./TicketFilters";
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
     return (
         <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
-            {headers.map(({ key }) => {
+            {headers.map(({ key }, index) => {
                 const value = ticket[key];
+
+                const isTicketID = key === "TicketID";
+                const stickyStyle = isTicketID
+                    ? "sticky left-0 bg-white z-20 px-4 py-3 bg-orange-300 whitespace-nowrap text-gray-900 font-semibold border-r"
+                    : "px-4 py-3 whitespace-nowrap text-gray-900 ";
 
                 if (key === "Status") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <span className="px-2 py-1 rounded-full">{value}</span>
                         </td>
                     );
@@ -19,7 +24,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "Title") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <div>
                                 <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
                                 <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
@@ -32,7 +37,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "Attachment") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <div className="flex gap-2 mt-1 max-h-48 overflow-auto">
                                 {value ? (
                                     value.split(",").map((url, idx) => {
@@ -66,7 +71,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "DateCreated") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             {formatDate(value)}
                         </td>
                     );
@@ -74,7 +79,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "WorkLogs") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <div className="relative group">
                                 <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
                                     {value ? `${value.substring(0, 28)}` : "No WorkLogs"}
@@ -89,15 +94,16 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
                     );
                 }
 
+                // Default case for other columns:
                 return (
-                    <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                    <td key={key} className={stickyStyle}>
                         {value || "N/A"}
                     </td>
                 );
             })}
 
             {/* Actions */}
-            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
+            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky border-l right-0 bg-white z-10">
                 <button
                     onClick={() => onEdit(ticket)}
                     className="text-red-600 hover:text-red-900"
