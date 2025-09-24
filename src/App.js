@@ -127,14 +127,45 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/gpgs-actions/tickets" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>} />
         <Route path="/gallery" element={<Gallary />} />
-        <Route path="/gpgs-actions/beds-avilable" element={<ProtectedRoute><BedsAvilable /></ProtectedRoute>} />
+        {/* <Route path="/gpgs-actions/beds-avilable" element={<ProtectedRoute><BedsAvilable /></ProtectedRoute>} />
         <Route path="/gpgs-actions/new-booking" element={<ProtectedRoute><NewBooking /></ProtectedRoute>} />
-        <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
+        <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} /> */}
+            {/* Public route for login page */}
+     
+
+      {/* Protected Routes - Only accessible to roles other than 'user' */}
+      <Route
+        path="/gpgs-actions/beds-avilable"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'manager']}>
+            <BedsAvilable />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/gpgs-actions/new-booking"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'manager']}>
+            <NewBooking />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/gpgs-actions/accounts"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'manager']}>
+            <Accounts />
+          </ProtectedRoute>
+        }
+      />
         <Route path="/gpgs-actions/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
         <Route path="/gpgs-actions" element={<ProtectedRoute><Gpgsaction /></ProtectedRoute>} />
 
-
         <Route path="*" element={<PageNotFound/>} />
+        <Route path="/gallery" element={<Gallary />} />
+
         {/* Admin routes */}
         {/* <Route path="/gpgs-actions/tickets" element={
             <AdminLayout />

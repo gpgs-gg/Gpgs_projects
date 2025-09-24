@@ -3,11 +3,37 @@
 import React, { useState, useContext, useMemo, createContext, useEffect } from 'react';
 import { usePropertyData, useTicketSheetData, useUpdateTicketSheetData } from './Services';
 import { useLocation } from 'react-router-dom';
-
+import CryptoJS from 'crypto-js';
+import { SECRET_KEY } from "../../Config";
 // ✅ Export the context
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  // decrptedTicketData
+ const [decryptedUser, setDecryptedUser] = useState(null);
+
+    useEffect(() => {
+        const encrypted = localStorage.getItem('user');
+        if (encrypted) {
+            setDecryptedUser(decryptUser(encrypted));
+        }
+    }, []);
+    const decryptUser = (encryptedData) => {
+        try {
+            const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+            const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+            return JSON.parse(decrypted);
+        } catch (error) {
+            console.error('Failed to decrypt user:', error);
+            return null;
+        }
+    };
+
+
+
+
+
+
 
  const location = useLocation();
 
@@ -18,11 +44,16 @@ export const AppProvider = ({ children }) => {
 
 // Start with an empty array
 const [tickets, setTickets] = useState([]);
+
 useEffect(() => {
   if (Array.isArray(data?.data)) {
-    setTickets([...data.data]);
+    const filteredTickets = decryptedUser?.role === "client"
+      ? data.data.filter((ele) => ele.CreatedByName === decryptedUser.name)
+      : data.data;
+
+    setTickets(filteredTickets);
   }
-}, [data]); // Runs whenever `data` changes
+}, [data, decryptedUser]);
 
 
     const initialUsers = [
@@ -135,6 +166,7 @@ const updateTicket = (ticketId, updates) => {
     };
 
     const filteredTickets = useMemo(() => {
+
         return tickets.filter(ticket => {
             const matchesSearch = ticket.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 ticket.Description.toLowerCase().includes(searchTerm.toLowerCase()) ||

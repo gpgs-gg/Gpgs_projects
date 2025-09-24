@@ -9,7 +9,7 @@ import {
   usePropertMasteryData,
   useUpdateTicketSheetData,
 } from "./Services";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LoaderPage from "../NewBooking/LoaderPage";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -161,6 +161,19 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   };
 
 
+
+
+  const selectRef = useRef(null);
+
+  useEffect(() => {
+    // Focus the Select component on mount or based on some condition
+    if (selectRef.current) {
+      selectRef.current.focus();
+    }
+  }, []);
+
+
+
   const {
     register,
     handleSubmit,
@@ -278,8 +291,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
     // Final count
     const totalFiles = filteredPreviews.length + filteredValidFiles.length;
-    if (totalFiles > 10) {
-      alert("⚠️ You can only upload up to 10 files.");
+    if (totalFiles > 5) {
+      alert("⚠️ You can only upload up to 5 files.");
       return;
     }
 
@@ -369,7 +382,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Category: data.Category?.value || "",
       Assignee: data.Assignee?.value || "",
       Manager: data.Manager?.value || "",
-      TargetDate: getFormattedTimestampForTargetDate(data.TargetDate) || "",
+      TargetDate: data.TargetDate ? getFormattedTimestampForTargetDate(data.TargetDate) : "N/A",
       Status: statusValue,
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",
@@ -435,15 +448,33 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     }
   };
 
+  useEffect(() => {
+    if (!isEdit) {
+      reset()
+      setPreviews([])
+    }
+  }, [isEdit])
+
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">
-        {isEdit ? `View & Edit Ticket : ${selectedTicket?.TicketID}` : "Create New Ticket"}
+    <div className="">
+      <h2 className="text-2xl font-bold text-gray-900 ml-5">
+        {isEdit ? (
+          <h1>View & Edit Ticket : {selectedTicket?.TicketID}</h1>
+        ) : (
+          <div className="lg:flex   items-center gap-5">
+            <h1>Create New Ticket</h1>
+            {decryptedUser?.role.toLowerCase() === "client" && (
+              <p className="text-orange-500 text-sm lg:text-lg">For any Maintenance, Housekeeping, Notice To Vacate PG Facility, Rent Receipt, Agreement, Full & Final Settlement, Electricity Bill Concern, etc.</p>
+            )}
+          </div>
+        )}
+
       </h2>
       <div className="bg-white rounded-lg shadow p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Property Code, Title */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {isEdit == "klsdfhl" && (
               <div>
                 <label className="block text-sm font-medium text-black mb-2">Ticket ID</label>
@@ -455,21 +486,60 @@ export const CreateEditTicket = ({ isEdit = false }) => {
               </div>
             )}
 
+
+
+
             <div>
               <label className="block text-sm font-medium text-black mb-2">Property Code <span className="text-red-500">*</span></label>
               <Controller
                 control={control}
                 name="PropertyCode"
-                rules={{ required: "Required" }}
+                rules={{ required: "Property Code Required" }}
                 render={({ field, fieldState: { error } }) => (
                   <>
-                    <Select {...field} isDisabled={isEdit}
-                      options={ProperyOptions} styles={SelectStyles} isClearable placeholder="Search & Select Property Code" />
+                    <Select
+                      ref={selectRef}
+                      {...field}
+                      options={ProperyOptions}
+                      styles={SelectStyles}
+                      isClearable
+                      placeholder="Search & Select Property Code"
+                      isDisabled={decryptedUser?.role === "client" || isEdit && decryptedUser?.role !== "client"}
+                    />
+
                     {error && <p className="text-red-500 text-sm">{error.message}</p>}
                   </>
                 )}
               />
             </div>
+
+            {[
+              { name: "Department", options: DepartmentOptions, placeholder: "Search & Select Department" },
+              { name: "Category", options: CategoryOptions, placeholder: "Search &  Select Category" },
+              ...(isEdit && decryptedUser?.role === "client"
+                ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
+                : []),
+              ...(decryptedUser?.role === "admin"
+                ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
+                : []),
+            ].map(({ name, options, placeholder }) => (
+              <div key={name}>
+                <label className="block text-sm font-medium text-black mb-2">{name} <span className="text-red-500">*</span></label>
+                <Controller
+                  control={control}
+                  name={name}
+                  rules={{ required: `${name} is required` }}
+                  render={({ field, fieldState: { error } }) => (
+                    <>
+                      <Select {...field} options={options} styles={SelectStyles} placeholder={placeholder} isClearable isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+                    </>
+                  )}
+                />
+              </div>
+            ))}
+
+
 
             <div>
               <label className="block text-sm font-medium text-black mb-2">
@@ -480,7 +550,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 disabled={isEdit}
                 className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                   } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
-                placeholder="Enter title"
+                placeholder="Enter Title"
+                isDisabled={isEdit && decryptedUser?.role === "client"}
               />
               {errors.Title && (
                 <p className="text-red-500 text-sm mt-1">
@@ -488,182 +559,239 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 </p>
               )}
             </div>
+            {!isEdit && decryptedUser?.role !== "client" && (<>
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Manager</label>
+                <Controller
+                  control={control}
+                  name="Manager"
+                  render={({ field }) => (
+                    <Select {...field} placeholder="Search & Select Manager" options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                  )}
+
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Assignee </label>
+                <Controller
+                  control={control}
+                  name="Assignee"
+                  render={({ field }) => (
+                    <Select {...field} placeholder="Search & Select Assignee" options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"}
+                    />
+                  )}
+                />
+              </div>
+            </>
+            )
+
+            }
+            {isEdit && (
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Status <span className="text-red-500">*</span></label>
+                <Controller
+                  control={control}
+                  name="Status"
+                  rules={{ required: "Status is required" }}
+                  render={({ field, fieldState: { error } }) => (
+                    <>
+                      <Select {...field} options={StatusOptions} styles={SelectStyles} isClearable isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+                    </>
+                  )}
+
+                />
+              </div>
+            )}
+            {decryptedUser?.role !== "client" && (
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">
+                  Target Date
+                </label>
+                <Controller
+                  control={control}
+                  name="TargetDate"
+                  defaultValue=""
+                  render={({ field }) => (
+                    <div className="relative w-full">
+                      <input
+                        type="date"
+                        {...field}
+                        value={field.value || ""}
+                        isDisabled={isEdit && decryptedUser?.role === "client"}
+                        className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                      />
+                      {field.value && (
+                        <button
+                          type="button"
+                          onClick={() => field.onChange("")}
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
+                        >
+                          &#10005;
+                        </button>
+                      )}
+                    </div>
+                  )}
+                />
+              </div>
+            )}
 
 
+            {isEdit && (
+              <div>
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">
+                    Created By <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    {...register("CreatedByName", { required: "Created By Name is required" })}
+                    disabled={isEdit}
+                    className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                      } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                    placeholder="Enter Created By Name"
+                  />
+                  {errors.Title && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.Title.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Description */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <div className=" flex flex-col justify-between">
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">Description <span className="text-red-500">*</span></label>
+              <textarea
+                {...register("Description", { required: "Description is required" })}
+                rows={4}
+                disabled={isEdit}
+                placeholder="Enter Your Description here"
+                className="w-full h-[150px] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+              />
+              {errors.Description && (
+                <p className="text-red-500 text-sm">{errors.Description.message}</p>
+              )}
+
+            </div>
+            {!isEdit && (
+
               <div>
-                <label className="block text-sm font-medium text-black mb-2">Description <span className="text-red-500">*</span></label>
-                <textarea
-                  {...register("Description", { required: "Description is required" })}
-                  rows={4}
-                  disabled={isEdit}
-                  placeholder="Enter Your Description here"
-                  className="w-full h-[250px] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
-                />
-                {errors.Description && (
-                  <p className="text-red-500 text-sm">{errors.Description.message}</p>
-                )}
-
-              </div>
-
-
-
-              {isEdit && (
                 <div>
-                  <div>
-                    <label className="block text-sm font-medium text-black mb-2">
-                      Created By <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      {...register("CreatedByName", { required: "Created By Name is required" })}
-                      disabled={isEdit}
-                      className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-                        } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
-                      placeholder="Enter Created By Name"
-                    />
-                    {errors.Title && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.Title.message}
-                      </p>
-                    )}
+                  <label className="block text-sm font-medium text-black mb-2">Attachment</label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*,video/*,application/pdf"
+                    onChange={handleFileChange}
+                    className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                  />
+                </div>
+                {previews.length > 0 && (
+                  <div className="flex flex-wrap gap-4 mt-5">
+                    {previews.map((file, index) => {
+                      const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+                      const isImage = imageExtensions.test(file.name);
+
+                      if (!isImage) return null; // Skip non-image files
+
+                      return (
+                        <div
+                          key={index}
+                          className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFile(index)}
+                            className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                          >
+                            ✕
+                          </button>
+
+                          <img
+                            src={file.url}
+                            alt={file.name}
+                            className="w-full h-28 object-cover rounded"
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
 
-            {/* Dropdowns */}
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-              {[
-                { name: "Department", options: DepartmentOptions, placeholder: "Select Department" },
-                { name: "Category", options: CategoryOptions, placeholder: "select Category" },
-                { name: "Priority", options: PriorityOptions, placeholder: "Select Priority" },
-              ].map(({ name, options, placeholder }) => (
-                <div key={name}>
-                  <label className="block text-sm font-medium text-black mb-2">{name} <span className="text-red-500">*</span></label>
-                  <Controller
-                    control={control}
-                    name={name}
-                    rules={{ required: `${name} is required` }}
-                    render={({ field, fieldState: { error } }) => (
-                      <>
-                        <Select {...field} options={options} styles={SelectStyles} placeholder={placeholder} isClearable />
-                        {error && <p className="text-red-500 text-sm">{error.message}</p>}
-                      </>
-                    )}
-                  />
-                </div>
-              ))}
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
               {isEdit && (
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">Status <span className="text-red-500">*</span></label>
-                  <Controller
-                    control={control}
-                    name="Status"
-                    rules={{ required: "Status is required" }}
-                    render={({ field, fieldState: { error } }) => (
-                      <>
-                        <Select {...field} options={StatusOptions} styles={SelectStyles} isClearable />
-                        {error && <p className="text-red-500 text-sm">{error.message}</p>}
-                      </>
-                    )}
-                  />
-                </div>
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Manager</label>
+                    <Controller
+                      control={control}
+                      name="Manager"
+                      render={({ field }) => (
+                        <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Assignee </label>
+                    <Controller
+                      control={control}
+                      name="Assignee"
+                      render={({ field }) => (
+                        <Select {...field} options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      )}
+                    />
+                  </div>
+                </>
               )}
+
+              {isEdit && (
+                <>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Customer Impacted </label>
+                    <Controller
+                      control={control}
+                      name="CustomerImpacted"
+                      render={({ field }) => (
+                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      )}
+                    />
+                  </div>
+
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Escalated </label>
+                    <Controller
+                      control={control}
+                      name="Escalated"
+                      render={({ field }) => (
+                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+
             </div>
+
+            {/* Dropdowns ////////////////*/}
+
           </div>
 
           {/* Manager & Assignee */}
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">Manager</label>
-              <Controller
-                control={control}
-                name="Manager"
-                render={({ field }) => (
-                  <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} />
-                )}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">Assignee </label>
-              <Controller
-                control={control}
-                name="Assignee"
-                render={({ field }) => (
-                  <Select {...field} options={assigneeOptions} isClearable styles={SelectStyles} />
-                )}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">
-                Target Date
-              </label>
-              <Controller
-                control={control}
-                name="TargetDate"
-                defaultValue=""
-                render={({ field }) => (
-                  <div className="relative w-full">
-                    <input
-                      type="date"
-                      {...field}
-                      value={field.value || ""}
-                      className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                    />
-                    {field.value && (
-                      <button
-                        type="button"
-                        onClick={() => field.onChange("")}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
-                      >
-                        &#10005;
-                      </button>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-
-          </div>
-
-          {isEdit && (
-            <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">Customer Impacted </label>
-                  <Controller
-                    control={control}
-                    name="CustomerImpacted"
-                    render={({ field }) => (
-                      <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} />
-                    )}
-                  />
-                </div>
-
-
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">Escalated </label>
-                  <Controller
-                    control={control}
-                    name="Escalated"
-                    render={({ field }) => (
-                      <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} />
-                    )}
-                  />
-                </div>
-              </div>
+            {isEdit && (
               <div>
-                <div>
-
-                </div>
                 <label className="block text-sm font-medium text-black mb-2">Work Logs <span className="text-red-500">*</span></label>
                 {previousWlogs && (
                   <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-32 overflow-y-auto">
@@ -674,62 +802,69 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   {...register("WorkLogs")}
                   placeholder="Add work log entries here..."
                   rows={4}
-                  className="w-full border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300  rounded-md px-3 py-2"
+                  className="w-full h-20 border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300  rounded-md px-3 py-2"
                 />
               </div>
-            </>
-          )}
 
-          {previews.length > 0 && (
-            <div className="flex flex-wrap gap-4">
-              {previews.map((file, index) => {
-                const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
-                const isImage = imageExtensions.test(file.name);
+            )}
+            <div>
 
-                if (!isImage) return null; // Skip non-image files
 
-                return (
-                  <div
-                    key={index}
-                    className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFile(index)}
-                      className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
-                    >
-                      ✕
-                    </button>
-
-                    <img
-                      src={file.url}
-                      alt={file.name}
-                      className="w-full h-28 object-cover rounded"
+              {/* Attachment */}
+              {isEdit && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Attachment</label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*,video/*,application/pdf"
+                      onChange={handleFileChange}
+                      className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
                     />
                   </div>
-                );
-              })}
+                  {previews.length > 0 && (
+                    <div className="flex flex-wrap gap-4 mt-5">
+                      {previews.map((file, index) => {
+                        const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+                        const isImage = imageExtensions.test(file.name);
+
+                        if (!isImage) return null; // Skip non-image files
+
+                        return (
+                          <div
+                            key={index}
+                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveFile(index)}
+                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                            >
+                              ✕
+                            </button>
+
+                            <img
+                              src={file.url}
+                              alt={file.name}
+                              className="w-full h-28 object-cover rounded"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
-          )}
 
-          {/* Attachment */}
-          <div>
-            <label className="block text-sm font-medium text-black mb-2">Attachment</label>
-            <input
-              type="file"
-              multiple
-              accept="image/*,video/*,application/pdf"
-              onChange={handleFileChange}
-              className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
-            />
           </div>
-
           {/* Buttons */}
-          <div className="flex gap-4">
+          <div className="flex   gap-4 items-center justify-center">
 
             <button
               type="submit"
-              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 flex items-center justify-center gap-2"
+              className={`bg-orange-300 ${isEdit ? "mt-[-10]":"mt-[-80px]"}  text-white px-6 py-2 rounded hover:bg-orange-400 flex items-center justify-center gap-2`}
               disabled={isSubmittingBooking || isUpdatingTicket}
             >
               {(isSubmittingBooking || isUpdatingTicket) ? (
@@ -738,7 +873,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   {isEdit ? 'Updating...' : 'Creating...'}
                 </>
               ) : (
-                isEdit ? 'Update Ticket' : 'Create Ticket'
+                isEdit ? 'Update Ticket' : 'Create'
               )}
             </button>
 
@@ -747,7 +882,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             <button
               type="button"
               onClick={() => setCurrentView("tickets")}
-              className="border border-gray-300 text-black px-6 py-2 rounded hover:bg-gray-100"
+              className={`border border-gray-300 ${isEdit ? "mt-[-10]":"mt-[-80px]"} text-black px-6 py-2 rounded hover:bg-gray-10`}
             >
               Cancel
             </button>

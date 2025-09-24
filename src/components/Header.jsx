@@ -5,7 +5,7 @@ import 'aos/dist/aos.css';
 import { useAuth } from "../context/AuthContext";
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from "../Config";
-import gpgsLogo from "../logo/Gpgs-logo.jpg";
+import gpgsLogo from "../logo/Gpgs-logo.jpg"; 
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);

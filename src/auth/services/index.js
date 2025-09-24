@@ -7,7 +7,7 @@ const apiClient = axios.create({
   // baseURL: "http://localhost:3000/api", // for Local Developement
 });
 
-
+// fecting data for employees
 const fetchEmployeeDetailsData = async () => {
   const response = await apiClient.get("/Employees-details");
   return response.data;
@@ -18,6 +18,21 @@ export const useEmployeeDetails = () => {
   return useQuery({
     queryKey: ["EmployeeDetails"],
     queryFn: fetchEmployeeDetailsData,
+  });
+};
+
+
+// fecting data for clients
+const fetchClientDetailsData = async () => {
+  const response = await apiClient.get("/Clients-details");
+  return response.data;
+};
+
+// React Query hook to fetch property data
+export const useClientDetails = () => {
+  return useQuery({
+    queryKey: ["clientsDetails"],
+    queryFn: fetchClientDetailsData,
   });
 };
 

@@ -75,9 +75,8 @@ const DepartmentOptions = [
 ];
 
 export const TicketFilters = () => {
-    const { filters, setFilters, users } = useApp();
+    const { filters, setFilters, users, filteredTickets } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
-
 
     const assigneeOptions = [
         { label: "All Assignees", value: "" },
@@ -119,16 +118,16 @@ export const TicketFilters = () => {
     };
 
 
-   function formatDateToDDMMMYYYY(dateString) {
-  const date = new Date(dateString);
-  if (isNaN(date)) return "";
+    function formatDateToDDMMMYYYY(dateString) {
+        const date = new Date(dateString);
+        if (isNaN(date)) return "";
 
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = date.toLocaleString('en-US', { month: 'short' });
-  const year = date.getFullYear();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        const year = date.getFullYear();
 
-  return `${day} ${month} ${year}`;
-}
+        return `${day} ${month} ${year}`;
+    }
 
 
 
@@ -141,7 +140,7 @@ export const TicketFilters = () => {
             Assignee: assigneeOptions.find((opt) => opt.value === filters.Assignee) || defaultValues.Assignee,
             Manager: ManagerOptions.find((opt) => opt.value === filters.Manager) || defaultValues.Manager,
             CreatedByName: assigneeOptionsForCreatedBy.find((opt) => opt.value === filters.CreatedByName) || defaultValues.CreatedByName,
-            TargetDate:filters.TargetDate || "",
+            TargetDate: filters.TargetDate || "",
 
         },
     });
@@ -161,9 +160,9 @@ export const TicketFilters = () => {
             Assignee: watchedAssignee?.value || "",
             Manager: watchedManager?.value || "",
             CreatedByName: watchedCreatedByName?.value || "",
-            TargetDate: formatDateToDDMMMYYYY(watchedTargetDate)|| "",
+            TargetDate: formatDateToDDMMMYYYY(watchedTargetDate) || "",
         });
-    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate , watchedCreatedByName]);
+    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate, watchedCreatedByName]);
 
     const handleClearFilters = () => {
         reset(defaultValues);
@@ -174,19 +173,19 @@ export const TicketFilters = () => {
             Assignee: "",
             Manager: "",
             TargetDate: "",
-            CreatedByName:""
+            CreatedByName: ""
         });
     };
 
     return (
         <div className="bg-white p-4 rounded-lg shadow mb-6">
 
-
-            <div className=" mt-[-10px] text-right">
+            <div className=" mt-[-10px] flex justify-between font-bold">
+                <span className="text-orange-600 underline text-sm ml-5 ">{`${filteredTickets.length} Ticket${filteredTickets.length > 1 ? "s" : ""} Found`} </span>
                 <button
                     type="button"
                     onClick={handleClearFilters}
-                    className="text-orange-600 hover:text-orange-800 text-sm font-medium underline"
+                    className="text-orange-600 hover:text-orange-800 font-bold text-sm mr-5 underline"
                 >
                     Clear Filters
                 </button>
@@ -194,7 +193,7 @@ export const TicketFilters = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
 
                 {/* Status */}
-                <div>
+                <div >
                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                     <Controller
                         name="Status"

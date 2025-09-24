@@ -88,7 +88,6 @@ const PropertyFormSection = memo(({
       const getCustomDiffDays = (startDate, endDate) => {
 
         // const perDayRent = watchMonthlyRent / 30;
-        // // console.log("perDayRent", perDayRent)
 
         // let rentAmount = 0;
         // let rentCalculationStartDate = doj;
@@ -98,7 +97,6 @@ const PropertyFormSection = memo(({
 
         // // do {
 
-        //     console.log("before if ", clientStayLastDate , rentCalculationLastDate)
 
         //   // this is full date camparision
         //   if (rentCalculationLastDate <= clientStayLastDate) {
@@ -107,7 +105,6 @@ const PropertyFormSection = memo(({
         //     const rentForNoOfDays = (rentCalculationLastDate.getDate() - rentCalculationStartDate.getDate()) + 1;
 
         //     rentAmount = perDayRent * rentForNoOfDays;
-        //     console.log("rentAmount", rentAmount)
 
         //     // this is full date .
         //     rentCalulatedUpToDate.setDate(rentCalculationLastDate.getDate());
@@ -115,10 +112,8 @@ const PropertyFormSection = memo(({
         //     // this is the 1st date for the rent calcultion for the next month ..
         //     rentCalculationStartDate.setDate(rentCalculationLastDate.getDate() + 1);
         //     rentCalculationLastDate = new Date(rentCalculationStartDate.getFullYear(), rentCalculationStartDate.getMonth() + 1, 0);
-        //     console.log("rentCalculationstartDate", rentCalculationStartDate, rentCalculationLastDate)
         //     // rentCalulatedUpToDate = rentCalculationLastDate + 1;
 
-        //     // console.log("rentAmount", rentAmount, rentForNoOfDays, perDayRent, rentCalulatedUpToDate)
         //   }
         // // } while (rentCalulatedUpToDate <= clientStayLastDate)
 
@@ -136,7 +131,6 @@ const PropertyFormSection = memo(({
             current.setDate(1);
           } else {
             totalDays += 1;
-            // console.log("totalDays", totalDays)
             current.setDate(current.getDate() + 1);
           }
         }

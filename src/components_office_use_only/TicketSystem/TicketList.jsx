@@ -1,34 +1,154 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useApp } from "./AppProvider";
 import { TicketFilters } from "./TicketFilters";
 
+// Memoized row
+const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
+    return (
+        <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
+            {headers.map(({ key }) => {
+                const value = ticket[key];
+
+                if (key === "Status") {
+                    return (
+                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                            <span className="px-2 py-1 rounded-full">{value}</span>
+                        </td>
+                    );
+                }
+
+                if (key === "Title") {
+                    return (
+                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                            <div>
+                                <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
+                                <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                    {ticket.Description ? `${ticket.Description.substring(0, 60)}...` : "No Description"}
+                                </div>
+                            </div>
+                        </td>
+                    );
+                }
+
+                if (key === "Attachment") {
+                    return (
+                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                            <div className="flex gap-2 mt-1 max-h-48 overflow-auto">
+                                {value ? (
+                                    value.split(",").map((url, idx) => {
+                                        const trimmedUrl = url.trim();
+                                        const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
+                                        if (!isImage) return null;
+
+                                        return (
+                                            <div
+                                                key={idx}
+                                                className="w-10 h-10 border rounded-md overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-blue-400"
+                                                title={trimmedUrl}
+                                                onClick={() => onImageClick(trimmedUrl)}
+                                            >
+                                                <img
+                                                    src={trimmedUrl}
+                                                    alt={`Attachment ${idx + 1}`}
+                                                    loading="lazy"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        );
+                                    })
+                                ) : (
+                                    <p className="text-sm text-gray-500">No Attachments</p>
+                                )}
+                            </div>
+                        </td>
+                    );
+                }
+
+                if (key === "DateCreated") {
+                    return (
+                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                            {formatDate(value)}
+                        </td>
+                    );
+                }
+
+                if (key === "WorkLogs") {
+                    return (
+                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                            <div className="relative group">
+                                <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
+                                    {value ? `${value.substring(0, 28)}` : "No WorkLogs"}
+                                </div>
+                                {value && (
+                                    <div className="absolute z-50 hidden group-hover:block bg-white border p-3 rounded shadow-md w-96 max-h-96 overflow-y-auto cursor-pointer top-full mt-1 left-0 whitespace-pre-wrap break-words text-sm">
+                                        {value}
+                                    </div>
+                                )}
+                            </div>
+                        </td>
+                    );
+                }
+
+                return (
+                    <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        {value || "N/A"}
+                    </td>
+                );
+            })}
+
+            {/* Actions */}
+            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
+                <button
+                    onClick={() => onEdit(ticket)}
+                    className="text-red-600 hover:text-red-900"
+                    title="View"
+                >
+                    <i className="fa fa-eye"></i>
+                </button>
+
+                <button
+                    onClick={() => onEdit(ticket)}
+                    className="text-green-600 hover:text-green-900 mr-3"
+                    title="Edit"
+                >
+                    <i className="fas fa-edit"></i>
+                </button>
+            </td>
+        </tr>
+    );
+});
+
 export const TicketList = () => {
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const TICKETS_PER_PAGE = 10;
+
     const {
         filteredTickets,
         setCurrentView,
         setSelectedTicket,
-        deleteTicket,
-        setModal
     } = useApp();
 
-    const [selectedImage, setSelectedImage] = React.useState(null);
+    const totalPages = Math.ceil(filteredTickets.length / TICKETS_PER_PAGE);
+
+    const paginatedTickets = useMemo(() => {
+        const start = (currentPage - 1) * TICKETS_PER_PAGE;
+        return filteredTickets.slice(start, start + TICKETS_PER_PAGE);
+    }, [filteredTickets, currentPage]);
 
     const editTicket = (ticket) => {
         setSelectedTicket(ticket);
         setCurrentView("edit");
     };
+
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
-
-        // Assuming dateString is in "dd/MM/yyyy, HH:mm:ss" or similar format
         const [datePart, timePart] = dateString.split(",").map((str) => str.trim());
         const [day, month, year] = datePart.split("/");
         const [hour = "00", minute = "00", second = "00"] = (timePart || "").split(":");
         const isoString = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
-
         const date = new Date(isoString);
         if (isNaN(date)) return "Invalid Date";
-
         const options = {
             day: "2-digit",
             month: "short",
@@ -37,18 +157,12 @@ export const TicketList = () => {
             minute: "2-digit",
             hour12: true,
         };
-
         const formatted = date.toLocaleString("en-GB", options);
         const [dPart, tPart] = formatted.split(", ");
         return `${dPart}, ${tPart.toUpperCase()}`;
     };
 
-
-
-
-
-    // Header labels mapping to actual ticket object keys
-    const headers = [
+    const headers = useMemo(() => [
         { label: "TicketID", key: "TicketID" },
         { label: "Date Created", key: "DateCreated" },
         { label: "Property Code", key: "PropertyCode" },
@@ -75,168 +189,80 @@ export const TicketList = () => {
         { label: "Internal Comments", key: "InternalComments" },
         { label: "Estimated Time To Resolve", key: "EstimatedTimeToResolve" },
         { label: "Actual Time Spent", key: "ActualTimeSpent" },
-    ];
+    ], []);
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900">All Tickets</h2>
-                    <p className="text-gray-600">{filteredTickets.length} tickets found</p>
-                </div>
-
-                <button
-                    onClick={() => setCurrentView("create")}
-                    className="bg-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-700 flex items-center space-x-2"
-                >
-                    <i className="fas fa-plus"></i>
-                    <span>Create Ticket</span>
-                </button>
-            </div>
-
             <TicketFilters />
 
             <div className="bg-white rounded-lg shadow overflow-auto">
-                <table className="min-w-full  divide-gray-200 text-sm">
+                <table className="min-w-full divide-gray-200 text-sm">
                     <thead className="bg-orange-300">
                         <tr>
                             {headers.map(({ label, key }) => (
                                 <th
                                     key={label}
-                                    className={`px-6 py-3 text-left font-bold text-black text-lg whitespace-nowrap overflow-hidden  max-w-[200px] ${key === "TicketID" ? "sticky left-0 z-20 bg-orange-300" : ""
-                                        }`}
-                                    title={label} // Tooltip on hover
+                                    className={`px-6 py-3 text-left font-bold text-black text-lg whitespace-nowrap max-w-[200px] ${key === "TicketID" ? "sticky left-0 z-20 bg-orange-300" : ""}`}
+                                    title={label}
                                 >
                                     {label}
                                 </th>
                             ))}
-                            <th
-                                className="px-6 py-3 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-10 whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]" title="Actions">
+                            <th className="px-6 py-3 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-10 max-w-[150px]" title="Actions">
                                 Actions
                             </th>
                         </tr>
-
                     </thead>
                     <tbody className="bg-white divide-y text-[15px] divide-gray-200">
-                        {filteredTickets.map((ticket) => (
-                            <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
-                                {headers.map(({ key }) => (
-                                    <td
-                                        key={key}
-                                        className={`px-4 py-3 whitespace-nowrap  text-gray-900 max-w-[200px] ${key === "TicketID" ? "sticky left-0 bg-white z-10" : ""
-                                            }`}
-                                        title={typeof ticket[key] === "string" ? ticket[key] : ""}
-                                    >
-                                        {key === "Title" ? (
-                                            <div>
-                                                <div className="font-medium">{`${ticket.Title.substring(0, 25)}...` || "N/A"}</div>
-                                                <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden   text-ellipsis">
-                                                    {ticket.Description
-                                                        ? `${ticket.Description.substring(0, 60)}...`
-                                                        : "No Description"}
-                                                </div>
-                                            </div>
-                                        ) :
-                                            key === "Attachment" ? (
-                                                <>
-                                                    <div className="flex  gap-2 mt-1 max-h-48 overflow-auto">
-                                                        {ticket.Attachment ? (
-                                                            ticket.Attachment.split(",").map((url, idx) => {
-                                                                const trimmedUrl = url.trim();
-                                                                const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
-
-                                                                if (!isImage) return null;
-
-                                                                return (
-                                                                    <div
-                                                                        key={idx}
-                                                                        className="w-10 h-10 border rounded-md overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-blue-400"
-                                                                        title={trimmedUrl}
-                                                                        onClick={() => setSelectedImage(trimmedUrl)}
-                                                                    >
-                                                                        <img
-                                                                            src={trimmedUrl}
-                                                                            alt={`Attachment ${idx + 1}`}
-                                                                            className="w-full h-full object-cover"
-                                                                        />
-                                                                    </div>
-                                                                );
-                                                            })
-                                                        ) : (
-                                                            <p className="text-sm text-gray-500">No Attachments</p>
-                                                        )}
-                                                    </div>
-
-                                                    {/* Fullscreen Modal Preview */}
-                                                    {selectedImage && (
-                                                        <div
-                                                            onClick={() => setSelectedImage(null)}
-                                                            className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 cursor-pointer"
-                                                        >
-                                                            <img
-                                                                src={selectedImage}
-                                                                alt="Full View"
-                                                                className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )
-                                                : key === "DateCreated"
-                                                    // key === "ClosedDate" ||
-                                                    // key === "UpdatedDateTime"
-                                                    ? (
-                                                        formatDate(ticket[key])
-
-                                                    ) : key === "WorkLogs" ? (
-                                                        <div className="relative group">
-
-                                                            <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
-                                                                {`${ticket.WorkLogs.substring(0, 28)}` || "No WorkLogs"}
-                                                            </div>
-                                                            {/* Tooltip on Hover */}
-                                                            {ticket.WorkLogs && (
-                                                                <div className="absolute z-50 hidden group-hover:block bg-white border p-3 rounded shadow-md w-96 max-h-96 overflow-y-auto cursor-pointer top-full mt-1 left-0 whitespace-pre-wrap break-words text-sm">
-                                                                    {ticket.WorkLogs}
-                                                                </div>
-                                                            )}
-                                                        </div>
-
-                                                    ) : (
-                                                        ticket[key] || "N/A"
-                                                    )
-
-                                        }
-
-                                    </td>
-                                ))}
-
-                                <td className="px-5 py-7 h-full flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
-
-                                    <button
-                                        onClick={() => editTicket(ticket)}
-                                        className="text-red-600 hover:text-red-900"
-                                        title="View"
-                                    >
-                                        <i className="fa fa-eye"></i>
-                                    </button>
-
-                                    <button
-                                        onClick={() => editTicket(ticket)}
-                                        className="text-green-600 hover:text-green-900 mr-3"
-                                        title="Edit"
-                                    >
-                                        <i className="fas fa-edit"></i>
-                                    </button>
-
-                                </td>
-                            </tr>
+                        {paginatedTickets.map((ticket) => (
+                            <TicketRow
+                                key={ticket.TicketID}
+                                ticket={ticket}
+                                headers={headers}
+                                formatDate={formatDate}
+                                onEdit={editTicket}
+                                onImageClick={setSelectedImage}
+                            />
                         ))}
                     </tbody>
-
                 </table>
             </div>
 
+            {/* Pagination */}
+            <div className="flex justify-center items-center gap-6 pb-5">
+                  <span className="text-sm text-gray-700">
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
+                >
+                    <i class="fa-solid fa-arrow-left"></i> Previous
+                </button>
+              
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
+                >
+                    Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            {/* Image Preview Modal */}
+            {selectedImage && (
+                <div
+                    onClick={() => setSelectedImage(null)}
+                    className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 cursor-pointer"
+                >
+                    <img
+                        src={selectedImage}
+                        alt="Full View"
+                        className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
+                    />
+                </div>
+            )}
         </div>
     );
 };

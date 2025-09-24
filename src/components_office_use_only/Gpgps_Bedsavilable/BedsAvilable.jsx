@@ -234,13 +234,13 @@ const BedsAvilable = () => {
                   onMouseEnter={() => setPopup(btn.id)}
                   onMouseLeave={() => setPopup(null)}
                 >
-                  <button className="flex items-center justify-between w-full sm:justify-center gap-2 px-4 py-1 border border-orange-500 text-orange-600 bg-white rounded-xl hover:bg-orange-50 shadow-sm transition-all">
+                  <button className="flex items-center mt-5 justify-between w-full sm:justify-center gap-2 px-4 py-1 border border-orange-500 text-orange-600 bg-white rounded-xl hover:bg-orange-50 shadow-sm transition-all">
                     {btn.icon}
                     <span className="font-medium">{btn.label}</span>
                   </button>
 
                   {popup === btn.id && (
-                    <div className="absolute top-6.5 left-0 z-50 bg-white border border-orange-300 shadow-lg rounded-xl p-4 w-64 mt-2">
+                    <div className="absolute top-6.5 left-0 z-50 bg-white border border-orange-300 shadow-lg rounded-xl p-4 w-64 mt-1">
                       <h2 className="text-sm text-orange-500 font-bold mb-3 capitalize">
                         {btn.label} Filter
                       </h2>
@@ -267,7 +267,7 @@ const BedsAvilable = () => {
 
 
             {activeFilters.length > 0 && (
-              <button className="flex items-center bg-orange-100 justify-between h-8 sm:justify-center gap-2 px-4 py-1 border border-orange-500 text-orange-600  rounded-xl hover:bg-orange-50 shadow-sm transition-all">
+              <button className="flex items-center mt-5 bg-orange-100 justify-between h-8 sm:justify-center gap-2 px-4 py-1 border border-orange-500 text-orange-600  rounded-xl hover:bg-orange-50 shadow-sm transition-all">
                 {/* {btn.icon} */}
                 <span onClick={clearFilters}
                   className="font-medium flex items-center gap-2 ">
@@ -284,7 +284,7 @@ const BedsAvilable = () => {
 
 
 
-            <div className="flex items-center justify-end mt-1 mb-2 gap-2">
+            <div className="flex items-center justify-end mt-5 mb-2 gap-2">
               <button
                 onClick={() => setSortByVacatingDate((prev) => !prev)}
                 className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-all ${sortByVacatingDate ? "bg-orange-500" : "bg-gray-300"
@@ -317,7 +317,7 @@ const BedsAvilable = () => {
                 <span className="font-semibold text-orange-600">
                   {filterTotal}
                 </span>{" "}
-                result(s)
+                Bed(s)
               </div>
             )}
             <div className="overflow-auto max-h-screen  border border-gray-200">
@@ -343,7 +343,7 @@ const BedsAvilable = () => {
                   {filteredData.map((item, index) => (
                     <tr
                       key={index}
-                      className="even:bg-orange-50 hover:bg-orange-200 transition-all border-b border-gray-200"
+                      className="bg-white hover:bg-gray-100 transition-all border-b border-gray-200"
                     >
                       {Object.keys(filteredData[0] || {}).map((key, idx) => (
                         <td
