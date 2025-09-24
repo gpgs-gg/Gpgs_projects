@@ -16,7 +16,7 @@ const Home = () => {
 
   return (
     <>
-      <section id="home" className="gradient-bg flex text-black  py-16 pt-32 min-h-screen">
+      <section id="home" className="gradient-bg flex text-black  py-16 pt-32 lg:min-h-screen">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center  justify-between px-4 sm:px-6 lg:px-8 gap-10">
 
           {/* Left side: content */}
