@@ -31,7 +31,7 @@ const Gpgsaction = () => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
-  const cardClasses = "bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 border flex flex-col items-center text-center";
+  const cardClasses = "bg-white shadow-lg rounded-xl p-5 hover:shadow-2xl transition duration-300 border flex flex-col items-center text-center";
   const iconClasses = "h-14 w-14 flex items-center justify-center rounded-full mb-4";
   const titleClasses = "text-xl font-semibold text-gray-800 mb-4";
   const btnClasses = "w-full text-white py-2 rounded-md font-medium transition";
@@ -57,11 +57,11 @@ const Gpgsaction = () => {
 
   return (
     <section className="bg-gray-200 min-h-screen py-10 px-4 md:px-6 flex items-center justify-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
 
         {/* TICKETS SYSTEM */}
         <Link to="/gpgs-actions/tickets">
-          <div className={cardClasses} data-aos="fade-up">
+          <div className={cardClasses}>
             <div className={`${iconClasses} bg-green-100 text-green-600`}>
               <i className="fa-solid fa-ticket text-xl"></i>
             </div>
@@ -75,19 +75,19 @@ const Gpgsaction = () => {
         {/* SALES */}
         <div
           className={`${cardClasses} cursor-pointer`}
-          // data-aos="fade-up"
+          //
           onClick={() => setShowSalesOptions(prev => !prev)}
         >
           <div className={`${iconClasses} bg-yellow-100 text-yellow-600`}>
             <i className="fa-solid fa-chart-line text-xl"></i>
           </div>
           <h3 className={titleClasses}>SALES</h3>
-          <button className={`${btnClasses} bg-yellow-500 hover:bg-yellow-600 mb-4`}>
+          <button className={`${btnClasses} bg-yellow-500 hover:bg-yellow-600`}>
             {showSalesOptions ? 'Hide Sales Options' : 'Show Sales Options'}
           </button>
 
           {showSalesOptions && (
-            <div className="w-full flex flex-col gap-3">
+            <div className="w-full flex flex-col gap-3 mt-5">
               <Link
                 to="/gpgs-actions/beds-avilable"
                 className={`${subBtnClasses} bg-green-100 text-green-800 hover:bg-green-200`}
@@ -106,7 +106,7 @@ const Gpgsaction = () => {
 
         {/* ACCOUNTS */}
         <Link to="/gpgs-actions/accounts">
-          <div className={cardClasses} data-aos="fade-up">
+          <div className={cardClasses}>
             <div className={`${iconClasses} bg-green-100 text-green-600`}>
               <i className="fa-solid fa-file-invoice text-xl"></i>
             </div>
