@@ -128,7 +128,11 @@ export const TicketList = () => {
         setCurrentView,
         setSelectedTicket,
     } = useApp();
-
+    
+ useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredTickets]);
+    
     const totalPages = Math.ceil(filteredTickets.length / TICKETS_PER_PAGE);
 
     const paginatedTickets = useMemo(() => {
