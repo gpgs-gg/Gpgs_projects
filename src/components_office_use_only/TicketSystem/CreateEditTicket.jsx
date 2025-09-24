@@ -464,7 +464,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
         ) : (
           <div className="lg:flex   items-center gap-5">
             <h1>Create New Ticket</h1>
-            {decryptedUser?.role.toLowerCase() === "client" && (
+            {decryptedUser?.role.toLowerCase().toLowerCase() === "client" && (
               <p className="text-orange-500 text-sm lg:text-lg">For any Maintenance, Housekeeping, Notice To Vacate PG Facility, Rent Receipt, Agreement, Full & Final Settlement, Electricity Bill Concern, etc.</p>
             )}
           </div>
@@ -504,7 +504,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       styles={SelectStyles}
                       isClearable
                       placeholder="Search & Select Property Code"
-                      isDisabled={decryptedUser?.role === "client" || isEdit && decryptedUser?.role !== "client"}
+                      isDisabled={decryptedUser?.role.toLowerCase() === "client" || isEdit && decryptedUser?.role.toLowerCase() !== "client"}
                     />
 
                     {error && <p className="text-red-500 text-sm">{error.message}</p>}
@@ -516,10 +516,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             {[
               { name: "Department", options: DepartmentOptions, placeholder: "Search & Select Department" },
               { name: "Category", options: CategoryOptions, placeholder: "Search &  Select Category" },
-              ...(isEdit && decryptedUser?.role === "client"
+              ...(isEdit && decryptedUser?.role.toLowerCase() === "client"
                 ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
                 : []),
-              ...(decryptedUser?.role === "admin"
+              ...(decryptedUser?.role.toLowerCase() === "admin"
                 ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
                 : []),
             ].map(({ name, options, placeholder }) => (
@@ -531,7 +531,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   rules={{ required: `${name} is required` }}
                   render={({ field, fieldState: { error } }) => (
                     <>
-                      <Select {...field} options={options} styles={SelectStyles} placeholder={placeholder} isClearable isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      <Select {...field} options={options} styles={SelectStyles} placeholder={placeholder} isClearable isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                       {error && <p className="text-red-500 text-sm">{error.message}</p>}
                     </>
                   )}
@@ -551,7 +551,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                   } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
                 placeholder="Enter Title"
-                isDisabled={isEdit && decryptedUser?.role === "client"}
+                isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
               />
               {errors.Title && (
                 <p className="text-red-500 text-sm mt-1">
@@ -559,14 +559,14 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 </p>
               )}
             </div>
-            {!isEdit && decryptedUser?.role !== "client" && (<>
+            {!isEdit && decryptedUser?.role.toLowerCase() !== "client" && (<>
               <div>
                 <label className="block text-sm font-medium text-black mb-2">Manager</label>
                 <Controller
                   control={control}
                   name="Manager"
                   render={({ field }) => (
-                    <Select {...field} placeholder="Search & Select Manager" options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                    <Select {...field} placeholder="Search & Select Manager" options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                   )}
 
                 />
@@ -577,7 +577,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   control={control}
                   name="Assignee"
                   render={({ field }) => (
-                    <Select {...field} placeholder="Search & Select Assignee" options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"}
+                    <Select {...field} placeholder="Search & Select Assignee" options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                     />
                   )}
                 />
@@ -595,7 +595,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   rules={{ required: "Status is required" }}
                   render={({ field, fieldState: { error } }) => (
                     <>
-                      <Select {...field} options={StatusOptions} styles={SelectStyles} isClearable isDisabled={isEdit && decryptedUser?.role === "client"} />
+                      <Select {...field} options={StatusOptions} styles={SelectStyles} isClearable isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                       {error && <p className="text-red-500 text-sm">{error.message}</p>}
                     </>
                   )}
@@ -603,7 +603,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 />
               </div>
             )}
-            {decryptedUser?.role !== "client" && (
+            {decryptedUser?.role.toLowerCase() !== "client" && (
               <div>
                 <label className="block text-sm font-medium text-black mb-2">
                   Target Date
@@ -618,7 +618,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                         type="date"
                         {...field}
                         value={field.value || ""}
-                        isDisabled={isEdit && decryptedUser?.role === "client"}
+                        isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                         className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                       />
                       {field.value && (
@@ -735,7 +735,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       control={control}
                       name="Manager"
                       render={({ field }) => (
-                        <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                        <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                       )}
                     />
                   </div>
@@ -745,7 +745,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       control={control}
                       name="Assignee"
                       render={({ field }) => (
-                        <Select {...field} options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                        <Select {...field} options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                       )}
                     />
                   </div>
@@ -761,7 +761,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       control={control}
                       name="CustomerImpacted"
                       render={({ field }) => (
-                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                       )}
                     />
                   </div>
@@ -773,7 +773,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       control={control}
                       name="Escalated"
                       render={({ field }) => (
-                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role === "client"} />
+                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                       )}
                     />
                   </div>

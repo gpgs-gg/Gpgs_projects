@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useApp } from "./AppProvider";
 import { TicketFilters } from "./TicketFilters";
 
@@ -6,12 +6,17 @@ import { TicketFilters } from "./TicketFilters";
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
     return (
         <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
-            {headers.map(({ key }) => {
+            {headers.map(({ key }, index) => {
                 const value = ticket[key];
+
+                const isTicketID = key === "TicketID";
+                const stickyStyle = isTicketID
+                    ? "sticky left-0 bg-white z-20 px-4 py-3 bg-orange-300 whitespace-nowrap text-gray-900 font-semibold border-r"
+                    : "px-4 py-3 whitespace-nowrap text-gray-900 ";
 
                 if (key === "Status") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <span className="px-2 py-1 rounded-full">{value}</span>
                         </td>
                     );
@@ -19,7 +24,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "Title") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <div>
                                 <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
                                 <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
@@ -32,7 +37,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "Attachment") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <div className="flex gap-2 mt-1 max-h-48 overflow-auto">
                                 {value ? (
                                     value.split(",").map((url, idx) => {
@@ -66,7 +71,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "DateCreated") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             {formatDate(value)}
                         </td>
                     );
@@ -74,7 +79,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
                 if (key === "WorkLogs") {
                     return (
-                        <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                        <td key={key} className={stickyStyle}>
                             <div className="relative group">
                                 <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
                                     {value ? `${value.substring(0, 28)}` : "No WorkLogs"}
@@ -89,15 +94,16 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
                     );
                 }
 
+                // Default case for other columns:
                 return (
-                    <td key={key} className="px-4 py-3 whitespace-nowrap text-gray-900">
+                    <td key={key} className={stickyStyle}>
                         {value || "N/A"}
                     </td>
                 );
             })}
 
             {/* Actions */}
-            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky right-0 bg-white z-10">
+            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky border-l right-0 bg-white z-10">
                 <button
                     onClick={() => onEdit(ticket)}
                     className="text-red-600 hover:text-red-900"
@@ -118,6 +124,8 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
     );
 });
 
+
+
 export const TicketList = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -128,6 +136,11 @@ export const TicketList = () => {
         setCurrentView,
         setSelectedTicket,
     } = useApp();
+
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filteredTickets]);
 
     const totalPages = Math.ceil(filteredTickets.length / TICKETS_PER_PAGE);
 
@@ -205,7 +218,7 @@ export const TicketList = () => {
                                     className={`px-6 py-3 text-left font-bold text-black text-lg whitespace-nowrap max-w-[200px] ${key === "TicketID" ? "sticky left-0 z-20 bg-orange-300" : ""}`}
                                     title={label}
                                 >
-                                    {label}
+                                    {label.substring(0, 20)}
                                 </th>
                             ))}
                             <th className="px-6 py-3 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-10 max-w-[150px]" title="Actions">
@@ -230,7 +243,7 @@ export const TicketList = () => {
 
             {/* Pagination */}
             <div className="flex justify-center items-center gap-6 pb-5">
-                  <span className="text-sm text-gray-700">
+                <span className="text-sm text-gray-700">
                     Page {currentPage} of {totalPages}
                 </span>
                 <button
@@ -240,7 +253,7 @@ export const TicketList = () => {
                 >
                     <i class="fa-solid fa-arrow-left"></i> Previous
                 </button>
-              
+
                 <button
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}

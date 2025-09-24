@@ -20,10 +20,13 @@ import LoginPage from './auth/LoginPage';
 import { divIcon } from 'leaflet';
 import PublicRoute from './AuthRoutes/PublicRoute';
 import PageNotFound from './components/PageNotFound';
+import { useAuth } from './context/AuthContext';
+// import { useAuth } from './context/AuthContext';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
+  const { logout } = useAuth();
 
 
   // Smooth scroll
@@ -104,8 +107,36 @@ function App() {
     };
   }, []);
 
+
+
+const ONE_DAY = 24 * 60 * 60 * 1000;
+useEffect(() => {
+  const loginTimestamp = Number(localStorage.getItem('loginTimestamp'));
+
+  if (loginTimestamp) {
+    const now = Date.now();
+    if (now - loginTimestamp > ONE_DAY) {
+      logout();
+      localStorage.removeItem('loginTimestamp');
+      window.location.reload();
+    }
+  }
+}, []);
+
+
+
+// Add to main component or index.js
+// useEffect(() => {
+//   const onContext = (e) => e.preventDefault();
+//   document.addEventListener('contextmenu', onContext);
+//   return () => document.removeEventListener('contextmenu', onContext);
+// }, []);
+
+
   return (
     <>
+
+    
       {/* Show Header only if not in admin route */}
       <Header />
       <Routes>
@@ -171,6 +202,7 @@ function App() {
             <AdminLayout />
         } /> */}
       </Routes>
+     
     </>
   );
 }

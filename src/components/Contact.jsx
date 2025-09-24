@@ -19,6 +19,7 @@ import gbed17 from "../images_of_female_pg/photo17.jpeg"
 import gbed20 from "../images_of_female_pg/photo20.jpeg"
 import gbed21 from "../images_of_female_pg/photo21.jpeg"
 import gbed23 from "../images_of_female_pg/photo23.jpeg"
+import Footer from './Footer';
 
 
 // 🖼️ Replace these with your real image imports or URLs
@@ -39,6 +40,7 @@ const supportContacts = [
 
 const Contact = () => {
   return (
+ <>
     <section id="contact" className="gradient-bg-contact text-white py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -133,6 +135,8 @@ const Contact = () => {
 
       </div>
     </section>
+    <Footer/>
+ </>
   );
 };
 

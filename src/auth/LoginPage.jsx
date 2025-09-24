@@ -20,7 +20,7 @@
 //   const { data: userData, isLoading } = useEmployeeDetails();
 
 //   // const { data: clientData, isLoading:isClientLoading } = useClientDetails();
-  
+
 //   const {
 //     register,
 //     handleSubmit,
@@ -65,7 +65,7 @@
 //        toast.success("Logged in successfully!", {
 //           toastId: "login-success" // Optional: prevents duplicate toasts
 //         });
-    
+
 //       setError('');
 //       navigate('/gpgs-actions');
 //       reset();
@@ -244,15 +244,14 @@ const LoginPage = () => {
       login(user); // Save to context
       toast.success("Logged in successfully!", { toastId: "login-success" });
       setError('');
-    
-   
-        window.location.reload();
-         reset();
-  
-      
+      localStorage.setItem('loginTimestamp', Date.now());
+      window.location.reload();
+      reset();
+
+
     } else {
       setError('');
-       toast.dismiss();
+      toast.dismiss();
       toast.error('Invalid Login ID or Password');
     }
   };
@@ -265,7 +264,7 @@ const LoginPage = () => {
           className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
         >
           <h2 className="text-2xl font-bold mb-6 text-orange-500 text-center">
-          Login
+            Login
           </h2>
 
           {/* Login ID */}

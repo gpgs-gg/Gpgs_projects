@@ -5,24 +5,23 @@ import 'aos/dist/aos.css';
 import video1 from "../videos/PV1NL21-privateRoom.mp4";
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
+import { FaWhatsapp, FaPhoneAlt } from 'react-icons/fa';
 import "./Home.css"
 
 const Home = () => {
   useEffect(() => {
-    AOS.init({ duration: 2000, once: false });
+    AOS.init({ duration: 1500, once: true });
     AOS.refresh();
   }, []);
 
-
   return (
     <>
-      <section id="home" className="gradient-bg text-black py-16 pt-32 min-h-screen">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 gap-10">
+      <section id="home" className="gradient-bg flex text-black  py-16 pt-32 lg:min-h-screen">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center  justify-between px-4 sm:px-6 lg:px-8 gap-10">
 
           {/* Left side: content */}
           <div className="flex-1 w-full">
-            <h1 className="text-3xl sm:text-2xl md:text-3xl font-bold text-green-900 mb-4 leading-snug" style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}
-            >
+            <h1 className="text-3xl sm:text-2xl md:text-3xl font-bold text-green-900 mb-4 leading-snug" style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}>
               Our goal is to make you feel at home
               in our paying guest facilities with all
               the quality services
@@ -55,7 +54,6 @@ const Home = () => {
                 </svg>
               </span>
             </Link>
-
 
             <div className="flex flex-wrap gap-4 justify-start">
               <div className="bg-white text-[#3730a3] px-6 py-3 rounded-lg font-semibold text-center w-full sm:w-auto">
@@ -97,6 +95,41 @@ const Home = () => {
 
         </div>
       </section>
+
+      {/* Sticky 3D WhatsApp & Call icons */}
+     <div
+  className="fixed bottom-8 right-8 z-50 flex flex-col space-y-4"
+  data-aos="fade-left"
+>
+  {/* WhatsApp Button */}
+  <a
+    href="https://wa.me/9326262292"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-auto min-w-[140px] px-4 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+      transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
+      active:scale-95 active:shadow-md"
+    title="Chat with us on WhatsApp"
+    aria-label="WhatsApp Chat"
+  >
+    <FaWhatsapp className="mr-3 text-3xl" />
+    <span className="text-base font-semibold">Chat With Us</span>
+  </a>
+
+  {/* Call Button */}
+  <a
+    href="tel:+9326262292"
+    className="w-auto min-w-[140px] px-4 h-16 bg-green-800 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+      transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
+      active:scale-95 active:shadow-md"
+    title="Call us"
+    aria-label="Call Us"
+  >
+    <FaPhoneAlt className="mr-3 text-3xl" />
+    <span className="text-base font-semibold">Click To Call</span>
+  </a>
+</div>
+
     </>
   );
 };

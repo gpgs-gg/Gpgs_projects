@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+
 // for boys import 
 import bed1 from "../images_of_male_pg/bed1.png"
 import bed2 from "../images_of_male_pg/bed2.png"
@@ -133,51 +137,68 @@ gbed30,
 
 ];
 
+
+
 const Gallary = () => {
+  const [activeTab, setActiveTab] = useState('male');
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+  }, []);
+
+  const tabs = [
+    { id: 'male', label: 'Male PG Photos' },
+    { id: 'female', label: 'Female PG Photos' }
+  ];
+
+  const currentImages = activeTab === 'male' ? images_of_male_pg : images_of_female_pg;
+
   return (
-    <div className="p-6 space-y-12 ">
-      {/* Girls PG Section */}
-      <section className='mt-20'>
-        <h2 className="text-2xl md:text-3xl font-bold  text-[#407105] text-center mb-6">
-          Male PG Photos
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {images_of_male_pg.map((src, index) => (
-            <div
-              key={index}
-              className="w-full h-[400px] rounded-lg shadow-md overflow-hidden"
+    <div className="min-h-screen bg-gray-100 py-16 px-4 sm:px-6 lg:px-12 mt-20">
+      <div className="max-w-7xl mx-auto">
+        {/* 🧭 Tabs */}
+        <div className="flex justify-center gap-4 mb-5">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-2 rounded-sm font-bold text-sm md:text-base  transition-all duration-300 
+                ${activeTab === tab.id
+                  ? 'border-b-8 border-green-900 text-black '
+                  : 'bg-white text-gray-700'
+                }`}
             >
-              <img
-                src={src}
-                alt={`male PG ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
+              {tab.label}
+            </button>
           ))}
         </div>
-      </section>
 
+        {/* 📷 Image Grid */}
+        <div className="space-y-8" data-aos="fade-up">
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-[#407105] mb-8">
+            {/* {tabs.find(tab => tab.id === activeTab).label} */}
+          </h2>
 
-   
-      <section className='mt-20'>
-        <h2 className="text-2xl md:text-3xl font-bold  text-[#407105] text-center mb-6">
-          Female PG Photos
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {images_of_female_pg.map((src, index) => (
-            <div
-              key={index}
-              className="w-full h-[400px] rounded-lg shadow-md overflow-hidden"
-            >
-              <img
-                src={src}
-                alt={`female PG ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {currentImages.map((src, index) => (
+              <div
+                key={index}
+                className="group relative w-full h-[400px] overflow-hidden rounded-xl shadow-lg p-5 bg-white"
+                data-aos="zoom-in"
+                data-aos-delay={(index % 6) * 100}
+              >
+                <img
+                  src={src}
+                  alt={`${activeTab} PG ${index + 1}`}
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 ease-in-out"
+                />
+                {/* Optional overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300" />
+              </div>
+            ))}
+          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
