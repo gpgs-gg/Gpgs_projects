@@ -34,7 +34,7 @@ const Gpgsaction = () => {
   const cardClasses = "bg-white shadow-lg rounded-xl p-5 hover:shadow-2xl transition duration-300 border flex flex-col items-center text-center";
   const iconClasses = "h-14 w-14 flex items-center justify-center rounded-full mb-4";
   const titleClasses = "text-xl font-semibold text-gray-800 mb-4";
-  const btnClasses = "w-full text-white py-2 rounded-md font-medium transition";
+  const btnClasses = "w-full text-white py-2 px-3 rounded-md font-medium transition";
   const subBtnClasses = "py-2 px-4 rounded-md text-center transition text-sm";
 
   if (decryptedUser?.role.toLowerCase() === "client") {
