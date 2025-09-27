@@ -94,11 +94,12 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 lg:space-x-10">
+          <nav className="hidden md:flex items-center space-x-2 lg:space-x-8">
             {navLinks}
             <Link to="/gallery" className="nav-link">Gallery</Link>
-            <Link to="/gpgs-actions" className="nav-link">Office</Link>
-
+           
+            <Link to="/gpgs-actions" className="nav-link"><span className="text-xl">|</span> Office</Link>
+      
             {decryptedUser && (
               <div className="flex items-center space-x-4 ml-6">
                 <div className="text-right">
@@ -123,7 +124,7 @@ const Header = () => {
             )}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-700 hover:text-indigo-600 text-2xl focus:outline-none"
+              className="  text-2xl focus:outline-none"
               aria-label="Toggle Menu"
             >
               {menuOpen ? '×' : '☰'}

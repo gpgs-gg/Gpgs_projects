@@ -75,9 +75,9 @@ const DepartmentOptions = [
 ];
 
 export const TicketFilters = () => {
-    const { filters, setFilters, users, filteredTickets } = useApp();
+    const { filters, setFilters, users, filteredTickets , decryptedUser} = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
-
+   console.log("decryptedUser", decryptedUser?.role)
     const assigneeOptions = [
         { label: "All Assignees", value: "" },
         ...(EmployeeDetails?.data
@@ -203,19 +203,6 @@ export const TicketFilters = () => {
                         )}
                     />
                 </div>
-
-                {/* Priority */}
-                {/* <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                    <Controller
-                        name="Priority"
-                        control={control}
-                        render={({ field }) => (
-                            <Select {...field} options={priorityOptions} styles={SelectStyles} isClearable={false} />
-                        )}
-                    />
-                </div> */}
-
                 {/* Department */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
@@ -227,6 +214,9 @@ export const TicketFilters = () => {
                         )}
                     />
                 </div>
+                {decryptedUser?.role !== "client" && (
+              <>
+              
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Manager</label>
                     <Controller
@@ -237,6 +227,7 @@ export const TicketFilters = () => {
                         )}
                     />
                 </div>
+         
                 {/* Assignee */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
@@ -288,7 +279,8 @@ export const TicketFilters = () => {
                         )}
                     />
                 </div>
-
+              </>
+       )}
 
             </div>
 

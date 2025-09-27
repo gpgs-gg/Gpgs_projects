@@ -13,19 +13,34 @@ export const Navigation = () => {
   const [decryptedUser, setDecryptedUser] = useState(null);
 
 
-  const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
-    {
-      id: 'tickets',
-      label: decryptedUser?.role === 'client' ? 'My Tickets' : 'All Tickets',
-      icon: 'fas fa-ticket-alt'
-    },
-    { id: 'create', label: 'Create Ticket', icon: 'fas fa-plus-circle' },
-    // { id: 'kanban', label: 'Kanban Board', icon: 'fas fa-columns' },
-    // { id: 'reports', label: 'Reports', icon: 'fas fa-chart-bar' },
-    // { id: 'users', label: 'Users', icon: 'fas fa-users', adminOnly: true },
-    // { id: 'settings', label: 'Settings', icon: 'fas fa-cog' }
-  ];
+
+const rawMenuItems = [
+  { id: 'pgpropertydetails', label: 'PG Property Details', icon: 'fas fa-tachometer-alt' },
+  { id: 'personalinfo', label: 'Personal Info', icon: 'fas fa-tachometer-alt' },
+  { id: 'payments', label: 'Payments', icon: 'fas fa-tachometer-alt' },
+  { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
+    { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fas fa-tachometer-alt' },
+
+  {
+    id: 'tickets',
+    label: decryptedUser?.role === 'client' ? 'My Tickets' : 'All Tickets',
+    icon: 'fas fa-ticket-alt'
+  },
+  { id: 'create', label: 'Create Ticket', icon: 'fas fa-plus-circle' },
+];
+
+// Filter logic based on role
+const menuItems = rawMenuItems.filter(item => {
+  if (decryptedUser?.role === 'client') {
+    // For clients, exclude 'dashboard'
+    return ['pgpropertydetails', 'personalinfo', 'payments',"mypgtickets" ,'tickets', 'create'].includes(item.id);
+  } else {
+    // For other roles, exclude 'overview', 'personalinfo', 'payments'
+    return !['pgpropertydetails', 'personalinfo', 'payments',"mypgtickets" ,].includes(item.id);
+  }
+});
+
+console.log(menuItems);
 
   const handleLogout = () => {
     logout();

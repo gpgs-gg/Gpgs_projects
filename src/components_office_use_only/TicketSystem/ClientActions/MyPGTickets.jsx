@@ -1,6 +1,10 @@
+
+
+
 import React, { useState, useMemo, useEffect } from "react";
-import { useApp } from "./AppProvider";
-import { TicketFilters } from "./TicketFilters";
+// import { useApp } from "./AppProvider";
+import { TicketFilters } from "../TicketFilters";
+import { useApp } from "../AppProvider";
 
 // Memoized row
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
@@ -126,13 +130,10 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
     );
 });
 
-
-
-export const TicketList = () => {
+export const MyPGTickets = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
 const { decryptedUser } = useApp();
-
 
     const TICKETS_PER_PAGE = 10;
 
@@ -250,7 +251,7 @@ const headers = useMemo(() => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y text-[15px] divide-gray-200">
-                        {paginatedTickets.map((ticket) => (
+                        {paginatedTickets?.filter((ele)=>ele.Status === "Open" && ele.PropertyCode === decryptedUser.propertyCode).map((ticket) => (
                             <TicketRow
                                 key={ticket.TicketID}
                                 ticket={ticket}

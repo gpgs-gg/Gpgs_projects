@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import HousePng from "../logo/House.png"
 
 // Bright/default map style to override any dark theme
 const brightStyle = [];
@@ -160,7 +161,7 @@ const Location = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#2c4d04] mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2c4d04] mb-4"style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>
             Locations
           </h2>
           <p className="text-base md:text-xl text-gray-600">
@@ -211,7 +212,8 @@ const Location = () => {
                   <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                     {/* Front */}
                     <div className="absolute inset-0 bg-white rounded-lg flex flex-col items-center justify-center [backface-visibility:hidden]">
-                      <i className="fas fa-building text-indigo-600 text-xl md:text-2xl mb-2"></i>
+                      {/* <i className="fas fa-building text-indigo-600 text-xl md:text-2xl mb-2"></i> */}
+                      <img src={HousePng} alt="" className="h-12 w-12" />
                       <p className="font-medium text-gray-900 text-sm md:text-base">
                         {location.title}
                       </p>

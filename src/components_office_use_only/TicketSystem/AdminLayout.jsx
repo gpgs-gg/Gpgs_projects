@@ -8,14 +8,25 @@ import { UserManagement } from './UserManagement';
 import { Settings } from './Settings';
 import Navigation from './Navigation';
 import { useApp } from './AppProvider';
+import PgPropertyDetails from './ClientActions/PgPropertyDetails';
+import PersonalInfo from './ClientActions/PersonalInfo';
+import Payments from './ClientActions/Payments';
+import { MyPGTickets } from './ClientActions/MyPGTickets';
 
 const AdminLayout = () => {
   const { currentView } = useApp();
-
   const renderContent = () => {
     switch (currentView) {
       case 'dashboard':
         return <Dashboard />;
+      case 'payments':
+        return <Payments />;
+      case 'personalinfo':
+        return <PersonalInfo />;
+      case 'pgpropertydetails':
+        return < PgPropertyDetails/>;
+      case 'mypgtickets':
+        return < MyPGTickets/>;
       case 'tickets':
         return <TicketList />;
       case 'create':

@@ -21,6 +21,7 @@ import { divIcon } from 'leaflet';
 import PublicRoute from './AuthRoutes/PublicRoute';
 import PageNotFound from './components/PageNotFound';
 import { useAuth } from './context/AuthContext';
+import Profile from './ClientProfile/Profile';
 // import { useAuth } from './context/AuthContext';
 
 function App() {
@@ -196,6 +197,7 @@ useEffect(() => {
 
         <Route path="*" element={<PageNotFound/>} />
         <Route path="/gallery" element={<Gallary />} />
+        <Route path="gpgs-actions/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
 
         {/* Admin routes */}
         {/* <Route path="/gpgs-actions/tickets" element={

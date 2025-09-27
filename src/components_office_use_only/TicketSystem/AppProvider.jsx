@@ -9,8 +9,8 @@ import { SECRET_KEY } from "../../Config";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  // decrptedTicketData
- const [decryptedUser, setDecryptedUser] = useState(null);
+    // decrptedTicketData
+    const [decryptedUser, setDecryptedUser] = useState(null);
 
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
@@ -35,25 +35,25 @@ export const AppProvider = ({ children }) => {
 
 
 
- const location = useLocation();
+    const location = useLocation();
 
-  const isTicketsPage = location.pathname === '/gpgs-actions/tickets';
+    const isTicketsPage = location.pathname === '/gpgs-actions/tickets';
 
-  const { data, isLoading, error } = useTicketSheetData(isTicketsPage); 
+    const { data, isLoading, error } = useTicketSheetData(isTicketsPage);
     const { mutate: updateTicketData, isLoading: isticketUpdate } = useUpdateTicketSheetData();
 
-// Start with an empty array
-const [tickets, setTickets] = useState([]);
+    // Start with an empty array
+    const [tickets, setTickets] = useState([]);
 
-useEffect(() => {
-  if (Array.isArray(data?.data)) {
-    const filteredTickets = decryptedUser?.role === "client"
-      ? data.data.filter((ele) => ele.CreatedByName === decryptedUser.name)
-      : data.data;
+    useEffect(() => {
+        if (Array.isArray(data?.data)) {
+            const filteredTickets = decryptedUser?.role === "client"
+                ? data.data.filter((ele) => ele.CreatedByName === decryptedUser.name)
+                : data.data;
 
-    setTickets(filteredTickets);
-  }
-}, [data, decryptedUser]);
+            setTickets(filteredTickets);
+        }
+    }, [data, decryptedUser]);
 
 
     const initialUsers = [
@@ -66,10 +66,16 @@ useEffect(() => {
         { id: 7, name: 'Sarah Davis', role: 'Leader', email: 'sarah@company.com', department: 'Marketing' },
         { id: 8, name: 'Tom Anderson', role: 'Member', email: 'tom@company.com', department: 'Operations' }
     ];
-    
+
     const [users, setUsers] = useState(initialUsers);
     const [currentUser, setCurrentUser] = useState(initialUsers[0]);
-    const [currentView, setCurrentView] = useState('dashboard');
+    const [currentView, setCurrentView] = useState(null);
+    useEffect(() => {
+        if (decryptedUser?.role) {
+            setCurrentView(decryptedUser.role === 'client' ? 'pgpropertydetails' : 'dashboard');
+        }
+    }, [decryptedUser]);
+
     const [modal, setModal] = useState('');
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -94,32 +100,32 @@ useEffect(() => {
         setTickets([...tickets, newTicket]);
     };
 
-const updateTicket = (ticketId, updates) => {
+    const updateTicket = (ticketId, updates) => {
 
-    // Step 1: Find the ticket to update
-    const ticketToUpdate = tickets?.find(ticket => ticket.TicketID === ticketId);
+        // Step 1: Find the ticket to update
+        const ticketToUpdate = tickets?.find(ticket => ticket.TicketID === ticketId);
 
-    if (!ticketToUpdate) {
-        console.error(`❌ Ticket with ID ${ticketId} not found.`);
-        return;
-    }
+        if (!ticketToUpdate) {
+            console.error(`❌ Ticket with ID ${ticketId} not found.`);
+            return;
+        }
 
-    // Step 2: Merge updates into the found ticket
-    const updatedTicket = { ...ticketToUpdate, ...updates };
+        // Step 2: Merge updates into the found ticket
+        const updatedTicket = { ...ticketToUpdate, ...updates };
 
 
-    // Step 3: Send only the updated ticket
-    updateTicketData(updatedTicket, {
-        onSuccess: () => {
-            alert("✅ Ticket successfully updated in Google Sheet!");
-        },
-        onError: (error) => {
-            console.error("❌ Failed to update ticket:", error);
-        },
-    });
+        // Step 3: Send only the updated ticket
+        updateTicketData(updatedTicket, {
+            onSuccess: () => {
+                alert("✅ Ticket successfully updated in Google Sheet!");
+            },
+            onError: (error) => {
+                console.error("❌ Failed to update ticket:", error);
+            },
+        });
 
-    return updatedTicket;
-};
+        return updatedTicket;
+    };
 
 
 
@@ -180,7 +186,7 @@ const updateTicket = (ticketId, updates) => {
             const matchesTargetDate = !filters.TargetDate || ticket.TargetDate === filters.TargetDate;
             const matchesCreatedByName = !filters.CreatedByName || ticket.CreatedByName === filters.CreatedByName;
 
-            return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager && matchesTargetDate && matchesCreatedByName ;
+            return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager && matchesTargetDate && matchesCreatedByName;
         });
     }, [tickets, searchTerm, filters]);
 
@@ -206,7 +212,8 @@ const updateTicket = (ticketId, updates) => {
         updateUser,
         deleteUser,
         setModal,
-        modal
+        modal,
+        decryptedUser
     };
 
     return (

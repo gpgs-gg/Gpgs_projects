@@ -13,6 +13,8 @@
     "axios": "^1.11.0",
     "chart.js": "^4.5.0",
     "crypto-js": "^4.2.0",
+    "date-fns": "^2.0.0-alpha.20",
+    "framer-motion": "^12.23.21",
     "jspdf": "^3.0.2",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.542.0",

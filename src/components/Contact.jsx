@@ -46,7 +46,7 @@ const Contact = () => {
 
         {/* Heading */}
         <div className="text-center mb-10">
-          <h2 className="text-4xl text-[#2c4d04] font-bold mb-4">
+          <h2 className="text-4xl text-[#2c4d04] font-bold mb-4"style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>
             Connect With Us
           </h2>
         </div>
@@ -82,7 +82,7 @@ const Contact = () => {
                   key={idx}
                   className="bg-white  backdrop-blur-lg rounded-xl p-6 text-center"
                 >
-                  <h3 className="text-sm sm:text-sm text-[#3730a3] font-bold mb-3">
+                  <h3 className="text-sm sm:text-xl text-[#3730a3] font-bold mb-3">
                     {title}
                   </h3>
                   <a

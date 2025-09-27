@@ -269,6 +269,20 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     }
   }, [isEdit, selectedTicket, setValue, ProperyOptions, ManagerOptions]);
 
+useEffect(() => {
+  if (decryptedUser?.role?.toLowerCase() === "client") {
+    // Find the full option object in ProperyOptions that matches decryptedUser.propertyCode
+    const selectedOption = ProperyOptions.find(
+      (opt) => opt.value === decryptedUser.propertyCode
+    );
+
+    if (selectedOption) {
+      setValue("PropertyCode", selectedOption);
+    }
+  }
+}, [decryptedUser, setValue]);
+
+
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
 
@@ -505,6 +519,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       isClearable
                       placeholder="Search & Select Property Code"
                       isDisabled={decryptedUser?.role.toLowerCase() === "client" || isEdit && decryptedUser?.role.toLowerCase() !== "client"}
+                      // isDisabled={isEdit}
                     />
 
                     {error && <p className="text-red-500 text-sm">{error.message}</p>}
@@ -528,7 +543,12 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 <Controller
                   control={control}
                   name={name}
-                  rules={{ required: `${name} is required` }}
+                  rules={{
+                    required:
+                      name === "Priority" && decryptedUser?.role.toLowerCase() === "client"
+                        ? false
+                        : `${name} is required`,
+                  }}
                   render={({ field, fieldState: { error } }) => (
                     <>
                       <Select {...field} options={options} styles={SelectStyles} placeholder={placeholder} isClearable isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
@@ -547,11 +567,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
               </label>
               <input
                 {...register("Title", { required: "Title is required" })}
-                disabled={isEdit}
+                disabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                 className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                   } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
                 placeholder="Enter Title"
-                isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
               />
               {errors.Title && (
                 <p className="text-red-500 text-sm mt-1">
@@ -618,7 +637,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                         type="date"
                         {...field}
                         value={field.value || ""}
-                        isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                       disabled = {isEdit && decryptedUser?.role.toLowerCase() === "client"}
                         className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                       />
                       {field.value && (
@@ -864,7 +883,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
             <button
               type="submit"
-              className={`bg-orange-300 ${isEdit ? "mt-[-10]":"mt-[-80px]"}  text-white px-6 py-2 rounded hover:bg-orange-400 flex items-center justify-center gap-2`}
+              className={`bg-orange-300 ${isEdit ? "mt-[-10]" : "mt-[-80px]"}  text-white px-6 py-2 rounded hover:bg-orange-400 flex items-center justify-center gap-2`}
               disabled={isSubmittingBooking || isUpdatingTicket}
             >
               {(isSubmittingBooking || isUpdatingTicket) ? (
@@ -882,7 +901,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             <button
               type="button"
               onClick={() => setCurrentView("tickets")}
-              className={`border border-gray-300 ${isEdit ? "mt-[-10]":"mt-[-80px]"} text-black px-6 py-2 rounded hover:bg-gray-10`}
+              className={`border border-gray-300 ${isEdit ? "mt-[-10]" : "mt-[-80px]"} text-black px-6 py-2 rounded hover:bg-gray-10`}
             >
               Cancel
             </button>

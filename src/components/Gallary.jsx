@@ -164,8 +164,8 @@ const Gallary = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-2 rounded-sm font-bold text-sm md:text-base  transition-all duration-300 
                 ${activeTab === tab.id
-                  ? 'border-b-8 border-green-900 text-black '
-                  : 'bg-white text-gray-700'
+                  ?  'bg-white text-gray-700'
+                  : 'border-b-8 border-green-900 text-black '
                 }`}
             >
               {tab.label}

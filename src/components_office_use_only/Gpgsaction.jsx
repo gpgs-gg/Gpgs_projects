@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from "../Config";
 
 const Gpgsaction = () => {
   const [showSalesOptions, setShowSalesOptions] = useState(false);
   const [decryptedUser, setDecryptedUser] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const encrypted = localStorage.getItem('user');
@@ -38,26 +39,40 @@ const Gpgsaction = () => {
   const subBtnClasses = "py-2 px-4 rounded-md text-center transition text-sm";
 
   if (decryptedUser?.role.toLowerCase() === "client") {
-    return (
-      <div className="flex justify-center items-center min-h-screen px-4">
-        <Link to="/gpgs-actions/tickets">
-          <div className={cardClasses}>
-            <div className={`${iconClasses} bg-green-100 text-green-600`}>
-              <i className="fa-solid fa-ticket text-xl"></i>
-            </div>
-            <h3 className={titleClasses}>TICKETS SYSTEM</h3>
-            <button className={`${btnClasses} bg-indigo-600 hover:bg-indigo-700`}>
-              Go For Tickets System
-            </button>
-          </div>
-        </Link>
-      </div>
-    );
+      navigate("/gpgs-actions/tickets")
+     
+//       <div className="flex justify-center items-center min-h-screen px-4 gap-5 flex-wrap">
+//         <Link to="/gpgs-actions/tickets">
+//           <div className={`${cardClasses} w-72`}>
+//             <div className={`${iconClasses} bg-orange-100 text-orange-600`}>
+//               <i className="fa-solid fa-ticket text-xl"></i>
+//             </div>
+//             <h3 className={titleClasses}>TICKETS SYSTEM</h3>
+//             <button className={`${btnClasses} bg-orange-400 hover:bg-orange-500`}>
+//               Go For Tickets System
+//             </button>
+//           </div>
+//         </Link>
+    
+
+//  <Link to="/gpgs-actions/profile">
+//           <div className={`${cardClasses} w-72`}>
+//             <div className={`${iconClasses} bg-orange-100 text-orange-600`}>
+//               <i className="fa-solid fa-file-invoice text-xl"></i>
+//             </div>
+//             <h3 className={titleClasses}>Profile</h3>
+//             <button className={`${btnClasses} bg-orange-400 hover:bg-orange-500`}>
+//               Go For Profile
+//             </button>
+//           </div>
+//         </Link>
+//     </div>
   }
 
   return (
     <section className="bg-gray-200 min-h-screen py-10 px-4 md:px-6 flex items-center justify-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
+      {decryptedUser?.role === "admin" && (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
 
         {/* TICKETS SYSTEM */}
         <Link to="/gpgs-actions/tickets">
@@ -118,6 +133,8 @@ const Gpgsaction = () => {
         </Link>
 
       </div>
+      )}
+  
     </section>
   );
 };

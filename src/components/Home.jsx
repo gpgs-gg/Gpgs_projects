@@ -14,9 +14,10 @@ const Home = () => {
     AOS.refresh();
   }, []);
 
+  
   return (
     <>
-      <section id="home" className="gradient-bg flex text-black  py-16 pt-32 lg:min-h-screen">
+      <section id="home" className="gradient-bg flex text-black border py-16 pt-32 lg:min-h-screen">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center  justify-between px-4 sm:px-6 lg:px-8 gap-10">
 
           {/* Left side: content */}
@@ -106,27 +107,25 @@ const Home = () => {
     href="https://wa.me/9326262292"
     target="_blank"
     rel="noopener noreferrer"
-    className="w-auto min-w-[140px] px-4 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+    className="w-auto min-w-[50px]  h-10 lg:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
       transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
-      active:scale-95 active:shadow-md"
+      active:scale-95 active:shadow-md animate-bounce"
     title="Chat with us on WhatsApp"
     aria-label="WhatsApp Chat"
   >
-    <FaWhatsapp className="mr-3 text-3xl" />
-    <span className="text-base font-semibold">Chat With Us</span>
+    <FaWhatsapp className=" text-xl lg:text-5xl" />
   </a>
 
   {/* Call Button */}
   <a
     href="tel:+9326262292"
-    className="w-auto min-w-[140px] px-4 h-16 bg-green-800 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+    className="w-auto min-w-[50px] px-5 h-10 lg:h-16 bg-blue-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
       transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
-      active:scale-95 active:shadow-md"
+      active:scale-95 active:shadow-md animate-bounce"
     title="Call us"
     aria-label="Call Us"
   >
-    <FaPhoneAlt className="mr-3 text-3xl" />
-    <span className="text-base font-semibold">Click To Call</span>
+    <FaPhoneAlt className=" text-xl lg:text-3xl" />
   </a>
 </div>
 

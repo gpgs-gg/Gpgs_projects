@@ -36,6 +36,19 @@ import gbed2 from "../images_of_female_pg/photo2.jpeg"
 import gbed27 from "../images_of_female_pg/photo27.jpeg"
 import { Link } from 'react-router-dom';
 import googlePng from "../logo/download_google-removebg-preview.png"
+import documentPng from "../logo/Document.png"
+import clockPng from "../logo/Clock.png"
+import securedPng from "../logo/Secured.png"
+import FirePng from "../logo/Fire.png"
+import INRPng from "../logo/INR.png"
+import GreenTickPng from "../logo/GreenTick.png"
+import Housekeeping from "../logo/Housekeeping.png"
+import ToolsPng from "../logo/Tools.png"
+import WifiPng from "../logo/WiFi.png"
+
+
+
+
 
 const Services = () => {
   useEffect(() => {
@@ -49,10 +62,10 @@ const Services = () => {
   const TestemonialContent = [
     {
       profile: " ",
-      name: "Sangeeta Bhatia",
+      name: "Vanshika Gupta",
       rating: 5,
-      link: "https://maps.app.goo.gl/cZJf5sHUGRws3svj7",
-      reviewText: "Accommodation is very neat clean. Every day cleaning takes place. My daughter was very safe here. They even helped with medicine when my daughter was sick. I would recommend this accommodation to everyone."
+      link: "https://maps.app.goo.gl/MCP7NWLN6r2cS9eK8",
+      reviewText: "Very systematic, very professional and the housekeeping is really good, the staffs are also very helpful & polite. They take quick actions in case we face any issues. The safety of this PG is 100% assured by them. Happy with the services.👍💯."
     },
     {
       profile: "",
@@ -68,12 +81,12 @@ const Services = () => {
       link: "https://maps.app.goo.gl/fdbhC4jn3rG61Pz6A",
       reviewText: "The best PG in Navi Mumbai. All the staffs are excellent. I stayed here for 2.5 months and my experience was amazing. All the facilities like cooking gas, refrigerator etc. are available here. Staffs are quick to resolve any problem. Thanks Gopal's PG for providing excellent service at reasonable price. Thank you so much..."
     },
-    {
+     {
       profile: " ",
-      name: "Vanshika Gupta",
+      name: "Sangeeta Bhatia",
       rating: 5,
-      link: "https://maps.app.goo.gl/MCP7NWLN6r2cS9eK8",
-      reviewText: "Very systematic, very professional and the housekeeping is really good, the staffs are also very helpful & polite. They take quick actions in case we face any issues. The safety of this PG is 100% assured by them. Happy with the services.👍💯."
+      link: "https://maps.app.goo.gl/cZJf5sHUGRws3svj7",
+      reviewText: "Accommodation is very neat clean. Every day cleaning takes place. My daughter was very safe here. They even helped with medicine when my daughter was sick. I would recommend this accommodation to everyone."
     },
     {
       profile: " ",
@@ -276,7 +289,7 @@ const Services = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Heading */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#2c4d04] mb-4">Services & Facilities</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#2c4d04] mb-4" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>Services & Facilities</h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto">
               Smartly designed accommodations with all-inclusive comfort — everything you need, at one price.
             </p>
@@ -346,8 +359,8 @@ const Services = () => {
                   className="card-hover bg-white rounded-xl shadow-lg overflow-hidden border flex flex-col justify-between"
                 >
                   <div className="p-6 text-center ombre-container  text-white">
-                    <h3 className="text-xl font-bold mb-2">{room.title}</h3>
-                    <p className="text-sm">{room.subtitle}</p>
+                    <h3 className="text-xl font-bold mb-2" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.4)' }}>{room.title}</h3>
+                    <p className="text-sm "  style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}>{room.subtitle}</p>
                   </div>
                   <div className="p-6 flex-grow flex flex-col justify-center items-center">
                     <ul className="space-y-3 text-gray-700 text-sm text-center">
@@ -369,26 +382,30 @@ const Services = () => {
               <h3 className="text-2xl font-semibold text-gray-900 mb-6">Services Included</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <i className="fas fa-wifi text-green-600"></i>
+                  <div className=" bg-white rounded-full flex items-center justify-center">
+                    {/* <i className="fas fa-wifi text-green-600"></i> */}
+                    <img src={WifiPng} alt="" className='h-9 w-9' />
                   </div>
                   <span className="text-gray-700">High-Speed WiFi</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <i className="fas fa-broom text-blue-600"></i>
+                <div className="flex items-center justify-center">
+                  <div className=" bg-white rounded-full flex items-center justify-center">
+                    {/* <i className="fas fa-broom text-blue-600"></i> */}
+                    <img src={Housekeeping} alt="" className='h-12 w-12 mt-[-15px]' />
                   </div>
                   <span className="text-gray-700">Housekeeping</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                    <i className="fas fa-tools text-purple-600"></i>
+                  <div className=" bg-white rounded-full flex items-center justify-center">
+                    {/* <i className="fas fa-tools text-purple-600"></i> */}
+                    <img src={ToolsPng} alt="" className='h-9 w-9' />
                   </div>
                   <span className="text-gray-700">Maintenance</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                    <i className="fas fa-fire text-orange-600"></i>
+                <div className="flex items-center ml-4 space-x-2">
+                  <div className=" bg-white rounded-full flex items-center justify-center">
+                    {/* <i className="fas fa-fire text-orange-600"></i> */}
+                    <img src={FirePng} alt="" className='h-10 w-10 mt-[-14px]' />
                   </div>
                   <span className="text-gray-700">Cooking Gas</span>
                 </div>
@@ -399,14 +416,15 @@ const Services = () => {
               <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-start">Premium Amenities</h3>
               <div className="space-y-4 capitalize">
                 <div className="flex items-start space-x-3">
-                  <i className="fas fa-check-circle text-green-500 mt-1"></i>
+                  {/* <i className="fas fa-check-circle text-green-500 mt-1"></i> */}
+                  <img src={GreenTickPng} alt="" className='h-5 w-5' />
                   <div>
                     <p className="font-medium text-gray-900">Fully Furnished Rooms</p>
                     <p className="text-gray-600  text-sm">Full-size bed, quality mattress, wardrobe, bedside table</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <i className="fas fa-check-circle text-green-500 mt-1"></i>
+                  <img src={GreenTickPng} alt="" className='h-5 w-5' />
                   <div>
                     <p className="font-medium text-gray-900">Modern Kitchen</p>
                     <p className="text-gray-600 text-sm">Gas stove, microwave, toaster, mixer grinder,
@@ -414,7 +432,7 @@ const Services = () => {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <i className="fas fa-check-circle text-green-500 mt-1"></i>
+                  <img src={GreenTickPng} alt="" className='h-5 w-5 ' />
                   <div>
                     <p className="font-medium text-gray-900">Laundry & Utilities</p>
                     <p className="text-gray-600 text-sm">Fully automatic washing machine, geyser,
@@ -430,16 +448,18 @@ const Services = () => {
         <section id="services" className=" bg-gray-50 pt-5 ">
           <div className="max-w-[1220px] bg-white rounded-xl py-5 mx-auto">
             <div className="text-center">
-              <h2 className="text-4xl font-bold text-[#2c4d04]">Additional Information</h2>
+              <h2 className="text-4xl font-bold text-[#2c4d04]"style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>Additional Information</h2>
             </div>
 
             <div className="grid md:grid-cols-2 gap-5 items-center">
               <div className='flex flex-col justify-center items-center'>
                 <h3 className="text-2xl font-semibold text-gray-900 ">Monthly Expenses</h3>
                 <div className="grid grid-cols-1 gap-2">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <i className="fa-solid fa-indian-rupee-sign text-xl text-green-500"></i>                                    </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                      {/* <i className="fa-solid fa-indian-rupee-sign text-xl text-green-500"></i>  */}
+                      <img src={INRPng} alt="" className='h-8 w-8' />
+                   </div>
                     <span className="text-gray-700">Rent + Electricity Bill (Your responsibility)</span>
                   </div>
 
@@ -450,19 +470,20 @@ const Services = () => {
                 <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-start">Security Deposit</h3>
                 <div className="space-y-4 capitalize">
                   <div className="flex items-start space-x-3">
-                    <i className="fas fa-check-circle text-green-500 mt-1"></i>
+                    <img src={securedPng} alt=""  className='h-5 w-5'/>
                     <div>
                       <p className="text-gray-600  text-sm">1-2 months rent (varies by property)</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <i className="fas fa-check-circle text-green-500 mt-1"></i>
+                      <img src={clockPng} alt=""  className='h-5 w-5'/>
                     <div>
                       <p className="text-gray-600 text-sm">Fully refundable with 1 month notice</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <i className="fas fa-check-circle text-green-500 mt-1"></i>
+                    {/* <i className="fas fa-check-circle text-green-500 mt-1"></i> */}
+                    <img src={documentPng} alt=""  className='h-5 w-5'/>
                     <div>
                       <p className="text-gray-600 text-sm">Documentation charges : ₹500 (one-time)</p>
                     </div>

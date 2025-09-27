@@ -20,6 +20,8 @@ import gbed18 from "../images_of_female_pg/photo18.jpeg"
 import gbed25 from "../images_of_female_pg/photo25.jpeg"
 import gbed26 from "../images_of_female_pg/photo26.jpeg"
 import gbed30 from "../images_of_female_pg/photo30.jpeg"
+import TeamPng from "../logo/Team.png"
+import ArrowBulbPng from "../logo/Arrow-Bulb.png"
 
 
 
@@ -40,7 +42,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#2c4d04] mb-4">About Us</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#2c4d04] mb-4" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>About Us</h2>
         </div>
 
         {/* Content Grid */}
@@ -53,7 +55,9 @@ const About = () => {
                 {/* Who are we */}
                 <div data-aos="fade-up">
                   <div className="bg-white rounded-xl p-6 shadow-lg ">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Who are we?</h4>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3 flex gap-1 items-center">
+                      <img src={TeamPng} alt="" className='h-10 w-10' />
+                      <span>Who are we?</span></h4>
                     <p className="text-base text-gray-700">
                       We are a team of dedicated and qualified professionals with 10+ years of experience
                       in accommodation and maintenance services. Our structured departments and refined
@@ -65,7 +69,9 @@ const About = () => {
                 {/* Mission & Vision */}
                 <div data-aos="fade-up">
                   <div className="bg-white rounded-xl p-6 shadow-lg ">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Our Mission & Vision</h4>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3 flex gap-1 items-center">
+                      <img src={ArrowBulbPng} alt="" className='h-10 w-10' />
+                      <span> Our Mission & Vision</span></h4>
                     <p className="text-base text-gray-700">
                       We believe in providing comfortable homes for everyone — creating spaces that feel just
                       like your own. We serve beyond business with prompt issue resolutions and professional
@@ -103,7 +109,7 @@ const About = () => {
               <p className="text-indigo-800 font-semibold text-sm">Years Experience</p>
             </div>
           </div>
-  <div className="bg-gray-50 rounded-xl shadow-lg p-6 sm:p-8">
+          <div className="bg-gray-50 rounded-xl shadow-lg p-6 sm:p-8">
             {/* <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6 flex items-center">
               <i className="fas fa-map-marker-alt text-purple-600 mr-3"></i>Locate us on Map
             </h3> */}
@@ -116,7 +122,7 @@ const About = () => {
                 loop={true}
                 slidesPerView={1}
               >
-                {[bed18 , gbed26 , bed7 ,gbed7, bed14 , bed15 , gbed2 ,gbed18 , gbed25 , gbed30 ].map((imgSrc, idx) => (
+                {[bed18, gbed26, bed7, gbed7, bed14, bed15, gbed2, gbed18, gbed25, gbed30].map((imgSrc, idx) => (
                   <SwiperSlide key={idx}>
                     <img
                       src={imgSrc}
@@ -137,19 +143,19 @@ const About = () => {
               </p>
             </div>
 
-              <div data-aos="fade-up" className='mt-10'>
-            {/* <div className="bg-white p-6 rounded-lg border-l-4 border-indigo-500 shadow">
+            <div data-aos="fade-up" className='mt-10'>
+              {/* <div className="bg-white p-6 rounded-lg border-l-4 border-indigo-500 shadow">
               <p className="text-gray-700 italic text-base sm:text-lg">
                 "We believe that a comfortable home environment is essential for success, whether you're a
                 student or a working professional. That's why we go beyond business to create spaces that feel
                 like home"
               </p>
             </div> */}
-          </div>
+            </div>
           </div>
           {/* Right Box: Quote */}
-        
-         
+
+
         </div>
       </div>
     </section>
