@@ -4,8 +4,6 @@ import { TicketFilters } from "./TicketFilters";
 
 // Memoized row
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
-
-
     return (
         <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
             {headers.map(({ key }, index) => {
@@ -131,7 +129,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 export const TicketList = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-const { decryptedUser } = useApp();
+    const { decryptedUser } = useApp();
 
 
     const TICKETS_PER_PAGE = 10;
@@ -180,52 +178,53 @@ const { decryptedUser } = useApp();
         return `${dPart}, ${tPart.toUpperCase()}`;
     };
 
-const fullHeaders = [
-  { label: "TicketID", key: "TicketID" },
-  { label: "Date Created", key: "DateCreated" },
-  { label: "Property Code", key: "PropertyCode" },
-  { label: "Title", key: "Title" },
-  { label: "Attachment", key: "Attachment" },
-  { label: "Customer Impacted", key: "CustomerImpacted" },
-  { label: "Escalated", key: "Escalated" },
-  { label: "Target Date", key: "TargetDate" },
-  { label: "Category", key: "Category" },
-  { label: "Status", key: "Status" },
-  { label: "Priority", key: "Priority" },
-  { label: "Department", key: "Department" },
-  { label: "Manager", key: "Manager" },
-  { label: "Assignee", key: "Assignee" },
-  { label: "Client ID", key: "ClientID" },
-  { label: "Employee ID", key: "EmployeeID" },
-  { label: "Created By Id", key: "CreatedById" },
-  { label: "Created By Name", key: "CreatedByName" },
-  { label: "Closed Date", key: "ClosedDate" },
-  { label: "Updated By ID", key: "UpdatedById" },
-  { label: "Updated By Name", key: "UpdatedByName" },
-  { label: "Updated Date Time", key: "UpdatedDateTime" },
-  { label: "WorkLogs", key: "WorkLogs" },
-  { label: "Internal Comments", key: "InternalComments" },
-  { label: "Estimated Time To Resolve", key: "EstimatedTimeToResolve" },
-  { label: "Actual Time Spent", key: "ActualTimeSpent" },
-];
+    const fullHeaders = [
+        { label: "TicketID", key: "TicketID" },
+        { label: "Date Created", key: "DateCreated" },
+        { label: "Property Code", key: "PropertyCode" },
+        { label: "Title", key: "Title" },
+        { label: "Attachment", key: "Attachment" },
+        { label: "Customer Impacted", key: "CustomerImpacted" },
+        { label: "Escalated", key: "Escalated" },
+        { label: "Target Date", key: "TargetDate" },
+        { label: "Category", key: "Category" },
+        { label: "Status", key: "Status" },
+        { label: "Priority", key: "Priority" },
+        { label: "Department", key: "Department" },
+        { label: "Manager", key: "Manager" },
+        { label: "Assignee", key: "Assignee" },
+        { label: "Client ID", key: "ClientID" },
+        { label: "Employee ID", key: "EmployeeID" },
+        { label: "Created By Id", key: "CreatedById" },
+        { label: "Created By Name", key: "CreatedByName" },
+        { label: "Closed Date", key: "ClosedDate" },
+        { label: "Updated By ID", key: "UpdatedById" },
+        { label: "Updated By Name", key: "UpdatedByName" },
+        { label: "Updated Date Time", key: "UpdatedDateTime" },
+        { label: "WorkLogs", key: "WorkLogs" },
+        { label: "Internal Comments", key: "InternalComments" },
+        { label: "Estimated Time To Resolve", key: "EstimatedTimeToResolve" },
+        { label: "Actual Time Spent", key: "ActualTimeSpent" },
+    ];
 
-const clientHeaders = [
-  { label: "Ticket ID", key: "TicketID" },
-  { label: "Date Created", key: "DateCreated" },
-  { label: "Department", key: "Department" },
-  { label: "Category", key: "Category" },
-  { label: "Status", key: "Status" },
-  { label: "Title", key: "Title" },
-  { label: "Description", key: "Description" },
-    { label: "WorkLogs", key: "WorkLogs" },
-,  // Assuming this key exists in data
-];
-const headers = useMemo(() => {
-  if (decryptedUser?.role === "client") {
-    return clientHeaders;
-  }
-  return fullHeaders;
-}, [decryptedUser]);
+    const clientHeaders = [
+        { label: "Ticket ID", key: "TicketID" },
+        { label: "Date Created", key: "DateCreated" },
+        { label: "Property Code", key: "PropertyCode" },
+        { label: "Department", key: "Department" },
+        { label: "Category", key: "Category" },
+        { label: "Status", key: "Status" },
+        { label: "WorkLogs", key: "WorkLogs" },
+        { label: "Title", key: "Title" },
+        { label: "Description", key: "Description" },
+        ,  // Assuming this key exists in data
+    ];
+    const headers = useMemo(() => {
+        if (decryptedUser?.role === "client") {
+            return clientHeaders;
+        }
+        return fullHeaders;
+    }, [decryptedUser]);
 
     return (
         <div className="space-y-6">
@@ -274,15 +273,14 @@ const headers = useMemo(() => {
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
                 >
-                    <i class="fa-solid fa-arrow-left"></i> Previous
+                    <i className="fa-solid fa-arrow-left"></i> Previous
                 </button>
-
                 <button
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
                 >
-                    Next <i class="fa-solid fa-arrow-right"></i>
+                    Next <i className="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
 

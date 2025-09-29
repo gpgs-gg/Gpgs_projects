@@ -133,27 +133,44 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 export const MyPGTickets = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-const { decryptedUser } = useApp();
+
+    const { decryptedUser, setMyPgTicketsTotal, filteredTickets, setCurrentView, setSelectedTicket} = useApp();
 
     const TICKETS_PER_PAGE = 10;
 
-    const {
-        filteredTickets,
-        setCurrentView,
-        setSelectedTicket,
-    } = useApp();
+    const now = new Date();
+    const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000); // 10 days ago
 
+    // Filter only tickets belonging to user's property and are not resolved or recently updated
+    const myFilteredTickets = useMemo(() => {
+        if (!filteredTickets) return [];
 
+        return filteredTickets.filter((ticket) => {
+            const isSameProperty = ticket.PropertyCode === decryptedUser.propertyCode;
+
+            const [datePart, timePart] = ticket.UpdatedDateTime.split(", ");
+            const [day, month, year] = datePart.split("/");
+            const ticketUpdatedDate = new Date(`${month}/${day}/${year} ${timePart}`);
+
+            const isRecentOrUnresolved =
+                ticket.Status !== "Resolved" || ticketUpdatedDate >= tenDaysAgo;
+
+            return isSameProperty && isRecentOrUnresolved;
+        });
+    }, [filteredTickets, decryptedUser.propertyCode]);
+
+    // Set ticket total based on filtered results
     useEffect(() => {
-        setCurrentPage(1);
-    }, [filteredTickets]);
+        setMyPgTicketsTotal(myFilteredTickets.length);
+        setCurrentPage(1); // reset to page 1 whenever filtered tickets change
+    }, [myFilteredTickets]);
 
-    const totalPages = Math.ceil(filteredTickets.length / TICKETS_PER_PAGE);
+    const totalPages = Math.ceil(myFilteredTickets.length / TICKETS_PER_PAGE);
 
     const paginatedTickets = useMemo(() => {
         const start = (currentPage - 1) * TICKETS_PER_PAGE;
-        return filteredTickets.slice(start, start + TICKETS_PER_PAGE);
-    }, [filteredTickets, currentPage]);
+        return myFilteredTickets.slice(start, start + TICKETS_PER_PAGE);
+    }, [myFilteredTickets, currentPage]);
 
     const editTicket = (ticket) => {
         setSelectedTicket(ticket);
@@ -181,56 +198,54 @@ const { decryptedUser } = useApp();
         return `${dPart}, ${tPart.toUpperCase()}`;
     };
 
-const fullHeaders = [
-  { label: "TicketID", key: "TicketID" },
-  { label: "Date Created", key: "DateCreated" },
-  { label: "Property Code", key: "PropertyCode" },
-  { label: "Title", key: "Title" },
-  { label: "Attachment", key: "Attachment" },
-  { label: "Customer Impacted", key: "CustomerImpacted" },
-  { label: "Escalated", key: "Escalated" },
-  { label: "Target Date", key: "TargetDate" },
-  { label: "Category", key: "Category" },
-  { label: "Status", key: "Status" },
-  { label: "Priority", key: "Priority" },
-  { label: "Department", key: "Department" },
-  { label: "Manager", key: "Manager" },
-  { label: "Assignee", key: "Assignee" },
-  { label: "Client ID", key: "ClientID" },
-  { label: "Employee ID", key: "EmployeeID" },
-  { label: "Created By Id", key: "CreatedById" },
-  { label: "Created By Name", key: "CreatedByName" },
-  { label: "Closed Date", key: "ClosedDate" },
-  { label: "Updated By ID", key: "UpdatedById" },
-  { label: "Updated By Name", key: "UpdatedByName" },
-  { label: "Updated Date Time", key: "UpdatedDateTime" },
-  { label: "WorkLogs", key: "WorkLogs" },
-  { label: "Internal Comments", key: "InternalComments" },
-  { label: "Estimated Time To Resolve", key: "EstimatedTimeToResolve" },
-  { label: "Actual Time Spent", key: "ActualTimeSpent" },
-];
+    const fullHeaders = [
+        { label: "TicketID", key: "TicketID" },
+        { label: "Date Created", key: "DateCreated" },
+        { label: "Property Code", key: "PropertyCode" },
+        { label: "Title", key: "Title" },
+        { label: "Attachment", key: "Attachment" },
+        { label: "Customer Impacted", key: "CustomerImpacted" },
+        { label: "Escalated", key: "Escalated" },
+        { label: "Target Date", key: "TargetDate" },
+        { label: "Category", key: "Category" },
+        { label: "Status", key: "Status" },
+        { label: "Priority", key: "Priority" },
+        { label: "Department", key: "Department" },
+        { label: "Manager", key: "Manager" },
+        { label: "Assignee", key: "Assignee" },
+        { label: "Client ID", key: "ClientID" },
+        { label: "Employee ID", key: "EmployeeID" },
+        { label: "Created By Id", key: "CreatedById" },
+        { label: "Created By Name", key: "CreatedByName" },
+        { label: "Closed Date", key: "ClosedDate" },
+        { label: "Updated By ID", key: "UpdatedById" },
+        { label: "Updated By Name", key: "UpdatedByName" },
+        { label: "Updated Date Time", key: "UpdatedDateTime" },
+        { label: "WorkLogs", key: "WorkLogs" },
+        { label: "Internal Comments", key: "InternalComments" },
+        { label: "Estimated Time To Resolve", key: "EstimatedTimeToResolve" },
+        { label: "Actual Time Spent", key: "ActualTimeSpent" },
+    ];
 
-const clientHeaders = [
-  { label: "Ticket ID", key: "TicketID" },
-  { label: "Date Created", key: "DateCreated" },
-  { label: "Department", key: "Department" },
-  { label: "Category", key: "Category" },
-  { label: "Status", key: "Status" },
-  { label: "Title", key: "Title" },
-  { label: "Description", key: "Description" },
-    { label: "WorkLogs", key: "WorkLogs" },
-,  // Assuming this key exists in data
-];
-const headers = useMemo(() => {
-  if (decryptedUser?.role === "client") {
-    return clientHeaders;
-  }
-  return fullHeaders;
-}, [decryptedUser]);
+    const clientHeaders = [
+        { label: "Ticket ID", key: "TicketID" },
+        { label: "Date Created", key: "DateCreated" },
+        { label: "Property Code", key: "PropertyCode" },
+        { label: "Department", key: "Department" },
+        { label: "Category", key: "Category" },
+        { label: "Status", key: "Status" },
+        { label: "WorkLogs", key: "WorkLogs" },
+        { label: "Title", key: "Title" },
+        { label: "Description", key: "Description" },
+    ];
+
+    const headers = useMemo(() => {
+        return decryptedUser?.role === "client" ? clientHeaders : fullHeaders;
+    }, [decryptedUser]);
 
     return (
         <div className="space-y-6">
-            <TicketFilters />
+ <TicketFilters/>
 
             <div className="bg-white rounded-lg shadow overflow-auto">
                 <table className="min-w-full divide-gray-200 text-sm">
@@ -251,7 +266,7 @@ const headers = useMemo(() => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y text-[15px] divide-gray-200">
-                        {paginatedTickets?.filter((ele)=>ele.Status === "Open" && ele.PropertyCode === decryptedUser.propertyCode).map((ticket) => (
+                        {paginatedTickets.map((ticket) => (
                             <TicketRow
                                 key={ticket.TicketID}
                                 ticket={ticket}
@@ -272,18 +287,18 @@ const headers = useMemo(() => {
                 </span>
                 <button
                     disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
                 >
-                    <i class="fa-solid fa-arrow-left"></i> Previous
+                    <i className="fa-solid fa-arrow-left"></i> Previous
                 </button>
 
                 <button
                     disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
                 >
-                    Next <i class="fa-solid fa-arrow-right"></i>
+                    Next <i className="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
 

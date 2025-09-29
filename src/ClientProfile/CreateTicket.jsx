@@ -12,7 +12,6 @@ const CreateTicket = ({ setCreateTicket, createTicket }) => {
   if (!createTicket) return null;
 
   const onSubmit = (data) => {
-    console.log('Form Data:', data);
     // Submit form to backend here
 
     // Reset form and close modal

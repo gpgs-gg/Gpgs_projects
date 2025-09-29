@@ -75,9 +75,9 @@ const DepartmentOptions = [
 ];
 
 export const TicketFilters = () => {
-    const { filters, setFilters, users, filteredTickets , decryptedUser} = useApp();
+    const { filters, setFilters, users, filteredTickets, decryptedUser, currentView , myPgTicketsTotal  } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
-   console.log("decryptedUser", decryptedUser?.role)
+
     const assigneeOptions = [
         { label: "All Assignees", value: "" },
         ...(EmployeeDetails?.data
@@ -178,10 +178,14 @@ export const TicketFilters = () => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
+        <div className={`bg-white p-4 rounded-lg shadow ${decryptedUser?.role.toLowerCase() === "client" ? "w-fit" : ""}  mb-6`}>
 
             <div className=" mt-[-10px] flex justify-between font-bold">
-                <span className="text-orange-600 underline text-sm ml-5 ">{`${filteredTickets.length} Ticket${filteredTickets.length > 1 ? "s" : ""} Found`} </span>
+
+                {currentView === "mypgtickets" ?
+                    <span className="text-orange-600 underline text-sm ml-5 ">{`${myPgTicketsTotal} Ticket${filteredTickets.length > 1 ? "s" : ""} Found`} </span>
+                    : <span className="text-orange-600 underline text-sm ml-5 ">{`${filteredTickets.length} Ticket${filteredTickets.length > 1 ? "s" : ""} Found`} </span>
+                }
                 <button
                     type="button"
                     onClick={handleClearFilters}
@@ -190,7 +194,7 @@ export const TicketFilters = () => {
                     Clear Filters
                 </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            <div className={`grid grid-cols-1 md:grid-cols-2 ${decryptedUser?.role.toLowerCase() === "client" ? "lg:grid-cols-2" : "lg:grid-cols-6"}  gap-4`}>
 
                 {/* Status */}
                 <div >
@@ -215,72 +219,72 @@ export const TicketFilters = () => {
                     />
                 </div>
                 {decryptedUser?.role !== "client" && (
-              <>
-              
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Manager</label>
-                    <Controller
-                        name="Manager"
-                        control={control}
-                        render={({ field }) => (
-                            <Select {...field} options={ManagerOptions} styles={SelectStyles} isClearable={false} />
-                        )}
-                    />
-                </div>
-         
-                {/* Assignee */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
-                    <Controller
-                        name="Assignee"
-                        control={control}
-                        render={({ field }) => (
-                            <Select {...field} options={assigneeOptions} styles={SelectStyles} isClearable={false} />
-                        )}
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-black mb-2">
-                        Target Date
-                    </label>
-                    <Controller
-                        control={control}
-                        name="TargetDate"
-                        defaultValue=""
-                        render={({ field }) => (
-                            <div className="relative w-full">
-                                <input
-                                    type="date"
-                                    {...field}
-                                    value={field.value || ""}
-                                    className="w-full border mt-[-3px] border-orange-500 rounded px-3 py-[8px] pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                                />
-                                {field.value && (
-                                    <button
-                                        type="button"
-                                        onClick={() => field.onChange("")}
-                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
-                                    >
-                                        &#10005;
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                    />
-                </div>
+                    <>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Created By</label>
-                    <Controller
-                        name="CreatedByName"
-                        control={control}
-                        render={({ field }) => (
-                            <Select {...field} options={assigneeOptionsForCreatedBy} styles={SelectStyles} isClearable={false} />
-                        )}
-                    />
-                </div>
-              </>
-       )}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Manager</label>
+                            <Controller
+                                name="Manager"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select {...field} options={ManagerOptions} styles={SelectStyles} isClearable={false} />
+                                )}
+                            />
+                        </div>
+
+                        {/* Assignee */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+                            <Controller
+                                name="Assignee"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select {...field} options={assigneeOptions} styles={SelectStyles} isClearable={false} />
+                                )}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-black mb-2">
+                                Target Date
+                            </label>
+                            <Controller
+                                control={control}
+                                name="TargetDate"
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <div className="relative w-full">
+                                        <input
+                                            type="date"
+                                            {...field}
+                                            value={field.value || ""}
+                                            className="w-full border mt-[-3px] border-orange-500 rounded px-3 py-[8px] pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                                        />
+                                        {field.value && (
+                                            <button
+                                                type="button"
+                                                onClick={() => field.onChange("")}
+                                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
+                                            >
+                                                &#10005;
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Created By</label>
+                            <Controller
+                                name="CreatedByName"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select {...field} options={assigneeOptionsForCreatedBy} styles={SelectStyles} isClearable={false} />
+                                )}
+                            />
+                        </div>
+                    </>
+                )}
 
             </div>
 

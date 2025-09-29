@@ -88,7 +88,6 @@ const Payments = () => {
             ? pgMainSheetData?.data?.filter((ele) => ele.FullName === decryptedUser.name) : []
     }, [pgMainSheetData])
 
-    console.log("mainSheetDataForNameWise", mainSheetDataForNameWise)
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
         if (encrypted) {
@@ -109,211 +108,211 @@ const Payments = () => {
 
 
     return (
-        <div className="max-w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                <div className="lg:col-span-1">
-                    <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                            <i className="fas fa-credit-card mr-2 text-orange-500"></i>
-                            Payment Summary
-                        </h2>
-                        <div className="space-y-4">
-                            <div className="flex justify-between p-3 bg-red-50 rounded-lg">
-                                <p className="text-red-700 font-medium">Current Due</p>
-                                <p className="font-semibold text-red-600">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.CurDueAmt : "loading..."}</p>
-                            </div>
-                            <div className="flex justify-between p-3 bg-orange-50 rounded-lg">
-                                <p className="text-orange-700 font-medium">Due Date</p>
-<p className=" text-gray-900">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'short' })} ${new Date().getFullYear()}`}</p>
-                            </div>
-                            <div className="flex justify-between p-3 bg-green-50 rounded-lg">
-                                <p className="text-green-700 font-medium">Previous Due</p>
-                                <p className="font-semibold text-green-600">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.PreDueAmt : "loading..."}</p>
-                            </div>
-                            <div className="pt-4 border-t">
-                                <button className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center">
-                                    <i className="fas fa-wallet mr-2"></i>
-                                    Pay Now
-                                </button>
-                            </div>
+//         <div className="max-w-full">
+//             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+//                 <div className="lg:col-span-1">
+//                     <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+//                         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+//                             <i className="fas fa-credit-card mr-2 text-orange-500"></i>
+//                             Payment Summary
+//                         </h2>
+//                         <div className="space-y-4">
+//                             <div className="flex justify-between p-3 bg-red-50 rounded-lg">
+//                                 <p className="text-red-700 font-medium">Current Due</p>
+//                                 <p className="font-semibold text-red-600">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.CurDueAmt : "loading..."}</p>
+//                             </div>
+//                             <div className="flex justify-between p-3 bg-orange-50 rounded-lg">
+//                                 <p className="text-orange-700 font-medium">Due Date</p>
+// <p className=" text-gray-900">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'short' })} ${new Date().getFullYear()}`}</p>
+//                             </div>
+//                             <div className="flex justify-between p-3 bg-green-50 rounded-lg">
+//                                 <p className="text-green-700 font-medium">Previous Due</p>
+//                                 <p className="font-semibold text-green-600">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.PreDueAmt : "loading..."}</p>
+//                             </div>
+//                             <div className="pt-4 border-t">
+//                                 <button className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center">
+//                                     <i className="fas fa-wallet mr-2"></i>
+//                                     Pay Now
+//                                 </button>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//                 <div className="lg:col-span-4">
+//                     <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+//                         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+//                             <i className="fas fa-history mr-2 text-orange-500"></i>
+//                             Payment History
+//                         </h2>
+//                         <div className="overflow-x-auto">
+
+
+//                             <table className="min-w-full divide-y divide-gray-200">
+//                                 <thead>
+//                                     <tr>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Month</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Rent</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Deposit</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Processing Fees</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Electricity Bill</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Adjusted Electricity Bill</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Adjusted Amount</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Total Receivable Amount</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Total Received Amount</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Current Due</th>
+//                                         <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Previous Due</th>
+//                                     </tr>
+//                                 </thead>
+//                                 <tbody className="divide-y divide-gray-200">
+//                                     {mainSheetDataForNameWise &&
+//                                         mainSheetDataForNameWise
+//                                             .filter((ele) => [
+//                                                 "__month",
+//                                                 "RentAmt",
+//                                                 "DA",
+//                                                 "ProFees",
+//                                                 "EBAmt",
+//                                                 "AdjEB",
+//                                                 "AdjAmt",
+//                                                 "ToRcableAmt",
+//                                                 "ToRcvedAmt",
+//                                                 "CurDueAmt",
+//                                                 "PreDueAmt"
+//                                             ]
+//                                                 .every((key) => ele.hasOwnProperty(key)))
+//                                             .map((payment, index) => (
+//                                                 <tr key={index} className="hover:bg-orange-50">
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{payment.__month}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.RentAmt}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.DA}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ProFees}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.EBAmt}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjEB}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjAmt}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcableAmt}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcvedAmt}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.CurDueAmt}</td>
+//                                                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.PreDueAmt}</td>
+//                                                 </tr>
+//                                             ))}
+//                                 </tbody>
+//                             </table>
+
+
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+          <div className="max-w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+                <div className="bg-white flex flex-col rounded-lg shadow-sm p-1 hover:shadow-md transition-shadow border lg:col-span-6">
+                    <h2 className="text-lg font-semibold text-gray-900 p-6  flex items-center">
+                        <i className="fas fa-credit-card mr-2 text-orange-500"></i>
+                        Payment Summary
+                    </h2>
+
+                    <div className="flex justify-evenly mb-6">
+                        <div className="flex  justify-between p-3 bg-red-50 rounded-lg w-80">
+                            <p className="text-red-700 font-medium">Current Due</p>
+                            <p className="font-semibold text-red-600">
+                                {mainSheetDataForNameWise.length > 0
+                                    ? mainSheetDataForNameWise[0]?.CurDueAmt
+                                    : "loading..."}
+                            </p>
                         </div>
+
+                        <div className="flex  justify-between p-3 bg-orange-50 rounded-lg w-80">
+                            <p className="text-orange-700 font-medium">Due Date</p>
+                            <p className="font-semibold text-gray-900">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}</p>
+                        </div>
+
+                        <div className="flex  justify-between p-3 bg-green-50 rounded-lg w-80">
+                            <p className="text-green-700 font-medium">Previous Due</p>
+                            <p className="font-semibold text-green-600">
+                                {mainSheetDataForNameWise.length > 0
+                                    ? mainSheetDataForNameWise[0]?.PreDueAmt
+                                    : "loading..."}
+                            </p>
+                        </div>
+                         <div className=" flex justify-center items-center">
+                        <button className="w-fit bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center">
+                            <i className="fas fa-wallet mr-2"></i>
+                            Pay Now
+                        </button>
                     </div>
+                    </div>
+
+                   
                 </div>
 
-                <div className="lg:col-span-4">
-                    <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                            <i className="fas fa-history mr-2 text-orange-500"></i>
-                            Payment History
-                        </h2>
-                        <div className="overflow-x-auto">
 
+               <div className="lg:col-span-6">
+  <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+    <h2 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+      <i className="fas fa-history mr-2 text-orange-500"></i>
+      Payment History
+    </h2>
 
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Month</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Rent</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Deposit</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Processing Fees</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Electricity Bill</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Adjusted Electricity Bill</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Adjusted Amount</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Total Receivable Amount</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Total Received Amount</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Current Due</th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Previous Due</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200">
-                                    {mainSheetDataForNameWise &&
-                                        mainSheetDataForNameWise
-                                            .filter((ele) => [
-                                                "__month",
-                                                "RentAmt",
-                                                "DA",
-                                                "ProFees",
-                                                "EBAmt",
-                                                "AdjEB",
-                                                "AdjAmt",
-                                                "ToRcableAmt",
-                                                "ToRcvedAmt",
-                                                "CurDueAmt",
-                                                "PreDueAmt"
-                                            ]
-                                                .every((key) => ele.hasOwnProperty(key)))
-                                            .map((payment, index) => (
-                                                <tr key={index} className="hover:bg-orange-50">
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{payment.__month}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.RentAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.DA}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ProFees}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.EBAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjEB}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcableAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcvedAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.CurDueAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.PreDueAmt}</td>
-                                                </tr>
-                                            ))}
-                                </tbody>
-                            </table>
+    <div className="overflow-x-auto">
+      <table className="min-w-[1200px] divide-y divide-orange-300">
+        <thead>
+          <tr>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Month</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Rent</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Deposit</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Processing Fees</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Electricity Bill</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Adjusted Electricity Bill</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Adjusted Amount</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Total Receivable Amount</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Total Received Amount</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Current Due</th>
+            <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Previous Due</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {mainSheetDataForNameWise &&
+            mainSheetDataForNameWise
+              .filter((ele) =>
+                [
+                  "__month",
+                  "RentAmt",
+                  "DA",
+                  "ProFees",
+                  "EBAmt",
+                  "AdjEB",
+                  "AdjAmt",
+                  "ToRcableAmt",
+                  "ToRcvedAmt",
+                  "CurDueAmt",
+                  "PreDueAmt",
+                ].every((key) => ele.hasOwnProperty(key))
+              )
+              .map((payment, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{payment.__month}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.RentAmt}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.DA}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ProFees}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.EBAmt}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjEB}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjAmt}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcableAmt}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcvedAmt}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.CurDueAmt}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.PreDueAmt}</td>
+                </tr>
+              ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-        //   <div className="max-w-full mx-auto px-4  sm:px-6 lg:px-8">
-        //     <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-        //         <div className="bg-white flex flex-col rounded-lg shadow-sm p-3 hover:shadow-md transition-shadow border lg:col-span-6">
-        //             <h2 className="text-lg font-semibold text-gray-900  flex items-center">
-        //                 <i className="fas fa-credit-card mr-2 text-orange-500"></i>
-        //                 Payment Summary
-        //             </h2>
-
-        //             <div className="flex justify-evenly mb-6">
-        //                 <div className="flex  justify-between p-3 bg-red-50 rounded-lg w-80">
-        //                     <p className="text-red-700 font-medium">Current Due</p>
-        //                     <p className="font-semibold text-red-600">
-        //                         {mainSheetDataForNameWise.length > 0
-        //                             ? mainSheetDataForNameWise[0]?.CurDueAmt
-        //                             : "loading..."}
-        //                     </p>
-        //                 </div>
-
-        //                 <div className="flex  justify-between p-3 bg-orange-50 rounded-lg w-80">
-        //                     <p className="text-orange-700 font-medium">Due Date</p>
-        //                     <p className="font-semibold text-gray-900">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}</p>
-        //                 </div>
-
-        //                 <div className="flex  justify-between p-3 bg-green-50 rounded-lg w-80">
-        //                     <p className="text-green-700 font-medium">Previous Due</p>
-        //                     <p className="font-semibold text-green-600">
-        //                         {mainSheetDataForNameWise.length > 0
-        //                             ? mainSheetDataForNameWise[0]?.PreDueAmt
-        //                             : "loading..."}
-        //                     </p>
-        //                 </div>
-        //             </div>
-
-        //             <div className="border-t pt-4 flex justify-center items-center">
-        //                 <button className="w-fit bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center">
-        //                     <i className="fas fa-wallet mr-2"></i>
-        //                     Pay Now
-        //                 </button>
-        //             </div>
-        //         </div>
-
-
-        //         <div className="lg:col-span-6">
-        //             <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-        //                 <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-        //                     <i className="fas fa-history mr-2 text-orange-500"></i>
-        //                     Payment History
-        //                 </h2>
-        //                 <div className="overflow-x-auto">
-
-
-        //                     <table className="min-w-full divide-y divide-gray-200">
-        //                         <thead>
-        //                             <tr>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Month</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Rent</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Deposit</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Processing Fees</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Electricity Bill</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Adjusted Electricity Bill</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Adjusted Amount</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Total Receivable Amount</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Total Received Amount</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Current Due</th>
-        //                                 <th className="px-4 py-3 text-left text-xs font-medium text-orange-700 uppercase tracking-wider">Previous Due</th>
-        //                             </tr>
-        //                         </thead>
-        //                         <tbody className="divide-y divide-gray-200">
-        //                             {mainSheetDataForNameWise &&
-        //                                 mainSheetDataForNameWise
-        //                                     .filter((ele) => [
-        //                                         "__month",
-        //                                         "RentAmt",
-        //                                         "DA",
-        //                                         "ProFees",
-        //                                         "EBAmt",
-        //                                         "AdjEB",
-        //                                         "AdjAmt",
-        //                                         "ToRcableAmt",
-        //                                         "ToRcvedAmt",
-        //                                         "CurDueAmt",
-        //                                         "PreDueAmt"
-        //                                     ]
-        //                                         .every((key) => ele.hasOwnProperty(key)))
-        //                                     .map((payment, index) => (
-        //                                         <tr key={index} className="hover:bg-orange-50">
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{payment.__month}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.RentAmt}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.DA}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ProFees}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.EBAmt}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjEB}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjAmt}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcableAmt}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcvedAmt}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.CurDueAmt}</td>
-        //                                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.PreDueAmt}</td>
-        //                                         </tr>
-        //                                     ))}
-        //                         </tbody>
-        //                     </table>
-
-
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
     )
 }
 

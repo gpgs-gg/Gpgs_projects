@@ -11,6 +11,7 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
     // decrptedTicketData
     const [decryptedUser, setDecryptedUser] = useState(null);
+    const [myPgTicketsTotal , setMyPgTicketsTotal] = useState(null)  
 
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
@@ -213,7 +214,9 @@ export const AppProvider = ({ children }) => {
         deleteUser,
         setModal,
         modal,
-        decryptedUser
+        decryptedUser,
+        setMyPgTicketsTotal,
+        myPgTicketsTotal
     };
 
     return (

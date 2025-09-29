@@ -22,6 +22,7 @@ import gbed26 from "../images_of_female_pg/photo26.jpeg"
 import gbed30 from "../images_of_female_pg/photo30.jpeg"
 import TeamPng from "../logo/Team.png"
 import ArrowBulbPng from "../logo/Arrow-Bulb.png"
+import { Link } from 'react-router-dom';
 
 
 
@@ -135,11 +136,26 @@ const About = () => {
             </div>
 
             {/* Info Box */}
-            <div className="bg-white p-6 rounded-lg text-center">
+            <div className="bg-white p-6 rounded-lg flex justify-center gap-3 items-center flex-col text-center">
               <i className="fas fa-city text-purple-600 text-3xl md:text-4xl mb-4"></i>
-              <p className="font-medium text-gray-900 text-base md:text-lg">Multiple Prime Locations</p>
+              <p className="font-bold text-gray-900 text-base md:text-xl">Ready To Upgrade Your Living Experience?</p>
               <p className="text-gray-600 mt-2 text-sm md:text-base">
-                Contact us for specific locations in Navi Mumbai
+                 <Link
+              to="/contact"
+              className="relative py-2 px-8 flex justify-center  items-center rounded-full w-full max-w-md mb-8 space-x-2 overflow-hidden border group bg-[#297229] ">
+              <p className="text-white text-base sm:text-lg md:text-xl  group relative z-10 transition-transform duration-300 ease-in-out transform group-hover:scale-110 ">
+                Connect With Us Today
+              </p>
+
+              {/* <span className="opacity-0 group-hover:opacity-100 text-white transition-opacity duration-300 z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
+                  className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                </svg>
+              </span> */}
+            </Link>
               </p>
             </div>
 

@@ -200,6 +200,8 @@ const LoginPage = () => {
   const normalizedClients = (clientData?.data || []).map(client => ({
     id: client["ID"],
     name: client["Name"],
+    loginId: client["EmailID"],
+    password: client["Password"],
     role: client["Role"],
     propertyCode: client["PropertyCode"],
     doj: client["DOJ"],
@@ -213,9 +215,12 @@ const LoginPage = () => {
     calling: client["CallingNo"],
     whatsAppNo: client["WhatsAppNo"],
     dob: client["DOB"],
-    aadharNo: client["AadharNo"],
-    loginId: client["EmailID"],
-    password: client["Password"],
+    emgyCont1FullName: client["EmgyCont1FullName"],
+    emgyCont1No: client["EmgyCont1No"],
+    emgyCont2FullName: client["EmgyCont2FullName"],
+    emgyCont2No: client["EmgyCont2No"],
+
+
   }));
   // Decrypt password
   const decrypt = (encryptedText) => {

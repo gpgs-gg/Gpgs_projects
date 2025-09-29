@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import Header from './components/Header';
@@ -17,7 +17,6 @@ import AdminLayout from './components_office_use_only/TicketSystem/AdminLayout';
 import NewBooking from './components_office_use_only/NewBooking/NewBooking';
 import ProtectedRoute from './AuthRoutes/ProtectedRoutes';
 import LoginPage from './auth/LoginPage';
-import { divIcon } from 'leaflet';
 import PublicRoute from './AuthRoutes/PublicRoute';
 import PageNotFound from './components/PageNotFound';
 import { useAuth } from './context/AuthContext';
@@ -108,36 +107,38 @@ function App() {
     };
   }, []);
 
+  // for auto logout ...............
+  const TEN_HOURS = 10 * 60 * 60 * 1000; // 36,000,000 ms
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const loginTimestamp = Number(localStorage.getItem("loginTimestamp"));
+      const now = Date.now();
+
+      if (loginTimestamp && now - loginTimestamp > TEN_HOURS) {
+        logout();
+        localStorage.removeItem("loginTimestamp");
+        window.location.reload();
+        clearInterval(interval); // stop checking after logout
+      }
+    }, 5000); // check every 5 seconds
+
+    return () => clearInterval(interval); // cleanup
+  }, [TEN_HOURS, logout]);
 
 
-const ONE_DAY = 24 * 60 * 60 * 1000;
-useEffect(() => {
-  const loginTimestamp = Number(localStorage.getItem('loginTimestamp'));
-
-  if (loginTimestamp) {
-    const now = Date.now();
-    if (now - loginTimestamp > ONE_DAY) {
-      logout();
-      localStorage.removeItem('loginTimestamp');
-      window.location.reload();
-    }
-  }
-}, []);
-
-
-
-// Add to main component or index.js
-// useEffect(() => {
-//   const onContext = (e) => e.preventDefault();
-//   document.addEventListener('contextmenu', onContext);
-//   return () => document.removeEventListener('contextmenu', onContext);
-// }, []);
+  // Add to main component or index.js
+  // useEffect(() => {
+  //   const onContext = (e) => e.preventDefault();
+  //   document.addEventListener('contextmenu', onContext);
+  //   return () => document.removeEventListener('contextmenu', onContext);
+  // }, []);
 
 
   return (
     <>
 
-    
+
       {/* Show Header only if not in admin route */}
       <Header />
       <Routes>
@@ -162,49 +163,49 @@ useEffect(() => {
         {/* <Route path="/gpgs-actions/beds-avilable" element={<ProtectedRoute><BedsAvilable /></ProtectedRoute>} />
         <Route path="/gpgs-actions/new-booking" element={<ProtectedRoute><NewBooking /></ProtectedRoute>} />
         <Route path="/gpgs-actions/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} /> */}
-            {/* Public route for login page */}
-     
+        {/* Public route for login page */}
 
-      {/* Protected Routes - Only accessible to roles other than 'user' */}
-      <Route
-        path="/gpgs-actions/beds-avilable"
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'manager']}>
-            <BedsAvilable />
-          </ProtectedRoute>
-        }
-      />
 
-      <Route
-        path="/gpgs-actions/new-booking"
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'manager']}>
-            <NewBooking />
-          </ProtectedRoute>
-        }
-      />
+        {/* Protected Routes - Only accessible to roles other than 'user' */}
+        <Route
+          path="/gpgs-actions/beds-avilable"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+              <BedsAvilable />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/gpgs-actions/accounts"
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'manager']}>
-            <Accounts />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/gpgs-actions/new-booking"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+              <NewBooking />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/gpgs-actions/accounts"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+              <Accounts />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/gpgs-actions/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
         <Route path="/gpgs-actions" element={<ProtectedRoute><Gpgsaction /></ProtectedRoute>} />
 
-        <Route path="*" element={<PageNotFound/>} />
+        <Route path="*" element={<PageNotFound />} />
         <Route path="/gallery" element={<Gallary />} />
-        <Route path="gpgs-actions/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
+        <Route path="gpgs-actions/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Admin routes */}
         {/* <Route path="/gpgs-actions/tickets" element={
             <AdminLayout />
         } /> */}
       </Routes>
-     
+
     </>
   );
 }

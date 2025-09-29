@@ -469,9 +469,9 @@ useEffect(() => {
     }
   }, [isEdit])
 
-
-  return (
-    <div className="">
+  if(isEdit && decryptedUser?.role.toLowerCase() === "client"){
+   return <>
+       <div className="">
       <h2 className="text-2xl font-bold text-gray-900 ml-5">
         {isEdit ? (
           <h1>View & Edit Ticket : {selectedTicket?.TicketID}</h1>
@@ -532,6 +532,401 @@ useEffect(() => {
               { name: "Department", options: DepartmentOptions, placeholder: "Search & Select Department" },
               { name: "Category", options: CategoryOptions, placeholder: "Search &  Select Category" },
               ...(isEdit && decryptedUser?.role.toLowerCase() === "client"
+                ? []
+                : [{ name: "Priority", options: PriorityOptions, placeholder: " Select Priority" }]),
+              ...(decryptedUser?.role.toLowerCase() === "admin"
+                ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
+                : []),
+            ].map(({ name, options, placeholder }) => (
+              <div key={name}>
+                <label className="block text-sm font-medium text-black mb-2">{name} <span className="text-red-500">*</span></label>
+                <Controller
+                  control={control}
+                  name={name}
+                  rules={{
+                    required:
+                      name === "Priority" && decryptedUser?.role.toLowerCase() === "client"
+                        ? false
+                        : `${name} is required`,
+                  }}
+                  render={({ field, fieldState: { error } }) => (
+                    <>
+                      <Select {...field} options={options} styles={SelectStyles} placeholder={placeholder} isClearable isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+                    </>
+                  )}
+                />
+              </div>
+            ))}
+
+
+
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">
+                Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...register("Title", { required: "Title is required" })}
+                disabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                  } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                placeholder="Enter Title"
+              />
+              {errors.Title && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.Title.message}
+                </p>
+              )}
+            </div>
+            {!isEdit && decryptedUser?.role.toLowerCase() !== "client" && (<>
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Manager</label>
+                <Controller
+                  control={control}
+                  name="Manager"
+                  render={({ field }) => (
+                    <Select {...field} placeholder="Search & Select Manager" options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                  )}
+
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Assignee </label>
+                <Controller
+                  control={control}
+                  name="Assignee"
+                  render={({ field }) => (
+                    <Select {...field} placeholder="Search & Select Assignee" options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                    />
+                  )}
+                />
+              </div>
+            </>
+            )
+
+            }
+            {/* {isEdit && (
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Status <span className="text-red-500">*</span></label>
+                <Controller
+                  control={control}
+                  name="Status"
+                  rules={{ required: "Status is required" }}
+                  render={({ field, fieldState: { error } }) => (
+                    <>
+                      <Select {...field} options={StatusOptions} styles={SelectStyles} isClearable isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+                    </>
+                  )}
+
+                />
+              </div>
+            )} */}
+            {decryptedUser?.role.toLowerCase() !== "client" && (
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">
+                  Target Date
+                </label>
+                <Controller
+                  control={control}
+                  name="TargetDate"
+                  defaultValue=""
+                  render={({ field }) => (
+                    <div className="relative w-full">
+                      <input
+                        type="date"
+                        {...field}
+                        value={field.value || ""}
+                       disabled = {isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                        className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                      />
+                      {field.value && (
+                        <button
+                          type="button"
+                          onClick={() => field.onChange("")}
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-600"
+                        >
+                          &#10005;
+                        </button>
+                      )}
+                    </div>
+                  )}
+                />
+              </div>
+            )}
+
+
+            {/* {isEdit && (
+              <div>
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">
+                    Created By <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    {...register("CreatedByName", { required: "Created By Name is required" })}
+                    disabled={isEdit}
+                    className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                      } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                    placeholder="Enter Created By Name"
+                  />
+                  {errors.Title && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.Title.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )} */}
+          </div>
+
+          {/* Description */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">Description <span className="text-red-500">*</span></label>
+              <textarea
+                {...register("Description", { required: "Description is required" })}
+                rows={4}
+                disabled={isEdit}
+                placeholder="Enter Your Description here"
+                className="w-full h-[150px] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+              />
+              {errors.Description && (
+                <p className="text-red-500 text-sm">{errors.Description.message}</p>
+              )}
+
+            </div>
+            {isEdit && (
+
+              <div>
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Attachment</label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*,video/*,application/pdf"
+                    onChange={handleFileChange}
+                    className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                  />
+                </div>
+                {previews.length > 0 && (
+                  <div className="flex flex-wrap gap-4 mt-5">
+                    {previews.map((file, index) => {
+                      const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+                      const isImage = imageExtensions.test(file.name);
+
+                      if (!isImage) return null; // Skip non-image files
+
+                      return (
+                        <div
+                          key={index}
+                          className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFile(index)}
+                            className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                          >
+                            ✕
+                          </button>
+
+                          <img
+                            src={file.url}
+                            alt={file.name}
+                            className="w-full h-28 object-cover rounded"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+
+            {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              {isEdit && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Manager</label>
+                    <Controller
+                      control={control}
+                      name="Manager"
+                      render={({ field }) => (
+                        <Select {...field} options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Assignee </label>
+                    <Controller
+                      control={control}
+                      name="Assignee"
+                      render={({ field }) => (
+                        <Select {...field} options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+
+              {isEdit && (
+                <>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Customer Impacted </label>
+                    <Controller
+                      control={control}
+                      name="CustomerImpacted"
+                      render={({ field }) => (
+                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      )}
+                    />
+                  </div>
+
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Escalated </label>
+                    <Controller
+                      control={control}
+                      name="Escalated"
+                      render={({ field }) => (
+                        <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+
+            </div> */}
+
+            {/* Dropdowns ////////////////*/}
+
+          </div>
+
+          {/* Manager & Assignee */}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            {isEdit && (
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Work Logs <span className="text-red-500">*</span></label>
+                {previousWlogs && (
+                  <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-32 overflow-y-auto">
+                    <pre className="text-xs text-black whitespace-pre-wrap">{previousWlogs}</pre>
+                  </div>
+                )}
+                <textarea
+                  {...register("WorkLogs")}
+                  placeholder="Add work log entries here..."
+                  rows={4}
+                  className="w-full h-20 border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300  rounded-md px-3 py-2"
+                />
+              </div>
+
+            )}
+            <div>
+
+
+              {/* Attachment */}
+             
+            </div>
+
+          </div>
+          {/* Buttons */}
+          <div className="flex   gap-4 items-center justify-center">
+
+            <button
+              type="submit"
+              className={`bg-orange-300 ${isEdit ? "mt-[-10]" : "mt-[-80px]"}  text-white px-6 py-2 rounded hover:bg-orange-400 flex items-center justify-center gap-2`}
+              disabled={isSubmittingBooking || isUpdatingTicket}
+            >
+              {(isSubmittingBooking || isUpdatingTicket) ? (
+                <>
+                  <LoaderPage size="small" />
+                  {isEdit ? 'Updating...' : 'Creating...'}
+                </>
+              ) : (
+                isEdit ? 'Update Ticket' : 'Create'
+              )}
+            </button>
+
+
+
+            <button
+              type="button"
+              onClick={() => setCurrentView("tickets")}
+              className={`border border-gray-300 ${isEdit ? "mt-[-10]" : "mt-[-80px]"} text-black px-6 py-2 rounded hover:bg-gray-10`}
+            >
+              Cancel
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    </>
+  }
+
+  return (
+    <div className="">
+      <h2 className="text-2xl font-bold text-gray-900 ml-5">
+        {isEdit ? (
+          <h1>View & Edit Ticket : {selectedTicket?.TicketID}</h1>
+        ) : (
+          <div className="lg:flex   items-center gap-5">
+            <h1>Create New Ticket</h1>
+            {decryptedUser?.role.toLowerCase().toLowerCase() === "client" && (
+              <p className="text-orange-500 text-sm lg:text-lg">For any Maintenance, Housekeeping, Notice To Vacate PG Facility, Rent Receipt, Agreement, Full & Final Settlement, Electricity Bill Concern, etc.</p>
+            )}
+          </div>
+        )}
+      </h2>
+      <div className="bg-white rounded-lg shadow p-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Property Code, Title */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {isEdit == "klsdfhl" && (
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Ticket ID</label>
+                <input
+                  {...register("TicketID", { required: true })}
+                  disabled
+                  className="w-full border border-orange-300 rounded-md px-3 py-2"
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">Property Code <span className="text-red-500">*</span></label>
+              <Controller
+                control={control}
+                name="PropertyCode"
+                rules={{ required: "Property Code Required" }}
+                render={({ field, fieldState: { error } }) => (
+                  <>
+                    <Select
+                      ref={selectRef}
+                      {...field}
+                      options={ProperyOptions}
+                      styles={SelectStyles}
+                      isClearable
+                      placeholder="Search & Select Property Code"
+                      isDisabled={decryptedUser?.role.toLowerCase() === "client" || isEdit && decryptedUser?.role.toLowerCase() !== "client"}
+                      // isDisabled={isEdit}
+                    />
+
+                    {error && <p className="text-red-500 text-sm">{error.message}</p>}
+                  </>
+                )}
+              />
+            </div>
+
+            {[
+              { name: "Department", options: DepartmentOptions, placeholder: "Search & Select Department" },
+              { name: "Category", options: CategoryOptions, placeholder: "Search &  Select Category" },
+              ...(isEdit && decryptedUser?.role.toLowerCase() === "client"
                 ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
                 : []),
               ...(decryptedUser?.role.toLowerCase() === "admin"
@@ -545,7 +940,7 @@ useEffect(() => {
                   name={name}
                   rules={{
                     required:
-                      name === "Priority" && decryptedUser?.role.toLowerCase() === "client"
+                      name === "Priority" && decryptedUser?.role.toLowerCase() === "client" || name === "Priority" && decryptedUser?.role.toLowerCase() === "admin"
                         ? false
                         : `${name} is required`,
                   }}

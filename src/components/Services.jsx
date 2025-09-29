@@ -81,7 +81,7 @@ const Services = () => {
       link: "https://maps.app.goo.gl/fdbhC4jn3rG61Pz6A",
       reviewText: "The best PG in Navi Mumbai. All the staffs are excellent. I stayed here for 2.5 months and my experience was amazing. All the facilities like cooking gas, refrigerator etc. are available here. Staffs are quick to resolve any problem. Thanks Gopal's PG for providing excellent service at reasonable price. Thank you so much..."
     },
-     {
+    {
       profile: " ",
       name: "Sangeeta Bhatia",
       rating: 5,
@@ -320,11 +320,20 @@ const Services = () => {
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-white p-6 rounded-lg text-center">
+                <div className="bg-white p-6 rounded-lg flex justify-center items-center flex-col gap-2 text-center">
                   <i className="fas fa-city text-purple-600 text-3xl md:text-4xl mb-4"></i>
-                  <p className="font-medium text-gray-900 text-base md:text-lg">Multiple Prime Locations</p>
+                  <p className="font-bold text-gray-900 text-xl md:text-lg">Found The Right Option For You?</p>
                   <p className="text-gray-600 mt-2 text-sm md:text-base">
-                    Contact us for specific locations in Navi Mumbai
+                    <Link
+                      to="/contact"
+                      className="group relative py-2 px-8 flex justify-center items-center rounded-full w-full max-w-md mb-2 space-x-2 overflow-hidden border bg-[#297229]">
+
+                      <p className="text-white text-base sm:text-lg md:text-xl transform animate-zoom">
+                        Reserve Your Spot Today
+                      </p>
+
+                    </Link>
+
                   </p>
                 </div>
               </div>
@@ -360,7 +369,7 @@ const Services = () => {
                 >
                   <div className="p-6 text-center ombre-container  text-white">
                     <h3 className="text-xl font-bold mb-2" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.4)' }}>{room.title}</h3>
-                    <p className="text-sm "  style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}>{room.subtitle}</p>
+                    <p className="text-sm " style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}>{room.subtitle}</p>
                   </div>
                   <div className="p-6 flex-grow flex flex-col justify-center items-center">
                     <ul className="space-y-3 text-gray-700 text-sm text-center">
@@ -448,7 +457,7 @@ const Services = () => {
         <section id="services" className=" bg-gray-50 pt-5 ">
           <div className="max-w-[1220px] bg-white rounded-xl py-5 mx-auto">
             <div className="text-center">
-              <h2 className="text-4xl font-bold text-[#2c4d04]"style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>Additional Information</h2>
+              <h2 className="text-4xl font-bold text-[#2c4d04]" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>Additional Information</h2>
             </div>
 
             <div className="grid md:grid-cols-2 gap-5 items-center">
@@ -459,7 +468,7 @@ const Services = () => {
                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                       {/* <i className="fa-solid fa-indian-rupee-sign text-xl text-green-500"></i>  */}
                       <img src={INRPng} alt="" className='h-8 w-8' />
-                   </div>
+                    </div>
                     <span className="text-gray-700">Rent + Electricity Bill (Your responsibility)</span>
                   </div>
 
@@ -470,20 +479,20 @@ const Services = () => {
                 <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-start">Security Deposit</h3>
                 <div className="space-y-4 capitalize">
                   <div className="flex items-start space-x-3">
-                    <img src={securedPng} alt=""  className='h-5 w-5'/>
+                    <img src={securedPng} alt="" className='h-5 w-5' />
                     <div>
                       <p className="text-gray-600  text-sm">1-2 months rent (varies by property)</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                      <img src={clockPng} alt=""  className='h-5 w-5'/>
+                    <img src={clockPng} alt="" className='h-5 w-5' />
                     <div>
                       <p className="text-gray-600 text-sm">Fully refundable with 1 month notice</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     {/* <i className="fas fa-check-circle text-green-500 mt-1"></i> */}
-                    <img src={documentPng} alt=""  className='h-5 w-5'/>
+                    <img src={documentPng} alt="" className='h-5 w-5' />
                     <div>
                       <p className="text-gray-600 text-sm">Documentation charges : ₹500 (one-time)</p>
                     </div>

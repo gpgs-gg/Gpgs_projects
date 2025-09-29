@@ -58,7 +58,6 @@ function Profile() {
         checkIn: false
     });
 
-    console.log("createTicket", createTicket)
 
     const { data: propertyDataFromApi } = usePropertyData();
 

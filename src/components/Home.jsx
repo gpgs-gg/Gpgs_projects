@@ -42,7 +42,7 @@ const Home = () => {
               to="/contact"
               className="relative p-3 flex justify-center items-center rounded-full w-full max-w-md mb-8 space-x-2 overflow-hidden group color-flow-bg"
             >
-              <p className="text-white text-base sm:text-lg md:text-xl transition-all duration-700 group-hover:mr-4 z-10">
+              <p className="text-white capitalize text-base sm:text-lg md:text-xl transition-all duration-700 group-hover:mr-4 z-10">
                 Book Your Stay with us today
               </p>
 

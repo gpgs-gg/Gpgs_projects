@@ -38,36 +38,13 @@ const Gpgsaction = () => {
   const btnClasses = "w-full text-white py-2 px-3 rounded-md font-medium transition";
   const subBtnClasses = "py-2 px-4 rounded-md text-center transition text-sm";
 
-  if (decryptedUser?.role.toLowerCase() === "client") {
+  useEffect(()=>{
+if (decryptedUser?.role.toLowerCase() === "client") {
       navigate("/gpgs-actions/tickets")
-     
-//       <div className="flex justify-center items-center min-h-screen px-4 gap-5 flex-wrap">
-//         <Link to="/gpgs-actions/tickets">
-//           <div className={`${cardClasses} w-72`}>
-//             <div className={`${iconClasses} bg-orange-100 text-orange-600`}>
-//               <i className="fa-solid fa-ticket text-xl"></i>
-//             </div>
-//             <h3 className={titleClasses}>TICKETS SYSTEM</h3>
-//             <button className={`${btnClasses} bg-orange-400 hover:bg-orange-500`}>
-//               Go For Tickets System
-//             </button>
-//           </div>
-//         </Link>
-    
 
-//  <Link to="/gpgs-actions/profile">
-//           <div className={`${cardClasses} w-72`}>
-//             <div className={`${iconClasses} bg-orange-100 text-orange-600`}>
-//               <i className="fa-solid fa-file-invoice text-xl"></i>
-//             </div>
-//             <h3 className={titleClasses}>Profile</h3>
-//             <button className={`${btnClasses} bg-orange-400 hover:bg-orange-500`}>
-//               Go For Profile
-//             </button>
-//           </div>
-//         </Link>
-//     </div>
   }
+  }, [decryptedUser])
+  
 
   return (
     <section className="bg-gray-200 min-h-screen py-10 px-4 md:px-6 flex items-center justify-center">

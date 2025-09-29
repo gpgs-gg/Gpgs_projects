@@ -6,7 +6,6 @@ import CryptoJS from 'crypto-js';
 
 export const Navigation = () => {
   const { currentView, setCurrentView, currentUser } = useApp();
-
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { logout } = useAuth();
 
@@ -17,7 +16,7 @@ export const Navigation = () => {
 const rawMenuItems = [
   { id: 'pgpropertydetails', label: 'PG Property Details', icon: 'fas fa-tachometer-alt' },
   { id: 'personalinfo', label: 'Personal Info', icon: 'fas fa-tachometer-alt' },
-  { id: 'payments', label: 'Payments', icon: 'fas fa-tachometer-alt' },
+  { id: 'payments', label: 'Payments', icon: 'fa-solid fa-credit-card' },
   { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
     { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fas fa-tachometer-alt' },
 
@@ -40,7 +39,6 @@ const menuItems = rawMenuItems.filter(item => {
   }
 });
 
-console.log(menuItems);
 
   const handleLogout = () => {
     logout();
