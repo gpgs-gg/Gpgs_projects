@@ -100,6 +100,7 @@ export const CategoryOptions = [
   { value: "Wiper", label: "Wiper" },
   { value: "Rat", label: "Rat" },
   { value: "Pest Control", label: "Pest Control" },
+  {value: "Emergency Contacts", label: "Emergency Contacts"},
 ];
 
 export const DepartmentOptions = [

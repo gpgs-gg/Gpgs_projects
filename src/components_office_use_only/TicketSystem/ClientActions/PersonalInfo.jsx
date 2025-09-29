@@ -25,13 +25,13 @@ const PersonalInfo = () => {
     }, []);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+        <div className="max-w-full  mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4 flex bg-white px-10 py-1 w-fit rounded-lg items-center">
                             <i className="fas fa-user-circle mr-2 text-orange-500 bg-white"></i>
                            Personal Information
                         </h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4  gap-6">
                     <div className="p-3 bg-white rounded-lg border border-orange-300">
                         <p className="text-lg  font-bold">
                             Name

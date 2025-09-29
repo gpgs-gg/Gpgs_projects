@@ -18,7 +18,7 @@ const rawMenuItems = [
   { id: 'personalinfo', label: 'Personal Info', icon: 'fas fa-tachometer-alt' },
   { id: 'payments', label: 'Payments', icon: 'fa-solid fa-credit-card' },
   { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
-    { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fas fa-tachometer-alt' },
+    { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fa-solid fa-ticket' },
 
   {
     id: 'tickets',

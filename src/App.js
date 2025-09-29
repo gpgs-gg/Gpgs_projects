@@ -21,6 +21,7 @@ import PublicRoute from './AuthRoutes/PublicRoute';
 import PageNotFound from './components/PageNotFound';
 import { useAuth } from './context/AuthContext';
 import Profile from './ClientProfile/Profile';
+import Footer from './components/Footer';
 // import { useAuth } from './context/AuthContext';
 
 function App() {
@@ -205,6 +206,7 @@ function App() {
             <AdminLayout />
         } /> */}
       </Routes>
+    <Footer/>
 
     </>
   );

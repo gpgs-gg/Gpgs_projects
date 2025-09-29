@@ -85,10 +85,10 @@ const OverView = () => {
 
 
     return (
-        <div className="max-w-7xl mx-auto  py-6  lg:px-8">
+        <div className="max-w-full mx-auto  py-6  lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <div className="lg:col-span-2">
-                    <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex bg-white px-10 py-1 w-fit rounded-lg items-center">
                             <i className="fas fa-home mr-2 text-orange-500 bg-white"></i>
                             PG Accommodation Details

@@ -214,30 +214,30 @@ const Payments = () => {
                     </h2>
 
                     <div className="flex justify-evenly mb-6">
-                        <div className="flex  justify-between p-3 bg-red-50 rounded-lg w-80">
-                            <p className="text-red-700 font-medium">Current Due</p>
-                            <p className="font-semibold text-red-600">
+                        <div className="flex  justify-between p-3 bg-white border border-orange-300 rounded-lg w-80">
+                            <p className="text-gray-700 font-bold">Current Due</p>
+                            <p className="font-semibold text-gray-700">
                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.CurDueAmt
                                     : "loading..."}
                             </p>
                         </div>
 
-                        <div className="flex  justify-between p-3 bg-orange-50 rounded-lg w-80">
-                            <p className="text-orange-700 font-medium">Due Date</p>
-                            <p className="font-semibold text-gray-900">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}</p>
+                        <div className="flex  justify-between p-3 bg-white border border-orange-300 rounded-lg w-80">
+                            <p className="text-gray-700 font-bold">Due Date</p>
+                            <p className="font-semibold text-gray-700">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}</p>
                         </div>
 
-                        <div className="flex  justify-between p-3 bg-green-50 rounded-lg w-80">
-                            <p className="text-green-700 font-medium">Previous Due</p>
-                            <p className="font-semibold text-green-600">
+                        <div className="flex  justify-between p-3 bg-white border border-orange-300 rounded-lg w-80">
+                            <p className="text-gray-700 font-bold">Previous Due</p>
+                            <p className="font-semibold text-gray-700">
                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.PreDueAmt
                                     : "loading..."}
                             </p>
                         </div>
                          <div className=" flex justify-center items-center">
-                        <button className="w-fit bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition duration-200 flex items-center justify-center">
+                        <button className="w-fit bg-orange-300 text-black font-bold py-3 px-5 rounded-md hover:bg-orange-400 transition duration-200 flex items-center justify-center">
                             <i className="fas fa-wallet mr-2"></i>
                             Pay Now
                         </button>

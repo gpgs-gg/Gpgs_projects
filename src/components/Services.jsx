@@ -393,28 +393,28 @@ const Services = () => {
                 <div className="flex items-center space-x-3">
                   <div className=" bg-white rounded-full flex items-center justify-center">
                     {/* <i className="fas fa-wifi text-green-600"></i> */}
-                    <img src={WifiPng} alt="" className='h-9 w-9' />
+                    <img src="https://cdn-icons-gif.flaticon.com/15576/15576872.gif" alt="" className='h-9 w-9' />
                   </div>
                   <span className="text-gray-700">High-Speed WiFi</span>
                 </div>
                 <div className="flex items-center justify-center">
                   <div className=" bg-white rounded-full flex items-center justify-center">
                     {/* <i className="fas fa-broom text-blue-600"></i> */}
-                    <img src={Housekeeping} alt="" className='h-12 w-12 mt-[-15px]' />
+                    <img src="https://cdn-icons-gif.flaticon.com/10053/10053406.gif" alt="" className='h-12 w-12 mt-[-15px]' />
                   </div>
                   <span className="text-gray-700">Housekeeping</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className=" bg-white rounded-full flex items-center justify-center">
                     {/* <i className="fas fa-tools text-purple-600"></i> */}
-                    <img src={ToolsPng} alt="" className='h-9 w-9' />
+                    <img src="https://cdn-icons-gif.flaticon.com/17122/17122628.gif" alt="" className='h-9 w-9' />
                   </div>
                   <span className="text-gray-700">Maintenance</span>
                 </div>
                 <div className="flex items-center ml-4 space-x-2">
                   <div className=" bg-white rounded-full flex items-center justify-center">
                     {/* <i className="fas fa-fire text-orange-600"></i> */}
-                    <img src={FirePng} alt="" className='h-10 w-10 mt-[-14px]' />
+                    <img src="https://cdn-icons-gif.flaticon.com/15578/15578668.gif" alt="" className='h-10 w-10 mt-[-14px]' />
                   </div>
                   <span className="text-gray-700">Cooking Gas</span>
                 </div>
