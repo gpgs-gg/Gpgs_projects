@@ -38,6 +38,7 @@ export const CategoryOptions = [
   { value: "Rent Receipt", label: "Rent Receipt" },
   { value: "F&F Settlement", label: "F&F Settlement" },
   { value: "Rent", label: "Rent" },
+  { value: "Bed", label: "Bed" },
   { value: "Red Flag", label: "Red Flag" },
   { value: "Deposit", label: "Deposit" },
   { value: "Notice", label: "Notice" },

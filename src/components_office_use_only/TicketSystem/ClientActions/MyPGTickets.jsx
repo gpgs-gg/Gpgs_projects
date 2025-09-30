@@ -383,7 +383,7 @@ export const MyPGTickets = () => {
                                 }
 
                                 return (
-                                    <div key={key} className="space-y-1">
+                                    <div key={key} className=" rounded-xl border border-orange-300 p-3">
                                         <div className="font-bold text-black text-xl ">{label}</div>
                                         <div className="text-gray-800">{displayValue}</div>
                                     </div>

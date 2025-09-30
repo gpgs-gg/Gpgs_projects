@@ -36,11 +36,6 @@ export const useClientDetails = () => {
   });
 };
 
-
-
-
-
-
 // ✅ Update Ticket Sheet
 const changePassword= async (data) => {
   const response = await apiClient.post("/change-password", data);

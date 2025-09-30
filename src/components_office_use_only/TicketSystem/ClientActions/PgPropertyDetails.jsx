@@ -89,20 +89,21 @@ const OverView = () => {
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <div className="lg:col-span-2">
                     <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex bg-white px-10 py-1 w-fit rounded-lg items-center">
+                        <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex bg-white px-2 py-1 w-fit rounded-lg items-center">
                             <i className="fas fa-home mr-2 text-orange-500 bg-white"></i>
                             PG Accommodation Details
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="md:col-span-3 p-3 bg-white rounded-lg border border-orange-300">
+                        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                          
+                            <div className="p-3 bg-white rounded-lg border border-orange-300">
+                                <p className="text-lg font-bold">Property Code</p>
+                                <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.["Property Code"] : "loading..."} </p>
+                            </div>
+                              <div className="md:col-span-5 p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Property Address</p>
                                 <p className="font-medium text-gray-900">
                                     {propertyData ? propertyData[0]?.["Property Address"] : "loading..."}
                                 </p>
-                            </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg font-bold">Property Code</p>
-                                <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.["Property Code"] : "loading..."} </p>
                             </div>
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">WiFi Name</p>
@@ -118,29 +119,30 @@ const OverView = () => {
                                 <p className="font-medium text-gray-900">{decryptedUser?.doj}</p>
                             </div>
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg  font-bold">Security Deposit</p>
-                                <p className="font-medium text-gray-900">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.DA : "loading..."}</p>
+                                <p className="text-lg font-bold">Check-In Date</p>
+                                <p className="font-medium text-gray-900">{decryptedUser?.actualDoj}</p>
                             </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
+                              <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Monthly Rent</p>
                                 <p className="font-medium text-gray-900">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.MFR : "loading..."}</p>
                             </div>
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg font-bold">Check in Date</p>
-                                <p className="font-medium text-gray-900">{decryptedUser?.actualDoj}</p>
+                                <p className="text-lg  font-bold">Security Deposit</p>
+                                <p className="font-medium text-gray-900">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.DA : "loading..."}</p>
                             </div>
-                            <div className="p-3 md:col-span-2 bg-white rounded-lg border border-orange-300">
+                          
+                            <div className="p-3 md:col-span-6 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Electricity Bill Details</p>
-                                <div className='grid grid-cols-2 md:grid-cols-3 gap-2 mt-2'>
-                                    <div className="p-2 bg-[#F8F9FB] rounded border border-orange-300">
+                                <div className='grid grid-cols-2 md:grid-cols-5 gap-2 mt-2'>
+                                    <div className="p-2  rounded border border-orange-300">
                                         <p className="text-lg  font-bold">Consumer No</p>
                                         <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBConsumerNo : "loading..."}</p>
                                     </div>
-                                    <div className="p-2 bg-[#F8F9FB] rounded border border-orange-300">
+                                    <div className="p-2  rounded border border-orange-300">
                                         <p className="text-lg font-bold">Billing Unit</p>
                                         <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBBillingUnit : "loading..."}</p>
                                     </div>
-                                    <div className="p-2 bg-[#F8F9FB] rounded border border-orange-300">
+                                    <div className="p-2 col-span-3  rounded border border-orange-300">
                                         <p className="text-lg  font-bold">Power Company Web Link</p>
                                         {propertyData && propertyData[0]?.EBPCWebLink ? (
                                             <a

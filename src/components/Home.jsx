@@ -99,7 +99,7 @@ const Home = () => {
 
       {/* Sticky 3D WhatsApp & Call icons */}
      <div
-  className="fixed bottom-8 right-8 z-50 flex flex-col space-y-4"
+  className="fixed bottom-8  right-4 z-50 flex flex-col space-y-4"
   data-aos="fade-left"
 >
   {/* WhatsApp Button */}
@@ -107,7 +107,7 @@ const Home = () => {
     href="https://wa.me/9326262292"
     target="_blank"
     rel="noopener noreferrer"
-    className="w-auto min-w-[50px]  h-10 lg:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+    className="w-auto min-w-[50px]  h-8 lg:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
       transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
       active:scale-95 active:shadow-md animate-bounce"
     title="Chat with us on WhatsApp"
@@ -119,7 +119,7 @@ const Home = () => {
   {/* Call Button */}
   <a
     href="tel:+9326262292"
-    className="w-auto min-w-[50px] px-5 h-10 lg:h-16 bg-blue-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+    className="w-auto min-w-[50px] px-5 h-8 lg:h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
       transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
       active:scale-95 active:shadow-md animate-bounce"
     title="Call us"

@@ -206,9 +206,9 @@ const Payments = () => {
         //             </div>
         //         </div>
         <div className="max-w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-                <div className="bg-white flex flex-col flex-wrap rounded-lg shadow-sm p-1 hover:shadow-md transition-shadow border lg:col-span-6">
-                    <h2 className="text-lg font-semibold text-gray-900 p-2  flex items-center">
+            <div className="grid grid-cols-1 px-6 lg:grid-cols-6 gap-6">
+                <div className="bg-white flex flex-col flex-wrap rounded-lg shadow-sm px-4 border-orange-300 hover:shadow-md transition-shadow border lg:col-span-6">
+                    <h2 className="text-2xl font-semibold text-gray-900 p-2  flex items-center">
                         <i className="fas fa-credit-card mr-2 text-orange-500"></i>
                         Payment Summary
                     </h2>
@@ -237,8 +237,8 @@ const Payments = () => {
                             </p>
                         </div>
                         <div className=" flex justify-center items-center">
-                            <button className="w-fit bg-orange-300 text-black font-bold py-3 px-5 rounded-md hover:bg-orange-400 transition duration-200 flex items-center justify-center">
-                                <i className="fas fa-wallet mr-2"></i>
+                            <button className="w-fit text-xl bg-orange-300 text-black font-bold py-3 px-10 rounded-md hover:bg-orange-400 transition duration-200 flex items-center justify-center">
+                                {/* <i className="fas fa-wallet mr-2"></i> */}
                                 Pay Now
                             </button>
                         </div>
@@ -249,8 +249,8 @@ const Payments = () => {
 
 
                 <div className="lg:col-span-6">
-                    <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <h2 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                    <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                        <h2 className="text-2xl font-semibold text-gray-900 flex items-center mb-4">
                             <i className="fas fa-history mr-2 text-orange-500"></i>
                             Payment History
                         </h2>
@@ -292,17 +292,17 @@ const Payments = () => {
                                             )
                                             .map((payment, index) => (
                                                 <tr key={index} className="hover:bg-[#F8F9FB]">
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{payment.__month}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.RentAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.DA}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ProFees}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.EBAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjEB}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.AdjAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcableAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.ToRcvedAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.CurDueAmt}</td>
-                                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">₹. {payment.PreDueAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg font-medium text-gray-900">{payment.__month}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.RentAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.DA}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.ProFees}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.EBAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.AdjEB}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.AdjAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.ToRcableAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.ToRcvedAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.CurDueAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.PreDueAmt}</td>
                                                 </tr>
                                             ))}
                                 </tbody>

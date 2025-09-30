@@ -14,12 +14,12 @@ export const Navigation = () => {
 
 
 const rawMenuItems = [
-  { id: 'pgpropertydetails', label: 'PG Property Details', icon: 'fas fa-tachometer-alt' },
+  { id: 'pgpropertydetails', label: 'Property Info', icon: 'fa-solid fa-house' },
   { id: 'personalinfo', label: 'Personal Info', icon: 'fa-solid fa-circle-info' },
   { id: 'payments', label: 'Payments', icon: 'fa-solid fa-credit-card' },
   { id: 'documents', label: 'Documents', icon: 'fa-solid fa-file' },
   { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
-  { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fa-solid fa-ticket' },
+  { id: 'mypgtickets', label: 'Property Tickets', icon: 'fa-solid fa-ticket' },
 
   {
     id: 'tickets',
@@ -36,7 +36,7 @@ const menuItems = rawMenuItems.filter(item => {
     return ['pgpropertydetails', 'personalinfo', 'payments', "documents" ,"mypgtickets" ,'tickets', 'create'].includes(item.id);
   } else {
     // For other roles, exclude 'overview', 'personalinfo', 'payments'
-    return !['pgpropertydetails', 'personalinfo', 'payments',"mypgtickets" ,].includes(item.id);
+    return !['pgpropertydetails', 'personalinfo', 'payments',"mypgtickets", "documents" ,].includes(item.id);
   }
 });
 

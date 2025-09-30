@@ -118,7 +118,7 @@ function App() {
 
       if (loginTimestamp && now - loginTimestamp > TEN_HOURS) {
         logout();
-         window.location.reload();
+        window.location.reload();
         localStorage.removeItem("loginTimestamp");
         clearInterval(interval); // stop checking after logout
       }
