@@ -298,7 +298,7 @@ const Accounts = () => {
 
 
           {sheetId && propertySheetData && rnrSheetData.length > 0 && (
-            <div className="mt-2 mx-auto max-w-3xl bg-gray-50 text-black rounded-2xl shadow-lg p-6">
+            <div className="mt-2 mx-auto max-w-3xl bg-[#F8F9FB] text-black rounded-2xl shadow-lg p-6">
               {/* Heading */}
               <h2 className="text-2xl text-orange-300 font-bold text-center mb-6">
                 Loaded Data

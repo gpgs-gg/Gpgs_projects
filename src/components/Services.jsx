@@ -208,15 +208,15 @@ const Services = () => {
   return (
     <>
 
-      <section className='border bg-gray-50'>
+      <section className='border bg-[#F8F9FB]'>
 
-        <h1 className="flex items-center justify-center bg-gray-50 gap-1">
+        <h1 className="flex items-center justify-center bg-[#F8F9FB] gap-1">
           <Link className="underline text-blue-500 cursor-pointer font-bold" to="https://www.google.com/maps/place/Gopal's+Paying+Guest+Services/@19.0347746,73.0228427,17z/data=!4m8!3m7!1s0x3be7c30f479c2543:0x2955da06c91d2d7f!8m2!3d19.0346655!4d73.024013!9m1!1b1!16s%2Fg%2F11rc28lypw?entry=ttu&g_ep=EgoyMDI1MDkxNi4wIKXMDSoASAFQAw%3D%3D" target='_black'>
             Click Here</Link> to check us on
           <img
             src={googlePng}
             alt="Logo"
-            className="h-20 w-auto ml-1 bg-gray-50"
+            className="h-20 w-auto ml-1 bg-[#F8F9FB]"
           />
         </h1>
         <div
@@ -285,7 +285,7 @@ const Services = () => {
       </section>
 
 
-      <section id="services" className="py-20 bg-white">
+      <section id="services" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Heading */}
           <div className="text-center mb-12">
@@ -298,9 +298,9 @@ const Services = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* Left Side: Carousel & Info */}
             <div>
-              <div className="bg-gray-50 rounded-xl shadow-lg p-6 sm:p-8">
+              <div className="bg-[#F8F9FB] rounded-xl shadow-lg p-6 ">
                 {/* Swiper Carousel */}
-                <div className="mb-6 rounded-lg overflow-hidden">
+                <div className="rounded-lg overflow-hidden">
                   <Swiper
                     modules={[Autoplay]}
                     autoplay={{ delay: 1000 }}
@@ -312,7 +312,7 @@ const Services = () => {
                         <img
                           src={src}
                           alt={`Location ${idx + 1}`}
-                          className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover rounded-md"
+                          className="w-full h-72 sm:h-64 md:h-72 lg:h-80 object-cover rounded-md"
                         />
                       </SwiperSlide>
                     ))}
@@ -384,7 +384,7 @@ const Services = () => {
         </div>
       </section>
 
-      <section className="py-10 bg-gray-50">
+      <section className="py-10 bg-[#F8F9FB]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid bg-white rounded-xl p-2 md:grid-cols-2 gap-12 items-center">
             <div className='  flex flex-col justify-center items-center'>
@@ -454,7 +454,7 @@ const Services = () => {
         </div>
 
 
-        <section id="services" className=" bg-gray-50 pt-5 ">
+        <section id="services" className=" bg-[#F8F9FB] pt-5 ">
           <div className="max-w-[1220px] bg-white rounded-xl py-5 mx-auto">
             <div className="text-center">
               <h2 className="text-4xl font-bold text-[#2c4d04]" style={{ textShadow: '2px 2px 6px rgba(0, 0, 0, 0.3)' }}>Additional Information</h2>

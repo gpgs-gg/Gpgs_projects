@@ -137,7 +137,7 @@ export        const TicketDetails = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowWorkLogForm(false)}
-                                                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50"
+                                                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-[#F8F9FB]"
                                             >
                                                 Cancel
                                             </button>
@@ -153,7 +153,7 @@ export        const TicketDetails = () => {
                                     {selectedTicket.workLogs.map((log, index) => (
                                         <div key={log.id} className="relative pl-6 timeline-item">
                                             <div className="absolute left-0 top-0 w-4 h-4 bg-orange-600 rounded-full border-2 border-white shadow"></div>
-                                            <div className="bg-gray-50 rounded-lg p-4">
+                                            <div className="bg-[#F8F9FB] rounded-lg p-4">
                                                 <div className="flex justify-between items-start mb-2">
                                                     <span className="font-medium text-gray-900">{log.user}</span>
                                                     <span className="text-sm text-gray-500">

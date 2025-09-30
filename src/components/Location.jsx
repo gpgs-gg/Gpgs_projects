@@ -157,7 +157,7 @@ const Location = () => {
   ];
 
   return (
-    <section id="locations" className="py-24 bg-gray-50">
+    <section id="locations" className="py-24 bg-[#F8F9FB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
@@ -183,7 +183,7 @@ const Location = () => {
                 <GoogleMapWithMarkers sectors={hoveredLocation.sector} />
               </div>
             ) : (
-              <div className="bg-gray-50 p-6 rounded-lg text-center">
+              <div className="bg-[#F8F9FB] p-6 rounded-lg text-center">
                 <i className="fas fa-city text-purple-600 text-3xl md:text-4xl mb-4"></i>
                 <p className="font-medium text-gray-900 text-base md:text-lg">
                   Multiple Prime Locations

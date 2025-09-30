@@ -10,7 +10,7 @@ export    const KanbanBoard = () => {
                 { id: 'Assigned', title: 'Assigned', color: 'border-orange-300', bgColor: 'bg-orange-50' },
                 { id: 'In Progress', title: 'In Progress', color: 'border-orange-300', bgColor: 'bg-orange-50' },
                 { id: 'Resolved', title: 'Resolved', color: 'border-green-300', bgColor: 'bg-green-50' },
-                { id: 'Closed', title: 'Closed', color: 'border-gray-300', bgColor: 'bg-gray-50' }
+                { id: 'Closed', title: 'Closed', color: 'border-gray-300', bgColor: 'bg-[#F8F9FB]' }
             ];
 
             const handleDragStart = (e, ticket) => {

@@ -12,6 +12,7 @@ import PgPropertyDetails from './ClientActions/PgPropertyDetails';
 import PersonalInfo from './ClientActions/PersonalInfo';
 import Payments from './ClientActions/Payments';
 import { MyPGTickets } from './ClientActions/MyPGTickets';
+import Documents from './ClientActions/Documents';
 
 const AdminLayout = () => {
   const { currentView } = useApp();
@@ -23,6 +24,8 @@ const AdminLayout = () => {
         return <Payments />;
       case 'personalinfo':
         return <PersonalInfo />;
+      case 'documents':
+        return <Documents />;
       case 'pgpropertydetails':
         return < PgPropertyDetails/>;
       case 'mypgtickets':
@@ -49,7 +52,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F8F9FB]">
       <Navigation />
       <main className="main-content container mx-auto px-6 pb-0 ">
         {renderContent()}

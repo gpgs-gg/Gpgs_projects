@@ -132,15 +132,15 @@ const OverView = () => {
                             <div className="p-3 md:col-span-2 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Electricity Bill Details</p>
                                 <div className='grid grid-cols-2 md:grid-cols-3 gap-2 mt-2'>
-                                    <div className="p-2 bg-gray-50 rounded border border-orange-300">
+                                    <div className="p-2 bg-[#F8F9FB] rounded border border-orange-300">
                                         <p className="text-lg  font-bold">Consumer No</p>
                                         <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBConsumerNo : "loading..."}</p>
                                     </div>
-                                    <div className="p-2 bg-gray-50 rounded border border-orange-300">
+                                    <div className="p-2 bg-[#F8F9FB] rounded border border-orange-300">
                                         <p className="text-lg font-bold">Billing Unit</p>
                                         <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBBillingUnit : "loading..."}</p>
                                     </div>
-                                    <div className="p-2 bg-gray-50 rounded border border-orange-300">
+                                    <div className="p-2 bg-[#F8F9FB] rounded border border-orange-300">
                                         <p className="text-lg  font-bold">Power Company Web Link</p>
                                         {propertyData && propertyData[0]?.EBPCWebLink ? (
                                             <a

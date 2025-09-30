@@ -145,7 +145,7 @@ export const Dashboard = () => {
                 <h3 className="text-lg font-semibold mb-4">Recent Tickets</h3>
                 <div className="space-y-3">
                     {tickets.slice(0, 8).map(ticket => (
-                        <div key={ticket.TicketID} className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg">
+                        <div key={ticket.TicketID} className="flex items-center space-x-4 p-3 hover:bg-[#F8F9FB] rounded-lg">
                             <div className={`w-3 h-3 rounded-full ${ticket.Priority === 'Critical' ? 'bg-red-500' :
                                 ticket.Priority === 'High' ? 'bg-orange-500' :
                                     ticket.Priority === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'

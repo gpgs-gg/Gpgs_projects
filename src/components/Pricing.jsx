@@ -66,7 +66,7 @@ const Pricing = () => {
             </div>
           </div>
 
-          <div className="mt-12 bg-gray-50 rounded-xl p-8">
+          <div className="mt-12 bg-[#F8F9FB] rounded-xl p-8">
             <h3 className="text-2xl font-semibold text-[#407105] mb-6 text-center">Additional Information</h3>
             <div className="grid md:grid-cols-2 gap-8">
               <div>

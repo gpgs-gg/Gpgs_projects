@@ -201,7 +201,7 @@ const BedsAvilable = () => {
 
   return (
     
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F8F9FB]">
       <div className="sticky top-0 z-5 ">
         <div className="relative flex items-center justify-center ">
           <div className="absolute  p-2 left-0 w-[250px]">

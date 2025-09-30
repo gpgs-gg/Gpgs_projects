@@ -207,7 +207,7 @@ export const Reports = () => {
         <h3 className="text-lg font-semibold mb-4">Team Performance</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-[#F8F9FB]">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Team Member

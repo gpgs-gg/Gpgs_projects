@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const PageNotFound = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F9FB] px-6 py-12">
       <div className="text-center max-w-md">
         {/* Optional: Replace with an SVG or image */}
         <div className="text-8xl font-extrabold text-green-900">404</div>

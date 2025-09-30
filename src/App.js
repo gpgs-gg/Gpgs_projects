@@ -118,8 +118,8 @@ function App() {
 
       if (loginTimestamp && now - loginTimestamp > TEN_HOURS) {
         logout();
+         window.location.reload();
         localStorage.removeItem("loginTimestamp");
-        window.location.reload();
         clearInterval(interval); // stop checking after logout
       }
     }, 5000); // check every 5 seconds
@@ -206,7 +206,11 @@ function App() {
             <AdminLayout />
         } /> */}
       </Routes>
-    <Footer/>
+
+
+
+       <Footer/>
+   
 
     </>
   );

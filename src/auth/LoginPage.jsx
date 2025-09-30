@@ -82,7 +82,7 @@
 
 //   return (
 //     <>
-//       <div className="flex items-center bg-gray-50 justify-center min-h-screen bg-primary-light">
+//       <div className="flex items-center bg-[#F8F9FB] justify-center min-h-screen bg-primary-light">
 //         <form
 //           onSubmit={handleSubmit(onSubmit)}
 //           className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
@@ -276,7 +276,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="flex items-center bg-gray-50 justify-center min-h-screen bg-primary-light">
+      <div className="flex items-center bg-[#F8F9FB] justify-center min-h-screen bg-primary-light">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"

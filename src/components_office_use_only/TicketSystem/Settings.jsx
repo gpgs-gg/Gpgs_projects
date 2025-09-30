@@ -145,7 +145,7 @@ export     const Settings = () => {
                             <h3 className="text-lg font-semibold mb-4">Department Configuration</h3>
                             <div className="space-y-3">
                                 {['IT', 'HR', 'Finance', 'Operations', 'Marketing'].map(dept => (
-                                    <div key={dept} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div key={dept} className="flex items-center justify-between p-3 bg-[#F8F9FB] rounded-lg">
                                         <span className="font-medium">{dept}</span>
                                         <div className="flex space-x-2">
                                             <button className="text-orange-600 hover:text-orange-800">

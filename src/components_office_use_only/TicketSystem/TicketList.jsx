@@ -5,7 +5,7 @@ import { TicketFilters } from "./TicketFilters";
 // Memoized row
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
     return (
-        <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
+        <tr key={ticket.TicketID} className="hover:bg-[#F8F9FB] border">
             {headers.map(({ key }, index) => {
                 const value = ticket[key];
 
@@ -213,11 +213,12 @@ export const TicketList = () => {
         { label: "Property Code", key: "PropertyCode" },
         { label: "Department", key: "Department" },
         { label: "Category", key: "Category" },
+     { label: "Attachment", key: "Attachment" },
         { label: "Status", key: "Status" },
         { label: "WorkLogs", key: "WorkLogs" },
         { label: "Title", key: "Title" },
         { label: "Description", key: "Description" },
-        ,  // Assuming this key exists in data
+         // Assuming this key exists in data
     ];
     const headers = useMemo(() => {
         if (decryptedUser?.role === "client") {

@@ -110,7 +110,7 @@ const About = () => {
               <p className="text-indigo-800 font-semibold text-sm">Years Experience</p>
             </div>
           </div>
-          <div className="bg-gray-50 rounded-xl shadow-lg p-6 sm:p-8">
+          <div className="bg-[#F8F9FB] rounded-xl shadow-lg p-6 sm:p-8">
             {/* <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6 flex items-center">
               <i className="fas fa-map-marker-alt text-purple-600 mr-3"></i>Locate us on Map
             </h3> */}
@@ -128,7 +128,7 @@ const About = () => {
                     <img
                       src={imgSrc}
                       alt={`Location ${idx + 1}`}
-                      className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover rounded-md"
+                      className="w-full h-72 sm:h-64 md:h-72 lg:h-80 object-cover rounded-md"
                     />
                   </SwiperSlide>
                 ))}

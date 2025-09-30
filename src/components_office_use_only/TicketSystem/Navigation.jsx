@@ -15,10 +15,11 @@ export const Navigation = () => {
 
 const rawMenuItems = [
   { id: 'pgpropertydetails', label: 'PG Property Details', icon: 'fas fa-tachometer-alt' },
-  { id: 'personalinfo', label: 'Personal Info', icon: 'fas fa-tachometer-alt' },
+  { id: 'personalinfo', label: 'Personal Info', icon: 'fa-solid fa-circle-info' },
   { id: 'payments', label: 'Payments', icon: 'fa-solid fa-credit-card' },
+  { id: 'documents', label: 'Documents', icon: 'fa-solid fa-file' },
   { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-tachometer-alt' },
-    { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fa-solid fa-ticket' },
+  { id: 'mypgtickets', label: 'My PG Tickets', icon: 'fa-solid fa-ticket' },
 
   {
     id: 'tickets',
@@ -32,7 +33,7 @@ const rawMenuItems = [
 const menuItems = rawMenuItems.filter(item => {
   if (decryptedUser?.role === 'client') {
     // For clients, exclude 'dashboard'
-    return ['pgpropertydetails', 'personalinfo', 'payments',"mypgtickets" ,'tickets', 'create'].includes(item.id);
+    return ['pgpropertydetails', 'personalinfo', 'payments', "documents" ,"mypgtickets" ,'tickets', 'create'].includes(item.id);
   } else {
     // For other roles, exclude 'overview', 'personalinfo', 'payments'
     return !['pgpropertydetails', 'personalinfo', 'payments',"mypgtickets" ,].includes(item.id);
@@ -62,7 +63,7 @@ const menuItems = rawMenuItems.filter(item => {
   };
 
   return (
-    <div className="bg-gray-50 shadow-sm border-b border-gray-200 mb-6 no-print">
+    <div className="bg-[#F8F9FB] shadow-sm border-b border-gray-200 mb-6 no-print">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 sm:px-6">
         <div className="flex items-center space-x-2">

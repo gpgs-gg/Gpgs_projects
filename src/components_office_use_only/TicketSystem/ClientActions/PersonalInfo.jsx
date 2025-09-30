@@ -34,15 +34,21 @@ const PersonalInfo = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4  gap-6">
                     <div className="p-3 bg-white rounded-lg border border-orange-300">
                         <p className="text-lg  font-bold">
-                            Name
+                            Full Name
                         </p>
                         <p className="font-medium text-gray-900">{decryptedUser?.name}</p>
                     </div>
                     <div className="p-3 bg-white rounded-lg border border-orange-300">
                         <p className="text-lg  font-bold">
-                            Phone
+                            Calling No
                         </p>
                         <p className="font-medium text-gray-900">{decryptedUser?.calling}</p>
+                    </div>
+                    <div className="p-3 bg-white rounded-lg border border-orange-300">
+                        <p className="text-lg  font-bold">
+                            WhatsApp No
+                        </p>
+                        <p className="font-medium text-gray-900">{decryptedUser?.whatsAppNo}</p>
                     </div>
                     <div className="p-3 bg-white rounded-lg border border-orange-300">
                         <p className="text-lg  font-bold">

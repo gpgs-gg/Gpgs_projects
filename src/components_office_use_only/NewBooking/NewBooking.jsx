@@ -1061,8 +1061,8 @@ const NewBooking = () => {
   };
 
   return (
-    <div className="max-w-8xl mx-auto bg-gray-50 min-h-screen">
-      <div className="bg-gray-50 shadow-lg rounded-xl  p-6">
+    <div className="max-w-8xl mx-auto bg-[#F8F9FB] min-h-screen">
+      <div className="bg-[#F8F9FB] shadow-lg rounded-xl  p-6">
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 mt-20">
           {/* === CLIENT DETAILS === */}

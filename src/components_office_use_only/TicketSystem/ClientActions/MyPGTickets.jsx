@@ -6,12 +6,17 @@ import React, { useState, useMemo, useEffect } from "react";
 import { TicketFilters } from "../TicketFilters";
 import { useApp } from "../AppProvider";
 
+
+
+
+
+
 // Memoized row
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick }) => {
 
 
     return (
-        <tr key={ticket.TicketID} className="hover:bg-gray-50 border">
+        <tr key={ticket.TicketID} className="hover:bg-[#F8F9FB] border">
             {headers.map(({ key }, index) => {
                 const value = ticket[key];
 
@@ -109,7 +114,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
             })}
 
             {/* Actions */}
-            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky border-l right-0 bg-white z-10">
+            <td className="px-5 py-7 flex gap-3 justify-center items-center whitespace-nowrap text-lg font-medium sticky border-l right-0 bg-white z-10">
                 <button
                     onClick={() => onEdit(ticket)}
                     className="text-red-600 hover:text-red-900"
@@ -118,13 +123,13 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
                     <i className="fa fa-eye"></i>
                 </button>
 
-                <button
+                {/* <button
                     onClick={() => onEdit(ticket)}
                     className="text-green-600 hover:text-green-900 mr-3"
                     title="Edit"
                 >
                     <i className="fas fa-edit"></i>
-                </button>
+                </button> */}
             </td>
         </tr>
     );
@@ -133,8 +138,9 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 export const MyPGTickets = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [viewTicket, setViewTicket] = useState(null);
 
-    const { decryptedUser, setMyPgTicketsTotal, filteredTickets, setCurrentView, setSelectedTicket} = useApp();
+    const { decryptedUser, setMyPgTicketsTotal, filteredTickets, setCurrentView, setSelectedTicket } = useApp();
 
     const TICKETS_PER_PAGE = 10;
 
@@ -173,8 +179,9 @@ export const MyPGTickets = () => {
     }, [myFilteredTickets, currentPage]);
 
     const editTicket = (ticket) => {
-        setSelectedTicket(ticket);
-        setCurrentView("edit");
+        // setSelectedTicket(ticket);
+        // setCurrentView("edit");
+        setViewTicket(ticket)
     };
 
     const formatDate = (dateString) => {
@@ -233,6 +240,7 @@ export const MyPGTickets = () => {
         { label: "Property Code", key: "PropertyCode" },
         { label: "Department", key: "Department" },
         { label: "Category", key: "Category" },
+        { label: "Attachment", key: "Attachment" },
         { label: "Status", key: "Status" },
         { label: "WorkLogs", key: "WorkLogs" },
         { label: "Title", key: "Title" },
@@ -245,7 +253,7 @@ export const MyPGTickets = () => {
 
     return (
         <div className="space-y-6">
- <TicketFilters/>
+            <TicketFilters />
 
             <div className="bg-white rounded-lg shadow overflow-auto">
                 <table className="min-w-full divide-gray-200 text-sm">
@@ -315,6 +323,91 @@ export const MyPGTickets = () => {
                     />
                 </div>
             )}
+
+
+            {/* popup model for View  */}
+            {/* Ticket View Modal */}
+            {viewTicket && (
+                <div
+                    onClick={() => setViewTicket(null)}
+                    className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+                >
+                    <div
+                        className="bg-white w-full max-w-5xl rounded-lg shadow-xl p-6 overflow-y-auto max-h-[90vh] relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setViewTicket(null)}
+                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors"
+                            aria-label="Close Modal"
+                        >
+                            <i className="fas fa-times text-2xl"></i>
+                        </button>
+
+                        {/* Modal Title */}
+                        <h2 className="text-3xl font-semibold mb-6 border-b pb-3">Ticket Details</h2>
+
+                        {/* Grid for most fields */}
+                        <div className="grid grid-cols-1 sm:grid-cols-5 gap-6 text-sm text-gray-800">
+                            {headers.map(({ label, key }) => {
+                                if (key === "WorkLogs") return null; // Skip here, handle separately below
+
+                                const rawValue = viewTicket[key];
+                                let displayValue = rawValue || "N/A";
+
+                                if (key === "Attachment" && rawValue) {
+                                    const imageUrls = rawValue.split(",").map((url) => url.trim());
+                                    displayValue = (
+                                        <div className="flex flex-wrap gap-3 mt-2">
+                                            {imageUrls.map((url, idx) => (
+                                                <img
+                                                    key={idx}
+                                                    src={url}
+                                                    alt={`Attachment ${idx + 1}`}
+                                                    className="w-20 h-20 object-cover border rounded-md hover:ring-2 hover:ring-blue-400 transition"
+                                                />
+                                            ))}
+                                        </div>
+                                    );
+                                } else if (
+                                    ["DateCreated", "UpdatedDateTime", "ClosedDate"].includes(key)
+                                ) {
+                                    displayValue = formatDate(rawValue);
+                                } else if (key === "InternalComments") {
+                                    displayValue = (
+                                        <pre className="bg-[#F8F9FB] border border-gray-200 rounded p-2 overflow-x-auto max-h-40">
+                                            {rawValue || "N/A"}
+                                        </pre>
+                                    );
+                                }
+
+                                return (
+                                    <div key={key} className="space-y-1">
+                                        <div className="font-bold text-black text-xl ">{label}</div>
+                                        <div className="text-gray-800">{displayValue}</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Full-width WorkLogs at the bottom */}
+                        {viewTicket.WorkLogs && (
+                            <div className="mt-8">
+                                <div className="font-semibold text-gray-600 mb-2 text-lg">WorkLogs</div>
+                                <div className="bg-[#F8F9FB] border border-gray-300 rounded p-4 max-h-[300px] overflow-y-auto text-sm whitespace-pre-wrap">
+                                    {viewTicket.WorkLogs}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+
+
+
+
         </div>
     );
 };

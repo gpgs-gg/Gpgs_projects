@@ -58,7 +58,7 @@ export     const UserManagement = () => {
                     <div className="bg-white rounded-lg shadow overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                                <thead className="bg-[#F8F9FB]">
                                     <tr>
                                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
@@ -213,7 +213,7 @@ export     const UserManagement = () => {
                                                 setEditingUser(null);
                                                 reset();
                                             }}
-                                            className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50"
+                                            className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-[#F8F9FB]"
                                         >
                                             Cancel
                                         </button>
