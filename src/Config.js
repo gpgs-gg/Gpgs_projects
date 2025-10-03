@@ -11,9 +11,9 @@ export const SelectStyles = {
     paddingLeft: "0.75rem",
     paddingRight: "0.50rem",
     marginTop: "0.30rem",
-    borderWidth: "1px",
+    borderWidth: "2px",
     borderStyle: "solid",
-    borderColor: state.isFocused ? "#fb923c" : "#f97316",
+    borderColor: state.isFocused ? "#fb923c" : "#fdba74",
     borderRadius: "0.375rem",
     boxShadow: state.isFocused
       ? "0 0 0 2px rgba(251,146,60,0.5)"
@@ -33,6 +33,7 @@ export const SelectStyles = {
     zIndex: 9999
   })
 };
+
 export const CategoryOptions = [
   { value: "Others", label: "Others" },
   { value: "Rent Receipt", label: "Rent Receipt" },
@@ -101,7 +102,19 @@ export const CategoryOptions = [
   { value: "Wiper", label: "Wiper" },
   { value: "Rat", label: "Rat" },
   { value: "Pest Control", label: "Pest Control" },
-  {value: "Emergency Contacts", label: "Emergency Contacts"},
+  { value: "Emergency Contacts", label: "Emergency Contacts" },
+
+  // IT department 
+  { value: "New Requirement", label: "New Requirement" },
+  { value: "Update Issue", label: "Update Issue" },
+  { value: "Save Issue", label: "Save Issue" },
+  { value: "Login Issue", label: "Login Issue" },
+  { value: "Change Password Issue", label: "Change Password Issue" },
+  { value: "Msg Issue", label: "Msg Issue" },
+  { value: "Calculation Issue", label: "Calculation Issue" },
+  { value: "Color Issue", label: "Color Issue" },
+  { value: "Ui Size Issue", label: "Ui Size Issue" },
+  { value: "RNR Update Issue", label: "RNR Update Issue" },
 ];
 
 export const DepartmentOptions = [
@@ -113,11 +126,12 @@ export const DepartmentOptions = [
   { value: "Admin", label: "Admin" },
   { value: "Human Resource", label: "Human Resource" },
   { value: "Management", label: "Management" },
+  { value: "IT", label: "IT" },
 
 ];
 
-
 export const PriorityOptions = [
+  { value: "", label: "All Priorities" },
   { value: "Low", label: "Low" },
   { value: "Medium", label: "Medium" },
   { value: "High", label: "High" },

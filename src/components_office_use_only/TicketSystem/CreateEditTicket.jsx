@@ -230,8 +230,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
 
 
-
-
   const ProperyOptions = property?.data?.map((prop) => ({
     value: prop["Property Code"],
     label: prop["Property Code"],
@@ -441,7 +439,8 @@ useEffect(() => {
 
     // 📸 Append each image file
     previews.forEach((file) => {
-      formData.append("images", file.file); //  Keep the key same for all files
+      formData.append("images", file.file); 
+    
     });
 
     // ✅ Submit
@@ -499,9 +498,6 @@ useEffect(() => {
                 />
               </div>
             )}
-
-
-
 
             <div>
               <label className="block text-sm font-medium text-black mb-2">Property Code <span className="text-red-500">*</span></label>
@@ -569,7 +565,7 @@ useEffect(() => {
                 {...register("Title", { required: "Title is required" })}
                 disabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                 className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-                  } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                  } border-orange-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
                 placeholder="Enter Title"
               />
               {errors.Title && (
@@ -964,7 +960,7 @@ useEffect(() => {
                 {...register("Title", { required: "Title is required" })}
                 disabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                 className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-                  } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                  } border-orange-300 border-2 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
                 placeholder="Enter Title"
               />
               {errors.Title && (
@@ -1033,7 +1029,7 @@ useEffect(() => {
                         {...field}
                         value={field.value || ""}
                        disabled = {isEdit && decryptedUser?.role.toLowerCase() === "client"}
-                        className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                        className="w-full  border-orange-300 border-2 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                       />
                       {field.value && (
                         <button
@@ -1060,8 +1056,8 @@ useEffect(() => {
                   <input
                     {...register("CreatedByName", { required: "Created By Name is required" })}
                     disabled={isEdit}
-                    className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-                      } border-orange-500 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
+                    className={`w-full border-2 ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                      } border-orange-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
                     placeholder="Enter Created By Name"
                   />
                   {errors.Title && (
@@ -1084,7 +1080,7 @@ useEffect(() => {
                 rows={4}
                 disabled={isEdit}
                 placeholder="Enter Your Description here"
-                className="w-full h-[150px] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                className="w-full h-[150px] border-2 border-orange-300  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
               />
               {errors.Description && (
                 <p className="text-red-500 text-sm">{errors.Description.message}</p>
@@ -1101,7 +1097,7 @@ useEffect(() => {
                     multiple
                     accept="image/*,video/*,application/pdf"
                     onChange={handleFileChange}
-                    className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                    className="w-full h-[90%] border-2 border-orange-300  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
                   />
                 </div>
                 {previews.length > 0 && (
@@ -1216,7 +1212,7 @@ useEffect(() => {
                   {...register("WorkLogs")}
                   placeholder="Add work log entries here..."
                   rows={4}
-                  className="w-full h-20 border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300  rounded-md px-3 py-2"
+                  className="w-full h-20 border-2 border-orange-300  focus:outline-none focus:ring-2 focus:ring-orange-300  rounded-md px-3 py-2"
                 />
               </div>
 
@@ -1234,7 +1230,7 @@ useEffect(() => {
                       multiple
                       accept="image/*,video/*,application/pdf"
                       onChange={handleFileChange}
-                      className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                      className="w-full h-[90%] border-2 border-orange-300  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
                     />
                   </div>
                   {previews.length > 0 && (

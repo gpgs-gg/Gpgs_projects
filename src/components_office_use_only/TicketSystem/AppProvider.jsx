@@ -43,18 +43,7 @@ export const AppProvider = ({ children }) => {
     const { data, isLoading, error } = useTicketSheetData(isTicketsPage);
     const { mutate: updateTicketData, isLoading: isticketUpdate } = useUpdateTicketSheetData();
 
-    // Start with an empty array
-    const [tickets, setTickets] = useState([]);
-
-    useEffect(() => {
-        if (Array.isArray(data?.data)) {
-            const filteredTickets = decryptedUser?.role === "client"
-                ? data.data.filter((ele) => ele.CreatedByName === decryptedUser.name)
-                : data.data;
-
-            setTickets(filteredTickets);
-        }
-    }, [data, decryptedUser]);
+  
 
 
     const initialUsers = [
@@ -76,6 +65,48 @@ export const AppProvider = ({ children }) => {
             setCurrentView(decryptedUser.role === 'client' ? 'pgpropertydetails' : 'dashboard');
         }
     }, [decryptedUser]);
+
+
+      // Start with an empty array
+    const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    if (Array.isArray(data?.data)) {
+        let filteredTickets = data.data;
+
+        if (currentView === "mypgtickets") {
+            // Only filter by property code if myPgTicketsTotal is not null
+            filteredTickets = data.data.filter(
+                (ele) => ele.PropertyCode === decryptedUser?.propertyCode
+            );
+        } else {
+            // Other filters based on role
+            if (decryptedUser?.role === "client") {
+                filteredTickets = data.data.filter(
+                    (ele) => ele.CreatedByName === decryptedUser?.name
+                );
+            }
+            // else keep all (i.e., already assigned above)
+        }
+
+        setTickets(filteredTickets);
+    }
+}, [data, decryptedUser , currentView]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const [modal, setModal] = useState('');
     const [selectedTicket, setSelectedTicket] = useState(null);

@@ -141,7 +141,7 @@ export const MyPGTickets = () => {
     const [viewTicket, setViewTicket] = useState(null);
 
     const { decryptedUser, setMyPgTicketsTotal, filteredTickets, setCurrentView, setSelectedTicket } = useApp();
-
+ 
     const TICKETS_PER_PAGE = 10;
 
     const now = new Date();
@@ -164,7 +164,7 @@ export const MyPGTickets = () => {
             return isSameProperty && isRecentOrUnresolved;
         });
     }, [filteredTickets, decryptedUser.propertyCode]);
-
+    
     // Set ticket total based on filtered results
     useEffect(() => {
         setMyPgTicketsTotal(myFilteredTickets.length);
@@ -273,7 +273,7 @@ export const MyPGTickets = () => {
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y text-[15px] divide-gray-200">
+                    <tbody className="bg-white divide-y text-[18px] divide-gray-200">
                         {paginatedTickets.map((ticket) => (
                             <TicketRow
                                 key={ticket.TicketID}
@@ -324,7 +324,6 @@ export const MyPGTickets = () => {
                 </div>
             )}
 
-
             {/* popup model for View  */}
             {/* Ticket View Modal */}
             {viewTicket && (
@@ -333,7 +332,7 @@ export const MyPGTickets = () => {
                     className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
                 >
                     <div
-                        className="bg-white w-full max-w-5xl rounded-lg shadow-xl p-6 overflow-y-auto max-h-[90vh] relative"
+                        className="bg-white w-full max-w-7xl rounded-lg shadow-xl p-6 overflow-y-auto max-h-[90vh] relative"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Close Button */}
@@ -346,68 +345,85 @@ export const MyPGTickets = () => {
                         </button>
 
                         {/* Modal Title */}
-                        <h2 className="text-3xl font-semibold mb-6 border-b pb-3">Ticket Details</h2>
+                        <h2 className="text-3xl font-semibold mb-6 border-b pb-3">Ticket No - {viewTicket.TicketID}</h2>
 
-                        {/* Grid for most fields */}
-                        <div className="grid grid-cols-1 sm:grid-cols-5 gap-6 text-sm text-gray-800">
+                        {/* Grid for most fields (excluding WorkLogs & Attachment) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-sm text-gray-800">
                             {headers.map(({ label, key }) => {
-                                if (key === "WorkLogs") return null; // Skip here, handle separately below
+                                if (key === "WorkLogs" || key === "Attachment" || key === "TicketID") return null; // skip these here
 
                                 const rawValue = viewTicket[key];
                                 let displayValue = rawValue || "N/A";
 
-                                if (key === "Attachment" && rawValue) {
-                                    const imageUrls = rawValue.split(",").map((url) => url.trim());
-                                    displayValue = (
-                                        <div className="flex flex-wrap gap-3 mt-2">
-                                            {imageUrls.map((url, idx) => (
-                                                <img
-                                                    key={idx}
-                                                    src={url}
-                                                    alt={`Attachment ${idx + 1}`}
-                                                    className="w-20 h-20 object-cover border rounded-md hover:ring-2 hover:ring-blue-400 transition"
-                                                />
-                                            ))}
-                                        </div>
-                                    );
-                                } else if (
-                                    ["DateCreated", "UpdatedDateTime", "ClosedDate"].includes(key)
-                                ) {
+                                // Format dates
+                                if (["DateCreated", "UpdatedDateTime", "ClosedDate"].includes(key)) {
                                     displayValue = formatDate(rawValue);
-                                } else if (key === "InternalComments") {
+                                }
+
+                                // Internal Comments block
+                                // if (key === "InternalComments") {
+                                //     displayValue = (
+                                //         <pre className="bg-[#F8F9FB] border border-gray-200 rounded p-2 overflow-x-auto max-h-40 whitespace-pre-wrap">
+                                //             {rawValue || "N/A"}
+                                //         </pre>
+                                //     );
+                                // }
+                                if (key === "Description") {
                                     displayValue = (
-                                        <pre className="bg-[#F8F9FB] border border-gray-200 rounded p-2 overflow-x-auto max-h-40">
+                                        <pre className="rounded p-2 overflow-x-auto  whitespace-pre-wrap">
                                             {rawValue || "N/A"}
                                         </pre>
                                     );
                                 }
 
                                 return (
-                                    <div key={key} className=" rounded-xl border border-orange-300 p-3">
-                                        <div className="font-bold text-black text-xl ">{label}</div>
-                                        <div className="text-gray-800">{displayValue}</div>
+                                    <div
+                                        key={key}
+                                        className={`
+                                            rounded-xl border border-orange-300 p-2 bg-white shadow-sm",
+                                           ${ key === "Description" ? "sm:col-span-2 lg:col-span-3" : ""}
+                                           ${ key === "Title" ? "sm:col-span-2 lg:col-span-2" : ""}
+                                        `}
+                                    >
+                                        <div className="font-bold text-black text-lg mb-1">{label}</div>
+                                        <div className="text-gray-700 text-sm break-words">{displayValue}</div>
                                     </div>
                                 );
                             })}
                         </div>
 
-                        {/* Full-width WorkLogs at the bottom */}
+                        {/* WorkLogs Section */}
                         {viewTicket.WorkLogs && (
-                            <div className="mt-8">
-                                <div className="font-semibold text-gray-600 mb-2 text-lg">WorkLogs</div>
-                                <div className="bg-[#F8F9FB] border border-gray-300 rounded p-4 max-h-[300px] overflow-y-auto text-sm whitespace-pre-wrap">
+                            <div className="mt-8 ">
+                                <div className="font-semibold  text-gray-700 mb-2 text-lg">WorkLogs</div>
+                                <div className="bg-[#F8F9FB] overflow-y-auto max-h-60 border border-gray-300 rounded p-4  text-sm whitespace-pre-wrap">
                                     {viewTicket.WorkLogs}
                                 </div>
                             </div>
                         )}
+                        {/* Attachments Section - at the bottom */}
+                        {viewTicket.Attachment && (
+                            <div className="mt-8">
+                                <div className="font-semibold text-gray-700 mb-2 text-lg">Attachments</div>
+                                <div className="flex flex-wrap gap-3">
+                                    {viewTicket.Attachment.split(",")
+                                        .map((url) => url.trim())
+                                        .filter((url) => url.startsWith("http") && !url.includes("localhost"))
+                                        .map((url, idx) => (
+                                            <img
+                                                key={idx}
+                                                src={url}
+                                                alt={`Attachment ${idx + 1}`}
+                                                className="w-24 h-24 object-cover border rounded-md hover:ring-2 hover:ring-blue-400 transition"
+                                            />
+                                        ))}
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                 </div>
             )}
-
-
-
-
-
         </div>
     );
 };

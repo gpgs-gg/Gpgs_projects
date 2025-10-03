@@ -25,110 +25,50 @@ const PersonalInfo = () => {
     }, []);
 
     return (
-        <div className="max-w-full  mx-auto px-4 py-6 sm:px-6 ">
-            <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex bg-white px-2 py-1 w-fit rounded-lg items-center">
-                            <i className="fas fa-user-circle mr-2 text-orange-500 bg-white"></i>
-                           Personal Information
-                        </h2>
-                <div className="grid grid-cols-1 md:grid-cols-5  gap-6">
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Full Name
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.name}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Calling No
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.calling}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            WhatsApp No
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.whatsAppNo}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Email Id
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.loginId}</p>
-                    </div>
-                    {/* <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Id Proof
-                        </p>
-                        <p className="font-medium text-gray-900">Aadhaar Card - {decryptedUser?.aadharNo}</p>
-                    </div> */}
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Date Of Birth
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.dob}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Blood Group
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.bloodGroup}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Occupation
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.occupation}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Organisation
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.organisation}</p>
-                    </div>
-                    <div className="p-3 bg-white  rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Emergency Cont1 Name
-                        </p>
-                        <p className="font-medium text-gray-900">
-                            
-                            {/* {decryptedUser?.emgyCont1FullName} */}
-                            abhishek gautam gpgs
-                            </p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Emergency Cont1 No
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.emgyCont1No}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Emergency Cont2 Name
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.emgyCont2FullName}</p>
-                    </div>
-                    <div className="p-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Emergency Cont2 No
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.emgyCont2No}</p>
-                    </div>
-                    <div className="p-3 col-span-3 bg-white rounded-lg border border-orange-300">
-                        <p className="text-lg  font-bold">
-                            Permanent Address
-                        </p>
-                        <p className="font-medium text-gray-900">{decryptedUser?.calling}</p>
-                    </div>
-                    {/* <div className="p-3 bg-white rounded-lg">
-                                    <p className="text-sm text-orange-700 font-medium">
-                                        Temparary Address
-                                    </p>
-                                    <p className="font-medium text-gray-900">{decryptedUser?.calling}</p>
-                                </div> */}
+        <div className="max-w-full mx-auto md:px-4 py-6 sm:px-6">
+    <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center bg-white px-2 py-1 w-fit rounded-lg">
+            <i className="fas fa-user-circle mr-2 text-orange-500"></i>
+            Personal Information
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            {/* Helper component pattern would be ideal, but keeping it simple here */}
+
+            {[
+                { label: "Full Name", value: decryptedUser?.name },
+                { label: "Calling No", value: decryptedUser?.calling },
+                { label: "WhatsApp No", value: decryptedUser?.whatsAppNo },
+                { label: "Email Id", value: decryptedUser?.loginId },
+                { label: "Date Of Birth", value: decryptedUser?.dob },
+                { label: "Blood Group", value: decryptedUser?.bloodGroup },
+                { label: "Occupation", value: decryptedUser?.occupation },
+                { label: "Organisation", value: decryptedUser?.organisation },
+                { label: "Emergency Cont1 Name", value: decryptedUser?.emgyCont1FullName },
+                { label: "Emergency Cont1 No", value: decryptedUser?.emgyCont1No },
+                { label: "Emergency Cont2 Name", value: decryptedUser?.emgyCont2FullName },
+                { label: "Emergency Cont2 No", value: decryptedUser?.emgyCont2No },
+            ].map((item, index) => (
+                <div
+                    key={index}
+                    className="p-3 bg-white rounded-lg border border-orange-300"
+                >
+                    <p className="text-lg font-bold">{item.label}</p>
+                    <p className="font-medium text-gray-900">{item.value || "N/A"}</p>
                 </div>
+            ))}
+
+            {/* Permanent Address - spans 3 columns on md+ screens */}
+            <div className="p-3 bg-white rounded-lg border border-orange-300 md:col-span-3">
+                <p className="text-lg font-bold">Permanent Address</p>
+                <p className="font-medium text-gray-900">
+                    {decryptedUser?.permanentAddress || "N/A"}
+                </p>
             </div>
         </div>
+    </div>
+</div>
+
     )
 }
 

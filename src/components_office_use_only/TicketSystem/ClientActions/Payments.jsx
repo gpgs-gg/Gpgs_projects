@@ -206,31 +206,30 @@ const Payments = () => {
         //             </div>
         //         </div>
         <div className="max-w-full">
-            <div className="grid grid-cols-1 px-6 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-1 md:px-6 lg:grid-cols-6 gap-6">
                 <div className="bg-white flex flex-col flex-wrap rounded-lg shadow-sm px-4 border-orange-300 hover:shadow-md transition-shadow border lg:col-span-6">
                     <h2 className="text-2xl font-semibold text-gray-900 p-2  flex items-center">
                         <i className="fas fa-credit-card mr-2 text-orange-500"></i>
                         Payment Summary
                     </h2>
-
                     <div className="flex justify-evenly flex-wrap gap-3 mb-6">
-                        <div className="flex  justify-between p-3 bg-white border border-orange-300 rounded-lg w-80">
+                        <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
                             <p className="text-gray-700 font-bold">Current Due</p>
-                            <p className="font-semibold text-gray-700">
-                                {mainSheetDataForNameWise.length > 0
+                            <p className="font-semibold text-gray-700">₹.&nbsp;&nbsp; 
+                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.CurDueAmt
                                     : "loading..."}
                             </p>
                         </div>
 
-                        <div className="flex  justify-between p-3 bg-white border border-orange-300 rounded-lg w-80">
+                        <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg ">
                             <p className="text-gray-700 font-bold">Due Date</p>
                             <p className="font-semibold text-gray-700">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}</p>
                         </div>
 
-                        <div className="flex  justify-between p-3 bg-white border border-orange-300 rounded-lg w-80">
+                        <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
                             <p className="text-gray-700 font-bold">Previous Due</p>
-                            <p className="font-semibold text-gray-700">
+                            <p className="font-semibold text-gray-700">₹.&nbsp;&nbsp;   
                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.PreDueAmt
                                     : "loading..."}
@@ -259,17 +258,17 @@ const Payments = () => {
                             <table className="min-w-[1200px] divide-y divide-orange-300">
                                 <thead>
                                     <tr>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Month</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Rent</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Deposit</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Processing Fees</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Electricity Bill</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Adjusted Electricity Bill</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Adjusted Amount</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Total Receivable Amount</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Total Received Amount</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Current Due</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black tracking-wider whitespace-nowrap px-4 py-2">Previous Due</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Month</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Rent</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Deposit</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Processing Fees</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Electricity Bill</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Adjusted Electricity Bill</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Adjusted Amount</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Total Receivable Amount</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Total Received Amount</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Current Due</th>
+                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Previous Due</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">

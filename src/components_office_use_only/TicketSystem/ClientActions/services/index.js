@@ -1,4 +1,4 @@
-import {useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const apiClient = axios.create({
@@ -35,5 +35,47 @@ export const usePropertySheetData = (sheetId, enabled = true) => {
     queryFn: () => fetchPropertySheetData(sheetId),
     enabled: !!sheetId && enabled,
     initialData: [], // optional, safe default value
+  });
+};
+
+
+
+
+
+const UploadClientDocs = async (formData) => {
+  // No need to set headers manually for FormData
+  const response = await apiClient.post("/client-upload-docs", formData);
+  return response.data;
+};
+
+export const useUploadClientDocs = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: UploadClientDocs,
+    onSuccess: () => {
+      // Invalidate query cache to refetch fresh data
+      queryClient.invalidateQueries(["clientsDetails"]);
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+      // You can add additional error handling here if you want
+    },
+  });
+};
+
+
+
+
+const fetchClientDetailsData = async () => {
+  const response = await apiClient.get("/Clients-details");
+  return response.data;
+};
+
+// React Query hook to fetch property data
+export const useClientDetails = () => {
+  return useQuery({
+    queryKey: ["clientsDetails"],
+    queryFn: fetchClientDetailsData,
   });
 };

@@ -1,97 +1,150 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useClientDetails, useUploadClientDocs } from './services';
+import { useApp } from '../AppProvider';
+import { toast } from 'react-toastify';
+
+const MAX_FILES = 5;
 
 const Documents = () => {
+    const { decryptedUser } = useApp();
+   
     const [uploadedDocs, setUploadedDocs] = useState({
         kyc: [],
-        agreement: null,
-        checkIn: null,
+        agreement: [],
+    });
+
+    const [existingDocs, setExistingDocs] = useState({
+        kyc: [],
+        agreement: [],
     });
 
     const [savedDocs, setSavedDocs] = useState({
         kyc: false,
         agreement: false,
-        checkIn: false,
     });
 
     const fileInputRefs = {
         kyc: useRef(),
         agreement: useRef(),
-        checkIn: useRef(),
     };
 
+    const { mutate: uploadClientDocs, isPending } = useUploadClientDocs();
+    const { data: clientDetailsForDocuments, isLoading: isDocument } = useClientDetails();
+    // 🔁 Load existing documents on component mount
+    useEffect(() => {
+        if (clientDetailsForDocuments?.data) {
+            const filtered = clientDetailsForDocuments.data.find(
+                (ele) => ele.Name === decryptedUser.name
+            );
+
+            if (filtered) {
+                setExistingDocs({
+                    kyc: filtered.KYCDocuments?.split(',')?.filter(Boolean) || [],
+                    agreement: filtered.PGLegalDocuments?.split(',')?.filter(Boolean) || [],
+                });
+            }
+        }
+    }, [clientDetailsForDocuments, decryptedUser.name]);
+
     const handleFileChange = (type, event) => {
-        const file = event.target.files[0];
-        if (!file) return;
+        const newFiles = Array.from(event.target.files);
+        if (!newFiles.length) return;
 
         setUploadedDocs((prev) => {
-            if (type === 'kyc') {
-                return {
-                    ...prev,
-                    kyc: [...prev.kyc, file],
-                };
-            } else {
-                return {
-                    ...prev,
-                    [type]: file,
-                };
+            const currentFiles = prev[type] || [];
+            const existingCount = existingDocs[type]?.length || 0;
+            const totalFiles = currentFiles.length + newFiles.length + existingCount;
+
+            if (totalFiles > MAX_FILES) {
+                alert(`You can upload a maximum of ${MAX_FILES} files for ${type.toUpperCase()}.`);
+                return prev;
             }
+
+            return {
+                ...prev,
+                [type]: [...currentFiles, ...newFiles],
+            };
         });
     };
 
     const handleUploadClick = (type) => {
-        if (!savedDocs[type]) {
-            fileInputRefs[type].current.click();
-        }
+        fileInputRefs[type].current.click();
     };
 
-    const handleSave = (type) => {
-        if (type === 'kyc' && uploadedDocs.kyc.length === 0) return;
-        if (type !== 'kyc' && !uploadedDocs[type]) return;
+  const handleSave = (type) => {
+    if (!uploadedDocs[type] || uploadedDocs[type].length === 0) {
+        toast.warning("Please upload at least one document before saving.");
+        return;
+    }
 
-        setSavedDocs((prev) => ({
-            ...prev,
-            [type]: true,
-        }));
-    };
+    const formData = new FormData();
 
-    const handleRemoveKycFile = (index) => {
+    uploadedDocs[type].forEach((file) => {
+        formData.append('files', file);
+    });
+
+    formData.append('ID', decryptedUser.id);
+    formData.append('propertyCode', decryptedUser.propertyCode);
+    formData.append('name', decryptedUser.name);
+    formData.append(
+        'updateField',
+        type === 'kyc' ? 'KYCDocuments' : 'PGLegalDocuments'
+    );
+
+    formData.append(
+        'DocumentUploadedStatus',
+        JSON.stringify({
+            kyc: type === 'kyc',
+            agreement: type === 'agreement',
+        })
+    );
+
+    // ✅ Trigger mutation with success and error handlers
+    uploadClientDocs(formData, {
+        onSuccess: () => {
+            toast.success(`${type.toUpperCase()} documents uploaded successfully.`);
+
+            setUploadedDocs((prev) => ({
+                ...prev,
+                [type]: [],
+            }));
+
+            setSavedDocs((prev) => ({
+                ...prev,
+                [type]: true,
+            }));
+        },
+        onError: (error) => {
+            console.error('Upload failed:', error);
+            const errorMessage = error?.response?.data?.message || error.message || 'Upload failed.';
+            toast.error(`Failed to upload ${type.toUpperCase()} documents: ${errorMessage}`);
+        },
+    });
+};
+    const handleRemoveFile = (type, index) => {
         setUploadedDocs((prev) => ({
             ...prev,
-            kyc: prev.kyc.filter((_, i) => i !== index),
+            [type]: prev[type].filter((_, i) => i !== index),
         }));
-    };
-
-    const getFileLabel = (name) => {
-        const lower = name.toLowerCase();
-        if (lower.includes('aadhaar')) return 'Aadhaar';
-        if (lower.includes('pan')) return 'PAN Card';
-        if (lower.includes('photo') || lower.includes('img')) return 'Photograph';
-        return 'Document';
     };
 
     const documentsList = [
         {
             type: 'kyc',
             label: 'KYC Documents',
-            desc: 'Upload Aadhaar, PAN, Photo (multiple allowed one by one)',
+            desc: 'Upload Aadhaar, PAN, Photo (max 5)',
             icon: 'fa-id-card',
         },
         {
             type: 'agreement',
             label: 'Rental Agreement',
-            desc: 'Digitally signed document',
+            desc: 'Digitally signed document (max 5)',
             icon: 'fa-file-signature',
-        },
-        {
-            type: 'checkIn',
-            label: 'Check-in Form',
-            desc: 'Move-in details',
-            icon: 'fa-sign-in-alt',
         },
     ];
 
     return (
-        <div className="max-w-5xl mx-auto px-4 py-6">
+        <div className="max-w-5xl mx-auto md:px-4 py-6">
             <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
                     <i className="fas fa-folder-open mr-2 text-orange-500"></i>
@@ -100,124 +153,108 @@ const Documents = () => {
 
                 <div className="space-y-6">
                     {documentsList.map((doc) => {
-                        const uploaded = uploadedDocs[doc.type];
+                        const uploaded = uploadedDocs[doc.type] || [];
+                        const existing = existingDocs[doc.type] || [];
                         const isSaved = savedDocs[doc.type];
-                        const hasUploaded =
-                            doc.type === 'kyc' ? uploaded.length > 0 : uploaded !== null;
+                        const hasFiles = uploaded.length + existing.length > 0;
 
                         return (
                             <div
                                 key={doc.type}
-                                className={`border-2 rounded-lg p-4 transition-shadow ${isSaved ? 'border-green-300 bg-green-50' : 'border-orange-200 '
-                                    }`}
+                                className="border-2 border-orange-200 rounded-lg p-4"
                             >
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="flex items-center">
-                                        <i
-                                            className={`fas text-2xl mr-3 ${isSaved
-                                                ? 'fa-check-circle text-green-600'
-                                                : `${doc.icon} text-orange-500`
-                                                }`}
-                                        ></i>
+                                        <i className={`fas text-2xl mr-3 ${doc.icon} text-orange-500`} />
                                         <div>
-                                            <h3 className="font-semibold text-lg">{doc.label}</h3>
+                                            <h3 className="font-semibold text-sm md:text-lg">{doc.label}</h3>
                                             <p className="text-sm text-gray-500">{doc.desc}</p>
                                         </div>
                                     </div>
 
-                                    {!isSaved && (
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleUploadClick(doc.type)}
-                                                className="bg-orange-600 text-white px-3 py-1.5 text-sm rounded hover:bg-orange-700"
-                                            >
-                                                <i className="fas fa-upload mr-1"></i> Upload
-                                            </button>
+                                    <div className="flex space-x-2 ">
+                                        <button
+                                            onClick={() => handleUploadClick(doc.type)}
+                                            className="bg-orange-600 text-white px-3 py-1.5 text-sm rounded hover:bg-orange-700"
+                                        >
+                                            <i className="fas fa-upload mr-1"></i> Upload
+                                        </button>
+                                        <button
+                                            onClick={() => handleSave(doc.type)}
+                                            disabled={uploaded.length === 0 }
+                                            className={`text-white px-3 py-1.5 text-sm rounded ${uploaded.length > 0
+                                                ? 'bg-green-600 hover:bg-green-700'
+                                                : 'bg-gray-300 cursor-not-allowed'
+                                                }`}
+                                        >
+                                            <i className="fas fa-save mr-1"></i> {isPending ? "Saving..":"Save"}
+                                        </button>
+                                    </div>
+                                </div>
 
-                                            <button
-                                                onClick={() => handleSave(doc.type)}
-                                                className={`${hasUploaded ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300 cursor-not-allowed'
-                                                    } text-white px-3 py-1.5 text-sm rounded`}
-                                                disabled={!hasUploaded}
+                                <div className="space-y-2 grid gap-6 grid-cols-2 md:grid-cols-5" >
+                                    {/*  Existing Files (from server) */}
+                                    {existing.map((url, index) => (
+                                        <div
+                                            key={`existing-${index}`}
+                                            className="bg-white w-fit border border-gray-200 rounded px-3 py-2 flex flex-col items-center space-y-2"
+                                        >
+                                            <a
+                                                href={url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                             >
-                                                <i className="fas fa-save mr-1"></i> Save
+                                                {url.match(/\.(jpg|jpeg|png)$/i) ? (
+                                                    <img
+                                                        src={url}
+                                                        alt={`Existing ${index}`}
+                                                        className="w-40 h-40 object-cover rounded"
+                                                    />
+                                                ) : (
+                                                    <i className="fas fa-file-alt text-gray-500 text-2xl"></i>
+                                                )}
+                                            </a>
+                                        </div>
+                                    ))}
+
+                                    {/* 🟢 Uploaded New Files (preview) */}
+                                    {uploaded.map((file, index) => (
+                                        <div
+                                            key={`uploaded-${index}`}
+                                            className="bg-white w-fit border border-green-200 rounded px-3 py-2 flex flex-col items-center space-y-2"
+                                        >
+                                            <a
+                                                href={URL.createObjectURL(file)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {file.type.startsWith('image/') ? (
+                                                    <img
+                                                        src={URL.createObjectURL(file)}
+                                                        alt={`Preview ${index}`}
+                                                        className="w-40 h-40 object-cover rounded"
+                                                    />
+                                                ) : (
+                                                    <i className="fas fa-file-alt text-gray-500 text-2xl"></i>
+                                                )}
+                                            </a>
+                                            <button
+                                                onClick={() => handleRemoveFile(doc.type, index)}
+                                                className="text-xs text-red-500 hover:underline"
+                                            >
+                                                Remove
                                             </button>
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
 
-                                {/* File preview */}
-                                <div className="space-y-2 flex gap-6 flex-wrap">
-                                    {hasUploaded ? (
-                                        doc.type === 'kyc' ? (
-                                            uploaded.map((file, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="bg-white w-fit border border-green-200 rounded px-3 py-2 flex flex-col items-center space-y-2 relative"
-                                                >
-                                                    <a
-                                                        href={URL.createObjectURL(file)}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-green-600 hover:underline text-sm flex items-center"
-                                                    >
-                                                        {file.type.startsWith('image/') ? (
-                                                            <img
-                                                                src={URL.createObjectURL(file)}
-                                                                alt={`Preview ${index}`}
-                                                                className="w-40 h-40 object-cover rounded"
-                                                            />
-                                                        ) : (
-                                                            <i className="fas fa-file-alt text-gray-500 text-2xl"></i>
-                                                        )}
-                                                    </a>
-                                                    {!isSaved && (
-                                                        <button
-                                                            onClick={() => handleRemoveKycFile(index)}
-                                                            className="text-xs text-red-500 hover:underline"
-                                                        >
-                                                            Remove
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            ))
-                                        ) : (
-                                            uploaded && (
-                                                <div className="bg-white border border-green-200 rounded px-3 py-2 flex items-center space-x-4">
-                                                    <a
-                                                        href={URL.createObjectURL(uploaded)}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-green-600 hover:underline text-sm flex items-center"
-                                                    >
-                                                        {uploaded.type.startsWith('image/') ? (
-                                                            <img
-                                                                src={URL.createObjectURL(uploaded)}
-                                                                alt="Preview"
-                                                                className="w-40 h-40 object-cover rounded"
-                                                            />
-                                                        ) : (
-                                                            <i className="fas fa-file-alt text-gray-500 text-2xl"></i>
-                                                        )}
-                                                    </a>
-                                                </div>
-                                            )
-                                        )
-                                    ) : (
-                                        <p className="text-sm text-gray-500 italic">
-                                            No document uploaded yet.
-                                        </p>
-                                    )}
-                                </div>
-
-                                {/* Hidden File Input */}
                                 <input
                                     type="file"
                                     accept=".pdf,.jpg,.jpeg,.png"
                                     className="hidden"
                                     ref={fileInputRefs[doc.type]}
                                     onChange={(e) => handleFileChange(doc.type, e)}
-                                    multiple={false}
+                                    multiple
                                 />
                             </div>
                         );

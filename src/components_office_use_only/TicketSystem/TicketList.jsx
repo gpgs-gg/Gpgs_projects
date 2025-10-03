@@ -249,7 +249,7 @@ export const TicketList = () => {
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y text-[15px] divide-gray-200">
+                    <tbody className="bg-white divide-y text-[18px] divide-gray-200">
                         {paginatedTickets.map((ticket) => (
                             <TicketRow
                                 key={ticket.TicketID}

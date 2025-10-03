@@ -202,6 +202,7 @@ const LoginPage = () => {
     name: client["Name"],
     loginId: client["EmailID"],
     password: client["Password"],
+    IsActive: client["IsActive"],
     role: client["Role"],
     propertyCode: client["PropertyCode"],
     doj: client["DOJ"],
@@ -234,45 +235,64 @@ const LoginPage = () => {
   };
 
   // Handle login
-  const onSubmit = (data) => {
-    const inputLoginId = data.loginId.trim();
-    const inputPassword = data.password.trim();
-    // Try matching employee
-    const matchedEmployee = normalizedUsers.find((user) => {
-      const decryptedPassword = decrypt(user.password);
-      return (
-        user.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
-        decryptedPassword === inputPassword
-      );
+const onSubmit = (data) => {
+  const inputLoginId = data.loginId.trim();
+  const inputPassword = data.password.trim();
+
+  // Try matching employee
+  const matchedEmployee = normalizedUsers.find((user) => {
+    const decryptedPassword = decrypt(user.password);
+    return (
+      user.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+      decryptedPassword === inputPassword
+    );
+  });
+
+  // If no match in employee, check if client matches and is active
+  const matchedClient = !matchedEmployee && normalizedClients.find((client) => {
+    const decryptedPassword = client.password;
+    return (
+      client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+      decryptedPassword === inputPassword &&
+      client.IsActive.toLowerCase() === "yes" // ✅ Must be active
+    );
+  });
+
+  // Additional check: client matches credentials but is NOT active
+  const inactiveClient = !matchedEmployee && normalizedClients.find((client) => {
+    const decryptedPassword = client.password;
+    return (
+      client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+      decryptedPassword === inputPassword &&
+      client.IsActive !== "Yes"
+    );
+  });
+
+  const user = matchedEmployee || matchedClient;
+
+  if (user) {
+    login(user); // Save to context or session
+    toast.success("✅ Logged in successfully!", { toastId: "login-success" });
+    setError('');
+    localStorage.setItem('loginTimestamp', Date.now());
+    window.location.reload();
+    reset();
+  } else if (inactiveClient) {
+    setError('');
+    toast.dismiss();
+    toast.error("🚫 You don't have permission to log in. Please contact Administrator.", {
+      toastId: 'inactive-client',
     });
-
-    // If no match in employee, check clients
-    const matchedClient = !matchedEmployee && normalizedClients.find((client) => {
-      const decryptedPassword = client.password;
-
-
-      return (
-        client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
-        decryptedPassword === inputPassword
-      );
+  } else {
+    setError('');
+    toast.dismiss();
+    toast.error('❌ Invalid Login ID or Password', {
+      toastId: 'login-error',
     });
-    const user = matchedEmployee || matchedClient;
-
-    if (user) {
-      login(user); // Save to context
-      toast.success("Logged in successfully!", { toastId: "login-success" });
-      setError('');
-      localStorage.setItem('loginTimestamp', Date.now());
-      window.location.reload();
-      reset();
+  }
+};
 
 
-    } else {
-      setError('');
-      toast.dismiss();
-      toast.error('Invalid Login ID or Password');
-    }
-  };
 
   return (
     <>
