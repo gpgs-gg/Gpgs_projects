@@ -235,62 +235,62 @@ const LoginPage = () => {
   };
 
   // Handle login
-const onSubmit = (data) => {
-  const inputLoginId = data.loginId.trim();
-  const inputPassword = data.password.trim();
+  const onSubmit = (data) => {
+    const inputLoginId = data.loginId.trim();
+    const inputPassword = data.password.trim();
 
-  // Try matching employee
-  const matchedEmployee = normalizedUsers.find((user) => {
-    const decryptedPassword = decrypt(user.password);
-    return (
-      user.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
-      decryptedPassword === inputPassword
-    );
-  });
-
-  // If no match in employee, check if client matches and is active
-  const matchedClient = !matchedEmployee && normalizedClients.find((client) => {
-    const decryptedPassword = client.password;
-    return (
-      client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
-      decryptedPassword === inputPassword &&
-      client.IsActive.toLowerCase() === "yes" // ✅ Must be active
-    );
-  });
-
-  // Additional check: client matches credentials but is NOT active
-  const inactiveClient = !matchedEmployee && normalizedClients.find((client) => {
-    const decryptedPassword = client.password;
-    return (
-      client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
-      decryptedPassword === inputPassword &&
-      client.IsActive !== "Yes"
-    );
-  });
-
-  const user = matchedEmployee || matchedClient;
-
-  if (user) {
-    login(user); // Save to context or session
-    toast.success("✅ Logged in successfully!", { toastId: "login-success" });
-    setError('');
-    localStorage.setItem('loginTimestamp', Date.now());
-    window.location.reload();
-    reset();
-  } else if (inactiveClient) {
-    setError('');
-    toast.dismiss();
-    toast.error("🚫 You don't have permission to log in. Please contact Administrator.", {
-      toastId: 'inactive-client',
+    // Try matching employee
+    const matchedEmployee = normalizedUsers.find((user) => {
+      const decryptedPassword = decrypt(user.password);
+      return (
+        user.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+        decryptedPassword === inputPassword
+      );
     });
-  } else {
-    setError('');
-    toast.dismiss();
-    toast.error('❌ Invalid Login ID or Password', {
-      toastId: 'login-error',
+
+    // If no match in employee, check if client matches and is active
+    const matchedClient = !matchedEmployee && normalizedClients.find((client) => {
+      const decryptedPassword = client.password;
+      return (
+        client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+        decryptedPassword === inputPassword &&
+        client.IsActive.toLowerCase() === "yes" // ✅ Must be active
+      );
     });
-  }
-};
+
+    // Additional check: client matches credentials but is NOT active
+    const inactiveClient = !matchedEmployee && normalizedClients.find((client) => {
+      const decryptedPassword = client.password;
+      return (
+        client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+        decryptedPassword === inputPassword &&
+        client.IsActive !== "Yes"
+      );
+    });
+
+    const user = matchedEmployee || matchedClient;
+
+    if (user) {
+      login(user); // Save to context or session
+      toast.success("Logged in successfully!", { toastId: "login-success" });
+      setError('');
+      localStorage.setItem('loginTimestamp', Date.now());
+      window.location.reload();
+      reset();
+    } else if (inactiveClient) {
+      setError('');
+      toast.dismiss();
+      toast.error("You don't have permission to log in. Please contact Administrator.", {
+        toastId: 'inactive-client',
+      });
+    } else {
+      setError('');
+      toast.dismiss();
+      toast.error('Invalid Login ID or Password', {
+        toastId: 'login-error',
+      });
+    }
+  };
 
 
 
@@ -299,11 +299,13 @@ const onSubmit = (data) => {
       <div className="flex items-center bg-[#F8F9FB] justify-center min-h-screen bg-primary-light">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
+          className="bg-white p-10 rounded-lg shadow-md w-full max-w-lg"
         >
-          <h2 className="text-2xl font-bold mb-6 text-orange-500 text-center">
-            Login
+          <h2 className="text-2xl font-bold  text-orange-500 ">
+            Login to your account
           </h2>
+          <p className='pb-5'>
+            Enter your login id below to login to your account</p>
 
           {/* Login ID */}
           <input

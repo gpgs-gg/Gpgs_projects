@@ -21,7 +21,9 @@ root.render(
       <BrowserRouter>
         <AppProvider>
           <AuthProvider>
-            <ToastContainer/>
+                <ToastContainer
+      />
+  
             <App />
           </AuthProvider>
         </AppProvider>

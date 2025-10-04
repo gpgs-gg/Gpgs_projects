@@ -2,12 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useClientDetails, useUploadClientDocs } from './services';
 import { useApp } from '../AppProvider';
 import { toast } from 'react-toastify';
+import LoaderPage from '../../NewBooking/LoaderPage';
 
 const MAX_FILES = 5;
 
 const Documents = () => {
     const { decryptedUser } = useApp();
-   
+    const [pendingDocType, setPendingDocType] = useState(null);
+
     const [uploadedDocs, setUploadedDocs] = useState({
         kyc: [],
         agreement: [],
@@ -56,7 +58,8 @@ const Documents = () => {
             const totalFiles = currentFiles.length + newFiles.length + existingCount;
 
             if (totalFiles > MAX_FILES) {
-                alert(`You can upload a maximum of ${MAX_FILES} files for ${type.toUpperCase()}.`);
+                toast.dismiss()
+                toast.error(`You can upload a maximum of ${MAX_FILES} files for ${type.toUpperCase()}.`);
                 return prev;
             }
 
@@ -71,56 +74,59 @@ const Documents = () => {
         fileInputRefs[type].current.click();
     };
 
-  const handleSave = (type) => {
-    if (!uploadedDocs[type] || uploadedDocs[type].length === 0) {
-        toast.warning("Please upload at least one document before saving.");
-        return;
-    }
+    const handleSave = (type) => {
+        if (!uploadedDocs[type] || uploadedDocs[type].length === 0) {
+            toast.warning("Please upload at least one document before saving.");
+            return;
+        }
 
-    const formData = new FormData();
+        setPendingDocType(type); // Mark this doc type as pending
 
-    uploadedDocs[type].forEach((file) => {
-        formData.append('files', file);
-    });
+        const formData = new FormData();
 
-    formData.append('ID', decryptedUser.id);
-    formData.append('propertyCode', decryptedUser.propertyCode);
-    formData.append('name', decryptedUser.name);
-    formData.append(
-        'updateField',
-        type === 'kyc' ? 'KYCDocuments' : 'PGLegalDocuments'
-    );
+        uploadedDocs[type].forEach((file) => {
+            formData.append('files', file);
+        });
 
-    formData.append(
-        'DocumentUploadedStatus',
-        JSON.stringify({
-            kyc: type === 'kyc',
-            agreement: type === 'agreement',
-        })
-    );
+        formData.append('ID', decryptedUser.id);
+        formData.append('propertyCode', decryptedUser.propertyCode);
+        formData.append('name', decryptedUser.name);
+        formData.append(
+            'updateField',
+            type === 'kyc' ? 'KYCDocuments' : 'PGLegalDocuments'
+        );
 
-    // ✅ Trigger mutation with success and error handlers
-    uploadClientDocs(formData, {
-        onSuccess: () => {
-            toast.success(`${type.toUpperCase()} documents uploaded successfully.`);
+        formData.append(
+            'DocumentUploadedStatus',
+            JSON.stringify({
+                kyc: type === 'kyc',
+                agreement: type === 'agreement',
+            })
+        );
 
-            setUploadedDocs((prev) => ({
-                ...prev,
-                [type]: [],
-            }));
+        // ✅ Trigger mutation with success and error handlers
+        uploadClientDocs(formData, {
+            onSuccess: () => {
+                toast.success(`${type.toUpperCase()} documents uploaded successfully.`);
 
-            setSavedDocs((prev) => ({
-                ...prev,
-                [type]: true,
-            }));
-        },
-        onError: (error) => {
-            console.error('Upload failed:', error);
-            const errorMessage = error?.response?.data?.message || error.message || 'Upload failed.';
-            toast.error(`Failed to upload ${type.toUpperCase()} documents: ${errorMessage}`);
-        },
-    });
-};
+                setUploadedDocs((prev) => ({
+                    ...prev,
+                    [type]: [],
+                }));
+
+                setSavedDocs((prev) => ({
+                    ...prev,
+                    [type]: true,
+                }));
+                setPendingDocType(null); // Clear pending status
+            },
+            onError: (error) => {
+                console.error('Upload failed:', error);
+                const errorMessage = error?.response?.data?.message || error.message || 'Upload failed.';
+                toast.error(`Failed to upload ${type.toUpperCase()} documents: ${errorMessage}`);
+            },
+        });
+    };
     const handleRemoveFile = (type, index) => {
         setUploadedDocs((prev) => ({
             ...prev,
@@ -155,8 +161,8 @@ const Documents = () => {
                     {documentsList.map((doc) => {
                         const uploaded = uploadedDocs[doc.type] || [];
                         const existing = existingDocs[doc.type] || [];
-                        const isSaved = savedDocs[doc.type];
-                        const hasFiles = uploaded.length + existing.length > 0;
+                        // const isSaved = savedDocs[doc.type];
+                        // const hasFiles = uploaded.length + existing.length > 0;
 
                         return (
                             <div
@@ -164,7 +170,9 @@ const Documents = () => {
                                 className="border-2 border-orange-200 rounded-lg p-4"
                             >
                                 <div className="flex justify-between items-center mb-4">
+
                                     <div className="flex items-center">
+
                                         <i className={`fas text-2xl mr-3 ${doc.icon} text-orange-500`} />
                                         <div>
                                             <h3 className="font-semibold text-sm md:text-lg">{doc.label}</h3>
@@ -181,20 +189,32 @@ const Documents = () => {
                                         </button>
                                         <button
                                             onClick={() => handleSave(doc.type)}
-                                            disabled={uploaded.length === 0 }
-                                            className={`text-white px-3 py-1.5 text-sm rounded ${uploaded.length > 0
-                                                ? 'bg-green-600 hover:bg-green-700'
-                                                : 'bg-gray-300 cursor-not-allowed'
+                                            disabled={uploaded.length === 0 || pendingDocType === doc.type}
+                                            className={`text-white px-3 py-1.5 text-sm rounded flex items-center ${uploaded.length > 0
+                                                    ? 'bg-green-600 hover:bg-green-700'
+                                                    : 'bg-gray-300 cursor-not-allowed'
                                                 }`}
                                         >
-                                            <i className="fas fa-save mr-1"></i> {isPending ? "Saving..":"Save"}
+                                            {pendingDocType === doc.type ? (
+                                                <>
+                                                    <LoaderPage className="mr-2" />
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <i className="fas fa-save mr-2"></i>
+                                                    Save
+                                                </>
+                                            )}
                                         </button>
+
                                     </div>
                                 </div>
 
                                 <div className="space-y-2 grid gap-6 grid-cols-2 md:grid-cols-5" >
+                                   
                                     {/*  Existing Files (from server) */}
-                                    {existing.map((url, index) => (
+                                    {isDocument ? <LoaderPage/> : existing.map((url, index) => (
                                         <div
                                             key={`existing-${index}`}
                                             className="bg-white w-fit border border-gray-200 rounded px-3 py-2 flex flex-col items-center space-y-2"

@@ -88,23 +88,23 @@ const Header = () => {
               <img
                 src={gpgsLogo}
                 alt="GPGS Logo"
-                className="h-14 w-auto md:h-20"
+                className="h-14  md:h-20"
               />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-2 lg:space-x-8">
+          <nav className="hidden md:flex  items-center space-x-2 md:space-x-5">
             {navLinks}
             <Link to="/gallery" className="nav-link">Gallery</Link>
            
-            <Link to="/gpgs-actions" className="nav-link"><span className="text-xl">|</span> Office</Link>
+            <Link to="/gpgs-actions" className="nav-link"><span className="text-xl">|</span>  My Account</Link>
       
             {decryptedUser && (
               <div className="flex items-center space-x-4 ml-6">
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-gray-800">{decryptedUser.name}</div>
-                  <div className="text-xs text-gray-500">({decryptedUser.role})</div>
+                  <div className="text-sm font-semibold text-gray-800">{decryptedUser?.name?.substring(0, 12) + "..."}</div>
+                  {/* <div className="text-xs text-gray-500">({decryptedUser.role})</div> */}
                 </div>
                 <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
                   {decryptedUser.name.split(' ').map(n => n[0]).join('')}
@@ -118,8 +118,8 @@ const Header = () => {
           <div className="md:hidden flex items-center space-x-2">
             {decryptedUser && (
               <div className="text-right mr-2">
-                <div className="text-sm font-semibold text-gray-800">{decryptedUser.name}</div>
-                <div className="text-xs text-gray-500">({decryptedUser.role})</div>
+                <div className="text-sm font-semibold text-gray-800">{decryptedUser.name.substring(0, 12) + "..."}</div>
+                {/* <div className="text-xs text-gray-500">({decryptedUser.role})</div> */}
               </div>
             )}
             <button

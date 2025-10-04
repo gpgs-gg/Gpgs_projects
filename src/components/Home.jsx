@@ -22,13 +22,13 @@ const Home = () => {
 
           {/* Left side: content */}
           <div className="flex-1 w-full">
-            <h1 className="text-3xl sm:text-2xl md:text-3xl font-bold text-green-900 mb-4 leading-snug" style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}>
+            <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-green-900 mb-4 leading-snug" style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}>
               Our goal is to make you feel at home
               in our paying guest facilities with all
               the quality services
             </h1>
             <p
-              className="text-2xl sm:text-xl md:text-2xl text-[#191715] mb-6 opacity-90"
+              className="text-xl sm:text-xl md:text-2xl text-[#191715] mb-6 opacity-90"
               style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}
             >
               <ReactTyped

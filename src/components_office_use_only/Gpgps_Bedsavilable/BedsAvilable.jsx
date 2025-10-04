@@ -280,10 +280,6 @@ const BedsAvilable = () => {
 
             )}
 
-
-
-
-
             <div className="flex items-center justify-end mt-5 mb-2 gap-2">
               <button
                 onClick={() => setSortByVacatingDate((prev) => !prev)}

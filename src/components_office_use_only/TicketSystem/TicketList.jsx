@@ -210,14 +210,14 @@ export const TicketList = () => {
     const clientHeaders = [
         { label: "Ticket ID", key: "TicketID" },
         { label: "Date Created", key: "DateCreated" },
-        { label: "Property Code", key: "PropertyCode" },
+        // { label: "Property Code", key: "PropertyCode" },
         { label: "Department", key: "Department" },
         { label: "Category", key: "Category" },
      { label: "Attachment", key: "Attachment" },
         { label: "Status", key: "Status" },
         { label: "WorkLogs", key: "WorkLogs" },
         { label: "Title", key: "Title" },
-        { label: "Description", key: "Description" },
+        // { label: "Description", key: "Description" },
          // Assuming this key exists in data
     ];
     const headers = useMemo(() => {

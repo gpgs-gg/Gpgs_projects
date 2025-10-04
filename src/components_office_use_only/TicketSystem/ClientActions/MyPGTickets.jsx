@@ -38,9 +38,9 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
                         <td key={key} className={stickyStyle}>
                             <div>
                                 <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
-                                <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                {/* <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
                                     {ticket.Description ? `${ticket.Description.substring(0, 60)}...` : "No Description"}
-                                </div>
+                                </div> */}
                             </div>
                         </td>
                     );
@@ -104,7 +104,7 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
                         </td>
                     );
                 }
-
+                 
                 // Default case for other columns:
                 return (
                     <td key={key} className={stickyStyle}>
@@ -237,7 +237,7 @@ export const MyPGTickets = () => {
     const clientHeaders = [
         { label: "Ticket ID", key: "TicketID" },
         { label: "Date Created", key: "DateCreated" },
-        { label: "Property Code", key: "PropertyCode" },
+        // { label: "Property Code", key: "PropertyCode" },
         { label: "Department", key: "Department" },
         { label: "Category", key: "Category" },
         { label: "Attachment", key: "Attachment" },

@@ -13,127 +13,11 @@ import { useEffect, useRef, useState } from "react";
 import LoaderPage from "../NewBooking/LoaderPage";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// Select dropdown options
-// const PriorityOptions = [
-//   { value: "Low", label: "Low" },
-//   { value: "Medium", label: "Medium" },
-//   { value: "High", label: "High" },
-//   { value: "Critical", label: "Critical" },
-// ];
-
-// const StatusOptions = [
-//   { value: "Open", label: "Open" },
-//   { value: "Acknowledged", label: "Acknowledged" },
-//   { value: "In Progress", label: "In Progress" },
-//   { value: "On Hold", label: "On Hold" },
-//   { value: "Resolved", label: "Resolved" },
-//   { value: "Closed", label: "Closed" },
-//   { value: "Cancelled", label: "Cancelled" },
-//   { value: "Re-Open", label: "Re-Open" },
-// ];
-
-// const DepartmentOptions = [
-//   { value: "Management", label: "Management" },
-//   { value: "Marketing", label: "Marketing" },
-//   { value: "Sales", label: "Sales" },
-//   { value: "Maintenance", label: "Maintenance" },
-//   { value: "Housekeeping", label: "Housekeeping" },
-//   { value: "Admin", label: "Admin" },
-//   { value: "Accounts", label: "Accounts" },
-//   { value: "Human Resource", label: "Human Resource" },
-// ];
-
-// const CategoryOptions = [
-//   { value: "Others", label: "Others" },
-//   { value: "Rent Receipt", label: "Rent Receipt" },
-//   { value: "F&F Settlement", label: "F&F Settlement" },
-//   { value: "Rent", label: "Rent" },
-//   { value: "Deposit", label: "Deposit" },
-//   { value: "Notice", label: "Notice" },
-//   { value: "Agreement", label: "Agreement" },
-//   { value: "Handover", label: "Handover" },
-//   { value: "Possession", label: "Possession" },
-//   { value: "Shifting", label: "Shifting" },
-//   { value: "New Male PG", label: "New Male PG" },
-//   { value: "New Female PG", label: "New Female PG" },
-//   { value: "No Water", label: "No Water" },
-//   { value: "No Power", label: "No Power" },
-//   { value: "Short Circuit", label: "Short Circuit" },
-//   { value: "Fan", label: "Fan" },
-//   { value: "Fan Rregulator", label: "Fan Rregulator" },
-//   { value: "Fan Switch", label: "Fan Switch" },
-//   { value: "Fan Capacitor", label: "Fan Capacitor" },
-//   { value: "Exhaust Fan", label: "Exhaust Fan" },
-//   { value: "LED Tubelight", label: "LED Tubelight" },
-//   { value: "LED Bulb", label: "LED Bulb" },
-//   { value: "Light Switch", label: "Light Switch" },
-//   { value: "Three Pin Socket", label: "Three Pin Socket" },
-//   { value: "Extension Board", label: "Extension Board" },
-//   { value: "Geyser", label: "Geyser" },
-//   { value: "Tap Leakage", label: "Tap Leakage" },
-//   { value: "Water Purifier", label: "Water Purifier" },
-//   { value: "Washing Machine", label: "Washing Machine" },
-//   { value: "Fridge", label: "Fridge" },
-//   { value: "WiFi", label: "WiFi" },
-//   { value: "AC", label: "AC" },
-//   { value: "AC Switch", label: "AC Switch" },
-//   { value: "AC Remote", label: "AC Remote" },
-//   { value: "Water Motor Pump", label: "Water Motor Pump" },
-//   { value: "Main Door", label: "Main Door" },
-//   { value: "Main Lock", label: "Main Lock" },
-//   { value: "Cupboard Door", label: "Cupboard Door" },
-//   { value: "Cupboard Lock", label: "Cupboard Lock" },
-//   { value: "Bedroom Door", label: "Bedroom Door" },
-//   { value: "Bedroom Lock", label: "Bedroom Lock" },
-//   { value: "Washroom Door", label: "Washroom Door" },
-//   { value: "Washroom Lock", label: "Washroom Lock" },
-//   { value: "Cleaning", label: "Cleaning" },
-//   { value: "Rat", label: "Rat" },
-//   { value: "Pest Control", label: "Pest Control" },
-// ];
-
-
-// const CusmoterImpactedOptions = [
-//   { value: "Yes", label: "Yes" },
-//   { value: "No", label: "No" },
-// ];
-
-// 🎨 React Select Theme
-// Orange color theme (for colors only)
-// const SelectStyles = {
-//   control: (base, state) => ({
-//     ...base,
-//     width: "100%",
-//     paddingTop: "0.25rem",
-//     paddingBottom: "0.10rem",
-//     paddingLeft: "0.75rem",
-//     paddingRight: "0.50rem",
-//     marginTop: "0.30rem",
-//     borderWidth: "1px",
-//     borderStyle: "solid",
-//     borderColor: state.isFocused ? "#fb923c" : "#f97316",
-//     borderRadius: "0.375rem",
-//     boxShadow: state.isFocused
-//       ? "0 0 0 2px rgba(251,146,60,0.5)"
-//       : "0 1px 2px rgba(0,0,0,0.05)",
-//     backgroundColor: "white",
-//     minHeight: "40px",
-//     "&:hover": { borderColor: "#fb923c" },
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: state.isSelected ? "white" : "#fb923c",
-//     backgroundColor: state.isSelected ? "#fb923c" : "white",
-//     "&:hover": { backgroundColor: "#fed7aa" }
-//   }),
-//   menu: (provided) => ({
-//     ...provided,
-//     zIndex: 9999
-//   })
-// };
 
 export const CreateEditTicket = ({ isEdit = false }) => {
-  const { addTicket, updateTicket, setCurrentView, users, selectedTicket, currentView, modal } = useApp();
+
+  //  our states and some functions called here ............
+  const {setCurrentView, selectedTicket} = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
 
@@ -145,8 +29,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
 
   useEffect(() => {
-    setDecryptedUser(decryptUser(localStorage.getItem('user')))
-      ; // Just to verify decryption works
+    setDecryptedUser(decryptUser(localStorage.getItem('user'))) ; // Just to verify decryption works.........
   }, []);
 
   const decryptUser = (encryptedData) => {
@@ -160,20 +43,16 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     }
   };
 
-
-
-
   const selectRef = useRef(null);
-
   useEffect(() => {
-    // Focus the Select component on mount or based on some condition
+    // Focus the Select component on mount or based on some condition.........
     if (selectRef.current) {
       selectRef.current.focus();
     }
   }, []);
 
 
-
+  // here define useForm for react Hook form .................
   const {
     register,
     handleSubmit,
@@ -198,14 +77,9 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       WorkLogs: ""
     },
   });
-  // Generate dynamic options
-  // const ManagerOptions = EmployeeDetails?.data
-  //   ?.filter((emp) => emp?.Name && emp.Designation.Managers) // Only include if Name is present
-  //   .map((emp) => ({
-  //     value: emp.Name,
-  //     label: `${emp.Name} - ${emp.Department || "N/A"}`,
-  //   })) || [];
 
+
+  // dynamic managersOption define here .........
   const ManagerOptions = EmployeeDetails?.data
     ?.filter(
       (emp) =>
@@ -217,7 +91,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       label: `${emp.Name}`,
     })) || [];
 
-
+  // dynamic assigneeOptions define here .........
   const assigneeOptions = [
     ...(EmployeeDetails?.data
       ?.filter((emp) => emp?.Name)
@@ -227,14 +101,14 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       })) || [])
   ];
 
-
-
-
+// dynamic ProperyOptions define here .........
   const ProperyOptions = property?.data?.map((prop) => ({
     value: prop["Property Code"],
     label: prop["Property Code"],
   })) || [];
-  // Set default values in edit mode
+
+
+  // Set default values in edit mode........
   useEffect(() => {
     if (isEdit && selectedTicket) {
       setValue("Title", selectedTicket.Title);
@@ -251,16 +125,14 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       setValue("Manager", ManagerOptions.find((u) => u.value === selectedTicket.Manager));
       setValue("CustomerImpacted", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.CustomerImpacted));
       setValue("Escalated", CusmoterImpactedOptions.find((u) => u.value === selectedTicket.Escalated));
-
       setPreviousWlogs(selectedTicket.WorkLogs || "");
-
-      // ✅ Only set previews once if not already set
+      // Only set previews once if not already set........
       if (selectedTicket.Attachment && previews.length === 0) {
         const attachments = selectedTicket.Attachment.split(',').map((url) => ({
           url,
-          type: '', // Optional: derive MIME type
+          type: '', // Optional: derive MIME type......
           name: url.split('/').pop(),
-          file: null, // Existing files shouldn't be re-uploaded
+          file: null, // Existing files shouldn't be re-uploaded.....
         }));
         setPreviews(attachments);
       }
@@ -283,24 +155,18 @@ useEffect(() => {
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-
     // Filter out files larger than 5MB
     const maxSize = 5 * 1024 * 1024; // 5MB in bytes
     const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
-
     if (oversizedFiles.length > 0) {
       alert(`⚠️ Some files are larger than 5 MB and were not added.`);
     }
-
     // Only keep files <= 5MB
     const validFiles = selectedFiles.filter(file => file.size <= maxSize);
-
     const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
-
     // Filter both arrays by extension
     const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
     const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
-
     // Final count
     const totalFiles = filteredPreviews.length + filteredValidFiles.length;
     if (totalFiles > 5) {
@@ -314,7 +180,6 @@ useEffect(() => {
       name: file.name,
       file,
     }));
-
     const updatedPreviews = [...previews, ...newPreviews];
     setPreviews(updatedPreviews);
 
@@ -633,7 +498,7 @@ useEffect(() => {
                         type="date"
                         {...field}
                         value={field.value || ""}
-                       disabled = {isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                       disabled = {isEdit}
                         className="w-full border border-orange-500 rounded px-3 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                       />
                       {field.value && (
@@ -912,7 +777,6 @@ useEffect(() => {
                       isDisabled={decryptedUser?.role.toLowerCase() === "client" || isEdit && decryptedUser?.role.toLowerCase() !== "client"}
                       // isDisabled={isEdit}
                     />
-
                     {error && <p className="text-red-500 text-sm">{error.message}</p>}
                   </>
                 )}
@@ -949,16 +813,13 @@ useEffect(() => {
                 />
               </div>
             ))}
-
-
-
             <div>
               <label className="block text-sm font-medium text-black mb-2">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("Title", { required: "Title is required" })}
-                disabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                disabled={isEdit}
                 className={`w-full border ${isEdit ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                   } border-orange-300 border-2 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-300`}
                 placeholder="Enter Title"

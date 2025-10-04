@@ -3,6 +3,7 @@ import CryptoJS from 'crypto-js';
 import { format, subMonths } from "date-fns"; // date-fns is handy
 import { usePropertyData, usePropertySheetData } from './services';
 import { SECRET_KEY } from '../../../Config';
+import LoaderPage from '../../NewBooking/LoaderPage';
 
 const pgClientData = {
     personalInfo: {
@@ -81,13 +82,11 @@ const Payments = () => {
     }, [filteredPropertySheetData]);
 
 
-    const { data: pgMainSheetData } = usePropertySheetData(mainSheetId);
-
+    const { data: pgMainSheetData} = usePropertySheetData(mainSheetId);
     const mainSheetDataForNameWise = useMemo(() => {
         return pgMainSheetData?.data?.length > 0
             ? pgMainSheetData?.data?.filter((ele) => ele.FullName === decryptedUser.name) : []
     }, [pgMainSheetData])
-
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
         if (encrypted) {
@@ -105,8 +104,7 @@ const Payments = () => {
 
         // return () => clearInterval(timer);
     }, []);
-
-
+             
     return (
         //         <div className="max-w-full">
         //             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -248,13 +246,16 @@ const Payments = () => {
 
 
                 <div className="lg:col-span-6">
-                    <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md ">
                         <h2 className="text-2xl font-semibold text-gray-900 flex items-center mb-4">
-                            <i className="fas fa-history mr-2 text-orange-500"></i>
-                            Payment History
+                         <p className='flex items-center justify-center'>
+                               <i className="fas fa-history mr-2 text-orange-500"></i>
+                             Payment History <span className='mt-5 ml-10'>{mainSheetDataForNameWise?.length === 0 && <LoaderPage/>}</span>
+                         </p>
                         </h2>
 
                         <div className="overflow-x-auto">
+                            
                             <table className="min-w-[1200px] divide-y divide-orange-300">
                                 <thead>
                                     <tr>
@@ -272,7 +273,9 @@ const Payments = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {mainSheetDataForNameWise &&
+
+
+                                    {mainSheetDataForNameWise  &&
                                         mainSheetDataForNameWise
                                             .filter((ele) =>
                                                 [
