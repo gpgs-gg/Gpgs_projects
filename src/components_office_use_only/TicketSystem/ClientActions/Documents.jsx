@@ -9,7 +9,6 @@ const MAX_FILES = 5;
 const Documents = () => {
     const { decryptedUser } = useApp();
     const [pendingDocType, setPendingDocType] = useState(null);
-
     const [uploadedDocs, setUploadedDocs] = useState({
         kyc: [],
         agreement: [],
@@ -88,7 +87,7 @@ const Documents = () => {
             formData.append('files', file);
         });
 
-        formData.append('ID', decryptedUser.id);
+        formData.append('ID', decryptedUser.clientID);
         formData.append('propertyCode', decryptedUser.propertyCode);
         formData.append('name', decryptedUser.name);
         formData.append(

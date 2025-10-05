@@ -6,7 +6,9 @@
 /* 2. Apply it to the body */
 body {
   font-family: var(--font-primary);
+   letter-spacing: 0.05em;
 }
+
 
 /* Existing styles */
 .gradient-bg {

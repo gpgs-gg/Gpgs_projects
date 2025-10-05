@@ -22,7 +22,9 @@ const Home = () => {
 
           {/* Left side: content */}
           <div className="flex-1 w-full">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-green-900 mb-4 leading-snug" style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}>
+            <h1 className="text-2xl sm:text-2xl md:text-4xl font-bold text-green-900 mb-4 leading-snug" 
+            // style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)' }}
+            >
               Our goal is to make you feel at home
               in our paying guest facilities with all
               the quality services
@@ -107,25 +109,25 @@ const Home = () => {
     href="https://wa.me/9326262292"
     target="_blank"
     rel="noopener noreferrer"
-    className="w-auto min-w-[50px]  h-8 lg:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+    className="w-auto min-w-[20px]  h-8 lg:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
       transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
       active:scale-95 active:shadow-md animate-bounce"
     title="Chat with us on WhatsApp"
     aria-label="WhatsApp Chat"
   >
-    <FaWhatsapp className=" text-xl lg:text-5xl" />
+    <FaWhatsapp className=" text-xl lg:text-4xl" />
   </a>
 
   {/* Call Button */}
   <a
     href="tel:+9326262292"
-    className="w-auto min-w-[50px] px-5 h-8 lg:h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
+    className="w-auto min-w-[20px] px-3 h-8 lg:h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl
       transform transition-transform duration-300 hover:scale-110 hover:-translate-y-1 hover:shadow-2xl
       active:scale-95 active:shadow-md animate-bounce"
     title="Call us"
     aria-label="Call Us"
   >
-    <FaPhoneAlt className=" text-xl lg:text-3xl" />
+    <FaPhoneAlt className=" text-xl lg:text-2xl" />
   </a>
 </div>
 

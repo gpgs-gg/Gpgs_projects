@@ -97,7 +97,7 @@ const Header = () => {
           <nav className="hidden md:flex  items-center space-x-2 md:space-x-5">
             {navLinks}
             <Link to="/gallery" className="nav-link">Gallery</Link>
-           
+            
             <Link to="/gpgs-actions" className="nav-link"><span className="text-xl">|</span>  My Account</Link>
       
             {decryptedUser && (

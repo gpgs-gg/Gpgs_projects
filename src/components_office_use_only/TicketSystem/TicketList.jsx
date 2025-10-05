@@ -213,12 +213,12 @@ export const TicketList = () => {
         // { label: "Property Code", key: "PropertyCode" },
         { label: "Department", key: "Department" },
         { label: "Category", key: "Category" },
-     { label: "Attachment", key: "Attachment" },
+        { label: "Attachment", key: "Attachment" },
         { label: "Status", key: "Status" },
         { label: "WorkLogs", key: "WorkLogs" },
         { label: "Title", key: "Title" },
         // { label: "Description", key: "Description" },
-         // Assuming this key exists in data
+        // Assuming this key exists in data
     ];
     const headers = useMemo(() => {
         if (decryptedUser?.role === "client") {

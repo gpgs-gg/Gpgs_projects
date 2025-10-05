@@ -157,55 +157,55 @@ const PropertyFormSection = memo(({
 
 
   // Select styles defined outside render to prevent recreation
-  const selectStyles = {
-    control: (base, state) => ({
-      ...base,
-      width: "100%",
-      paddingTop: "0.25rem",
-      paddingBottom: "0.10rem",
-      paddingLeft: "0.75rem",
-      paddingRight: "0.50rem",
-      marginTop: "0.30rem",
-      borderWidth: "2px",
-      borderStyle: "solid",
-      borderColor: state.isFocused ? "#fb923c" : "#f97316",
-      borderRadius: "0.375rem",
-      boxShadow: state.isFocused
-        ? "0 0 0 2px rgba(251,146,60,0.5)"
-        : "0 1px 2px rgba(0,0,0,0.05)",
-      backgroundColor: "white",
-      minHeight: "40px",
-      "&:hover": { borderColor: "#fb923c" },
-    }),
-    valueContainer: (base) => ({
-      ...base,
-      padding: 0,
-    }),
-    placeholder: (base) => ({
-      ...base,
-      color: "#000",
-      marginLeft: 0,
-    }),
-    input: (base) => ({
-      ...base,
-      margin: 0,
-      padding: 0,
-    }),
-    option: (base, state) => ({
-      ...base,
-      backgroundColor: state.isSelected
-        ? "#fb923c"
-        : state.isFocused
-          ? "rgba(251,146,60,0.1)"
-          : "white",
-      color: state.isSelected ? "white" : "#000",
-      cursor: "pointer",
-      "&:active": {
-        backgroundColor: "#fb923c",
-        color: "white",
-      },
-    }),
-  };
+  // const selectStyles = {
+  //   control: (base, state) => ({
+  //     ...base,
+  //     width: "100%",
+  //     paddingTop: "0.25rem",
+  //     paddingBottom: "0.10rem",
+  //     paddingLeft: "0.75rem",
+  //     paddingRight: "0.50rem",
+  //     marginTop: "0.30rem",
+  //     borderWidth: "2px",
+  //     borderStyle: "solid",
+  //     borderColor: state.isFocused ? "#fb923c" : "#f97316",
+  //     borderRadius: "0.375rem",
+  //     boxShadow: state.isFocused
+  //       ? "0 0 0 2px rgba(251,146,60,0.5)"
+  //       : "0 1px 2px rgba(0,0,0,0.05)",
+  //     backgroundColor: "white",
+  //     minHeight: "40px",
+  //     "&:hover": { borderColor: "#fb923c" },
+  //   }),
+  //   valueContainer: (base) => ({
+  //     ...base,
+  //     padding: 0,
+  //   }),
+  //   placeholder: (base) => ({
+  //     ...base,
+  //     color: "#000",
+  //     marginLeft: 0,
+  //   }),
+  //   input: (base) => ({
+  //     ...base,
+  //     margin: 0,
+  //     padding: 0,
+  //   }),
+  //   option: (base, state) => ({
+  //     ...base,
+  //     backgroundColor: state.isSelected
+  //       ? "#fb923c"
+  //       : state.isFocused
+  //         ? "rgba(251,146,60,0.1)"
+  //         : "white",
+  //     color: state.isSelected ? "white" : "#000",
+  //     cursor: "pointer",
+  //     "&:active": {
+  //       backgroundColor: "#fb923c",
+  //       color: "white",
+  //     },
+  //   }),
+  // };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

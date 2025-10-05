@@ -6,12 +6,12 @@ import { SECRET_KEY } from '../Config';
 import LoaderPage from '../components_office_use_only/NewBooking/LoaderPage';
 
 const SignupPage = ({ isOpen, setIsOpen }) => {
-const { mutate: changePassword, isPending } = useChangePassword();
-// Add this to your component state
-const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { mutate: changePassword, isPending } = useChangePassword();
+  // Add this to your component state
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // 👇 Real-time validation enabled
+  // Real-time validation enabled
   const {
     register,
     handleSubmit,
@@ -19,7 +19,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     reset,
     formState: { errors },
   } = useForm({
-    mode: 'onChange', // ✅ Enables real-time validation
+    mode: 'onChange', // Enables real-time validation
   });
 
   const password = watch('password');
@@ -80,62 +80,62 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
           </div>
 
           {/* New Password */}
-     <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-  <div className="relative">
-    <input
-      type={showPassword ? 'text' : 'password'}
-      placeholder="Enter your new password"
-      {...register('password', {
-        required: 'Password is required',
-        minLength: {
-          value: 6,
-          message: 'Password must be at least 6 characters',
-        },
-      })}
-      className="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
-    />
-    <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-orange-500"
-      tabIndex={-1}
-    >
-      <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-    </button>
-  </div>
-  {errors.password && (
-    <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-  )}
-</div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your new password"
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters',
+                  },
+                })}
+                className="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-orange-500"
+                tabIndex={-1}
+              >
+                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
+          </div>
 
           {/* Confirm Password */}
-     <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-  <div className="relative">
-    <input
-      type={showConfirmPassword ? 'text' : 'password'}
-      placeholder="Confirm your new password"
-      {...register('confirmPassword', {
-        required: 'Please confirm your password',
-        validate: (value) =>
-          value === password || 'Passwords do not match',
-      })}
-      className="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
-    />
-    <button
-      type="button"
-      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-      className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-orange-500"
-      tabIndex={-1}
-    >
-      <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-    </button>
-  </div>
-  {errors.confirmPassword && (
-    <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
-  )}
-</div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="Confirm your new password"
+                {...register('confirmPassword', {
+                  required: 'Please confirm your password',
+                  validate: (value) =>
+                    value === password || 'Passwords do not match',
+                })}
+                className="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-orange-500"
+                tabIndex={-1}
+              >
+                <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+            )}
+          </div>
 
           {/* Submit Button */}
           <button
@@ -143,7 +143,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
             disabled={isPending}
             className="w-full bg-orange-300 hover:bg-orange-400 font-semibold py-2 px-4 rounded-md transition-colors duration-200"
           >
-            {isPending ? <LoaderPage/> : 'Update Password'}
+            {isPending ? <LoaderPage /> : 'Update Password'}
           </button>
         </form>
       </div>

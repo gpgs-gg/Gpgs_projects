@@ -4,6 +4,7 @@ import { usePropertyData, usePropertySheetData } from './services';
 import CryptoJS from 'crypto-js';
 import { format, subMonths } from "date-fns"; // date-fns is handy
 import { SECRET_KEY } from '../../../Config';
+import { IoIosWarning } from "react-icons/io";
 
 const OverView = () => {
 
@@ -51,9 +52,9 @@ const OverView = () => {
 
     const mainSheetDataForNameWise = useMemo(() => {
         return pgMainSheetData?.data?.length > 0
-            ? pgMainSheetData?.data?.filter((ele) => ele.FullName.trim() === decryptedUser.name.trim()) : []
+            ? pgMainSheetData?.data?.filter((ele) => ele.ClientID.trim() === decryptedUser.clientID.trim()) : []
     }, [pgMainSheetData])
-       
+   console.log("mainSheetDataForNameWise", mainSheetDataForNameWise);
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
         if (encrypted) {
@@ -68,7 +69,6 @@ const OverView = () => {
         // const timer = setInterval(() => {
         //     setCurrentTime(new Date());
         // }, 1000);
-
         // return () => clearInterval(timer);
     }, []);
 
@@ -78,11 +78,6 @@ const OverView = () => {
             setPropertyData(filteredPropertySheetData);
         }
     }, [filteredPropertySheetData]);
-
-
-
-
-
 
     return (
         <div className="max-w-full mx-auto  py-6  lg:px-8">
@@ -94,12 +89,12 @@ const OverView = () => {
                             PG Accommodation Details
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-                          
+
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Property Code</p>
                                 <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.["Property Code"] : "loading..."} </p>
                             </div>
-                              <div className="md:col-span-5 p-3 bg-white rounded-lg border border-orange-300">
+                            <div className="md:col-span-5 p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Property Address</p>
                                 <p className="font-medium text-gray-900">
                                     {propertyData ? propertyData[0]?.["Property Address"] : "loading..."}
@@ -122,18 +117,18 @@ const OverView = () => {
                                 <p className="text-lg font-bold">Check-In Date</p>
                                 <p className="font-medium text-gray-900">{decryptedUser?.actualDoj}</p>
                             </div>
-                              <div className="p-3 bg-white rounded-lg border border-orange-300">
+                            <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Monthly Rent</p>
-                                <p className="font-medium text-gray-900">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.MFR : "loading..."}</p>
+                                <p className="font-medium text-gray-900">₹. {mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.MFR : "loading..."}</p>
                             </div>
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg  font-bold">Security Deposit</p>
-                                <p className="font-medium text-gray-900">{mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.DA : "loading..."}</p>
+                                <p className="font-medium text-gray-900">₹. {mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.DA : "loading..."}</p>
                             </div>
-                          
+
                             <div className="p-3 md:col-span-6 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Electricity Bill Details</p>
-                                <div className='grid grid-cols-2 md:grid-cols-5 gap-2 mt-2'>
+                                <div className='grid grid-cols-1 md:grid-cols-5 gap-2 mt-2'>
                                     <div className="p-2  rounded border border-orange-300">
                                         <p className="text-lg  font-bold">Consumer No</p>
                                         <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBConsumerNo : "loading..."}</p>
@@ -160,22 +155,140 @@ const OverView = () => {
 
                                 </div>
                             </div>
+                            <div className="p-3 md:col-span-3 bg-white rounded-lg border border-orange-300">
+                                <p className="text-lg font-bold">
+                                    Emergency Contacts <span className="text-[15px] text-red-600">(<IoIosWarning className="inline-block mr-1 text-xl mt-[-6px]" />Please Do Not Misuse)</span>
+                                    {/* , call only for electrical short circuits, health emergencies, or safety concerns */}
+                                </p>
+
+                                <div className='grid grid-cols-1 md:grid-cols-3  gap-2 mt-2'>
+                                    <div className="p-2 flex justify-center  flex-col rounded border border-orange-300">
+                                        <p className="text-lg  font-bold">Admin Team</p>
+                                          <br />
+                                        <p className="font-medium  text-gray-900">
+                                            <a
+                                                href={`tel:9044440222`}
+                                            >
+                                                <i className="fas fa-phone mr-2"></i>9044440222
+                                            </a>
+                                            <br />
+                                            <a
+                                                href={`tel:9503322757`}
+                                            >
+                                                <i className="fas fa-phone mr-2"></i>  9503322757
+                                            </a>
+
+                                        </p>
+                                    </div>
+                                    <div className="p-2  rounded border border-orange-300">
+                                        <p className="text-lg font-bold">Maintenance Team</p>
+                                                                                  <br />
+
+                                        <a
+                                            href={`tel:9326325181`}
+                                        >
+                                            <i className="fas fa-phone mr-2"></i>9326325181
+                                        </a>
+
+                                    </div>
+                                    <div className="p-2  rounded border border-orange-300">
+                                        <p className="text-lg  font-bold">Sales Team</p>
+                                                                                  <br />
+
+
+                                        <a
+                                            href={`tel:9326262292`}
+                                        >
+                                            <i className="fas fa-phone mr-2"></i>9326262292
+                                        </a>
+                                        <br />
+                                        <a
+                                            href={`tel:7021368623`}
+                                        >
+                                            <i className="fas fa-phone mr-2"></i>7021368623
+                                        </a>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div className="p-3 md:col-span-3 bg-white rounded-lg border border-orange-300">
+                                <p className="text-lg font-bold">Customer Care</p>
+                                <div className='grid grid-cols-1 md:grid-cols-3  gap-2 mt-2'>
+                                    <div className="p-2 flex justify-center  flex-col rounded border border-orange-300">
+                                        <p className="text-lg  font-bold">Chat / Call</p>
+                                                                                  <br />
+
+                                        <p className="font-medium text-gray-900">
+                                            <a
+                                                href={`tel:8928191814`}
+                                            >
+                                                <i className="fas fa-phone mr-2"></i>8928191814
+                                            </a>
+                                            <br />
+                                            <a
+                                                href={`tel:9503322757`}
+                                            >
+                                                <i className="fas fa-phone mr-2"></i>9819636341
+                                            </a>
+
+                                        </p>
+                                    </div>
+                                    {/* <div className="p-2  rounded border border-orange-300">
+                                        <p className="text-lg font-bold">Maintenance Team</p>
+                                        <a
+                                            href={`tel:9326325181`}
+                                        >
+                                            <i className="fas fa-phone mr-2"></i>9326325181
+                                        </a>
+
+                                    </div> */}
+                                    <div className="p-2 col-span-2 rounded border border-orange-300">
+                                        <p className="text-lg  font-bold">Review Link</p>
+
+                                        <a
+                                            href={`https://g.page/r/CX8tHckG2lUpEAE/review`}
+                                            target='_blank'
+                                        >
+                                          
+                                                <p className='text-blue-500 break-all'>https://g.page/r/CX8tHckG2lUpEAE/review</p>
+                                           <p className='text-md'> Gopal's Paying Guest Services would love your feedback. Post a review to our profile </p>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                         {/* <div className="mt-6 pt-4 border-t">
-                                        <h3 className="text-md font-medium text-gray-900 mb-2 flex items-center">
-                                            <i className="fas fa-user-tie mr-2 text-orange-500"></i>
-                                            PG Manager
-                                        </h3>
-                                        <div className="flex items-center p-3 bg-orange-50 rounded-lg">
-                                            <div className="bg-orange-100 rounded-full p-2 mr-3">
-                                                <i className="fas fa-user-tie text-orange-600"></i>
-                                            </div>
-                                            <div>
-                                                <p className="font-medium text-gray-900">{pgClientData.pgDetails.managerName}</p>
-                                                <p className="text-sm text-orange-700">{pgClientData.pgDetails.managerContact}</p>
-                                            </div>
-                                        </div>
-                                    </div> */}
+                            <h3 className="text-md font-medium text-gray-900 mb-2 flex items-center">
+                                <i className="fas fa-user-tie mr-2 text-orange-500"></i>
+                                Emergency Contacts
+                            </h3>
+                            <div className="flex items-center border border-orange-300 p-3 rounded-xl">
+                                <div className=" rounded-full p-2 mr-3">
+                                    <i className="fas fa-user-tie text-orange-600"></i>
+                                </div>
+                                <div className='flex gap-10  flex-wrap '>
+                                    <div className='px-10 py-5  rounded border border-orange-300'>
+                                        <p className="font-bold text-black">Admin Team</p>
+                                        <p className="text-sm text-orange-700">9044440222 <br /> 9503322757</p>
+                                    </div>
+                                    <div className='px-10 py-5  rounded border border-orange-300'>
+                                        <p className="font-bold text-black">Maintenance Team</p>
+                                        <p className="text-sm text-orange-700">9326325181</p>
+                                    </div>
+                                    <div className='px-10 py-5  rounded border border-orange-300'>
+                                        <p className="font-bold text-black">Sales Team</p>
+                                        <p className="text-sm text-orange-700">9326262292 <br /> 7021368623</p>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

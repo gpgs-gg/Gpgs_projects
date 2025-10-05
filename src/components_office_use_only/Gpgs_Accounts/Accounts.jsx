@@ -12,6 +12,7 @@ const Accounts = () => {
   const [sheetId, setSheetId] = useState(null);
   const [result, setResult] = useState(null);
   const [rnrSheetData, setRnrSheetData] = useState({})
+  console.log("RNR Data:", rnrSheetData);
   // Fetch all properties
   const { data: fetchSingleSheetData, error, isError } = useFetchSingleSheetData();
 

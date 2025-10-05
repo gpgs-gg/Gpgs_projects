@@ -211,23 +211,21 @@ const Payments = () => {
                         Payment Summary
                     </h2>
                     <div className="flex justify-evenly flex-wrap gap-3 mb-6">
+                           <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg ">
+                            <p className="text-gray-700 font-bold">Date</p>
+                            <p className="font-semibold text-gray-700">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'short' })} ${new Date().getFullYear()}`}</p>
+                        </div>
                         <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
                             <p className="text-gray-700 font-bold">Current Due</p>
-                            <p className="font-semibold text-gray-700">₹.&nbsp;&nbsp; 
+                            <p className="font-semibold text-gray-700">₹&nbsp; 
                                  {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.CurDueAmt
                                     : "loading..."}
                             </p>
                         </div>
-
-                        <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg ">
-                            <p className="text-gray-700 font-bold">Due Date</p>
-                            <p className="font-semibold text-gray-700">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}</p>
-                        </div>
-
                         <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
                             <p className="text-gray-700 font-bold">Previous Due</p>
-                            <p className="font-semibold text-gray-700">₹.&nbsp;&nbsp;   
+                            <p className="font-semibold text-gray-700">₹&nbsp;   
                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.PreDueAmt
                                     : "loading..."}
@@ -295,16 +293,16 @@ const Payments = () => {
                                             .map((payment, index) => (
                                                 <tr key={index} className="hover:bg-[#F8F9FB]">
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg font-medium text-gray-900">{payment.__month}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.RentAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.DA}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.ProFees}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.EBAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.AdjEB}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.AdjAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.ToRcableAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.ToRcvedAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.CurDueAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹. {payment.PreDueAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.RentAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.DA}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.ProFees}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.EBAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.AdjEB}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.AdjAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.ToRcableAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.ToRcvedAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.CurDueAmt}</td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.PreDueAmt}</td>
                                                 </tr>
                                             ))}
                                 </tbody>

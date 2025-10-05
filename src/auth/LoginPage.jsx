@@ -198,9 +198,9 @@ const LoginPage = () => {
 
   // Normalize client data
   const normalizedClients = (clientData?.data || []).map(client => ({
-    id: client["ID"],
+    clientID: client["ClientID"],
     name: client["Name"],
-    loginId: client["EmailID"],
+    loginId: client["LoginID"],
     password: client["Password"],
     IsActive: client["IsActive"],
     role: client["Role"],
@@ -299,21 +299,22 @@ const LoginPage = () => {
       <div className="flex items-center bg-[#F8F9FB] justify-center min-h-screen bg-primary-light">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-white p-10 rounded-lg shadow-md w-full max-w-lg"
+          className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
         >
           <h2 className="text-2xl font-bold  text-orange-500 ">
             Login to your account
           </h2>
           <p className='pb-5'>
-            Enter your login id below to login to your account</p>
+            Enter your login ID / Email ID below to login to your account</p>
 
           {/* Login ID */}
           <input
             type="text"
-            placeholder="Login ID / Email ID"
+            placeholder="Enter Login ID / Email ID"
             {...register('loginId', { required: 'Login ID / Email ID is required' })}
             className="w-full mb-2 p-2 border border-orange-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
           />
+
           {errors.loginId && (
             <p className="text-red-600 text-sm mb-2">{errors.loginId.message}</p>
           )}
@@ -355,7 +356,7 @@ const LoginPage = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-orange-300 text-black p-2 rounded hover:bg-orange-400 transition"
+            className="w-full text-lg tracking-wider bg-orange-300 text-black p-2 rounded hover:bg-orange-400 transition"
           >
             Login
           </button>

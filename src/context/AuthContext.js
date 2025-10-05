@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 🔒 Encrypt user object before storing
+  // Encrypt user object before storing
   const encryptUser = (user) => {
     return CryptoJS.AES.encrypt(JSON.stringify(user),  SECRET_KEY).toString();
   };

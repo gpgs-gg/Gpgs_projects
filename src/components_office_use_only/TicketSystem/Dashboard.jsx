@@ -17,7 +17,8 @@ export const Dashboard = () => {
         Assigned: tickets.filter(t => t.Status == 'Assigned').length
     };
 
-    useEffect(() => {
+ 
+   useEffect(() => {
         const statusCtx = document.getElementById('statusChart');
         const priorityCtx = document.getElementById('priorityChart');
 
@@ -89,6 +90,11 @@ export const Dashboard = () => {
             }
         };
     }, [tickets]);
+
+
+
+
+
 
     return (
         <div className="space-y-6">

@@ -50,9 +50,11 @@ export const CategoryOptions = [
   { value: "Shifting", label: "Shifting" },
   { value: "New Male PG", label: "New Male PG" },
   { value: "New Female PG", label: "New Female PG" },
+  { value: "Health Issue", label: "Health Issue" },
+  { value: "Safety Concerns", label: "Safety Concerns" },
   { value: "No Water", label: "No Water" },
   { value: "No Power", label: "No Power" },
-  { value: "Short Circuit", label: "Short Circuit" },
+  { value: "Electric Short Circuit", label: "Electric Short Circuit" },
   { value: "Fan", label: "Fan" },
   { value: "Fan Regulator", label: "Fan Regulator" },
   { value: "Fan Switch", label: "Fan Switch" },
@@ -113,8 +115,7 @@ export const CategoryOptions = [
   { value: "Msg Issue", label: "Msg Issue" },
   { value: "Calculation Issue", label: "Calculation Issue" },
   { value: "Color Issue", label: "Color Issue" },
-  { value: "Ui Size Issue", label: "Ui Size Issue" },
-  { value: "RNR Update Issue", label: "RNR Update Issue" },
+  { value: "Ui Size Issue", label: "UI Size Issue" }
 ];
 
 export const DepartmentOptions = [

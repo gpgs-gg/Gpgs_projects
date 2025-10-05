@@ -84,7 +84,6 @@ const menuItems = rawMenuItems.filter(item => {
         >
           {menuItems.map(item => {
             if (item.adminOnly && currentUser?.role !== 'Admin') return null;
-
             return (
               <button
                 key={item.id}
