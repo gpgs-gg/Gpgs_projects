@@ -250,7 +250,7 @@ const LoginPage = () => {
 
     // If no match in employee, check if client matches and is active
     const matchedClient = !matchedEmployee && normalizedClients.find((client) => {
-      const decryptedPassword = client.password;
+      const decryptedPassword = decrypt(client.password);
       return (
         client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
         decryptedPassword === inputPassword &&
@@ -260,9 +260,10 @@ const LoginPage = () => {
 
     // Additional check: client matches credentials but is NOT active
     const inactiveClient = !matchedEmployee && normalizedClients.find((client) => {
-      const decryptedPassword = client.password;
+      const decryptedPassword = decrypt(client.password);
       return (
         client.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+
         decryptedPassword === inputPassword &&
         client.IsActive !== "Yes"
       );
@@ -310,8 +311,8 @@ const LoginPage = () => {
           {/* Login ID */}
           <input
             type="text"
-            placeholder="Enter Login ID / Email ID"
-            {...register('loginId', { required: 'Login ID / Email ID is required' })}
+            placeholder="Enter Login ID"
+            {...register('loginId', { required: 'Login ID is required' })}
             className="w-full mb-2 p-2 border border-orange-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
           />
 
@@ -324,7 +325,15 @@ const LoginPage = () => {
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', {
+                required: 'Password is required',
+                validate: (value) => {
+                  const trimmed = value.trim();
+                  if (trimmed.length === 0) return 'Password cannot be empty spaces';
+                  if (trimmed.length < 6) return 'Password must be at least 6 characters';
+                  return true;
+                }
+              })}
               className="w-full p-2 border border-orange-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-300 pr-10"
             />
             <button
@@ -350,7 +359,7 @@ const LoginPage = () => {
             onClick={() => setIsOpen(true)}
             className="rounded-md font-sm text-sm text-gray-600 hover:text-orange-500 mb-4 underline"
           >
-            Change your password
+          Create / Change Password
           </button>
 
           {/* Submit */}

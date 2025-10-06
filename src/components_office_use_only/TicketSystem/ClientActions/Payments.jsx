@@ -82,7 +82,7 @@ const Payments = () => {
     }, [filteredPropertySheetData]);
 
 
-    const { data: pgMainSheetData} = usePropertySheetData(mainSheetId);
+    const { data: pgMainSheetData } = usePropertySheetData(mainSheetId);
     const mainSheetDataForNameWise = useMemo(() => {
         return pgMainSheetData?.data?.length > 0
             ? pgMainSheetData?.data?.filter((ele) => ele.FullName === decryptedUser.name) : []
@@ -104,7 +104,7 @@ const Payments = () => {
 
         // return () => clearInterval(timer);
     }, []);
-             
+
     return (
         //         <div className="max-w-full">
         //             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -211,21 +211,21 @@ const Payments = () => {
                         Payment Summary
                     </h2>
                     <div className="flex justify-evenly flex-wrap gap-3 mb-6">
-                           <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg ">
+                        <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg ">
                             <p className="text-gray-700 font-bold">Date</p>
                             <p className="font-semibold text-gray-700">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'short' })} ${new Date().getFullYear()}`}</p>
                         </div>
                         <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
                             <p className="text-gray-700 font-bold">Current Due</p>
-                            <p className="font-semibold text-gray-700">₹&nbsp; 
-                                 {mainSheetDataForNameWise.length > 0
+                            <p className="font-semibold text-gray-700">₹&nbsp;
+                                {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.CurDueAmt
                                     : "loading..."}
                             </p>
                         </div>
                         <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
                             <p className="text-gray-700 font-bold">Previous Due</p>
-                            <p className="font-semibold text-gray-700">₹&nbsp;   
+                            <p className="font-semibold text-gray-700">₹&nbsp;
                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.PreDueAmt
                                     : "loading..."}
@@ -246,18 +246,18 @@ const Payments = () => {
                 <div className="lg:col-span-6">
                     <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md ">
                         <h2 className="text-2xl font-semibold text-gray-900 flex items-center mb-4">
-                         <p className='flex items-center justify-center'>
-                               <i className="fas fa-history mr-2 text-orange-500"></i>
-                             Payment History <span className='mt-5 ml-10'>{mainSheetDataForNameWise?.length === 0 && <LoaderPage/>}</span>
-                         </p>
+                            <p className='flex items-center justify-center'>
+                                <i className="fas fa-history mr-2 text-orange-500"></i>
+                                Payment History <span className='mt-5 ml-10'>{mainSheetDataForNameWise?.length === 0 && <LoaderPage />}</span>
+                            </p>
                         </h2>
 
                         <div className="overflow-x-auto">
-                            
+
                             <table className="min-w-[1200px] divide-y divide-orange-300">
                                 <thead>
                                     <tr>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Month</th>
+                                        <th className="text-left sticky  left-0 text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Month</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Rent</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Deposit</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Processing Fees</th>
@@ -273,7 +273,7 @@ const Payments = () => {
                                 <tbody className="divide-y divide-gray-200">
 
 
-                                    {mainSheetDataForNameWise  &&
+                                    {mainSheetDataForNameWise &&
                                         mainSheetDataForNameWise
                                             .filter((ele) =>
                                                 [
@@ -292,10 +292,16 @@ const Payments = () => {
                                             )
                                             .map((payment, index) => (
                                                 <tr key={index} className="hover:bg-[#F8F9FB]">
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg font-medium text-gray-900">{payment.__month}</td>
+                                                    <td className="px-4 py-7 sticky bg-white left-0 whitespace-nowrap text-lg font-medium text-gray-900">{payment.__month}</td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.RentAmt}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.DA}</td>
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.ProFees}</td>
+
+                                                    {/* ✅ Show Deposit only for first row */}
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
+                                                        {index === mainSheetDataForNameWise.length - 1 ? `₹ ${payment.DA}` : '₹ 0'}
+                                                    </td>
+                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
+                                                        {index === mainSheetDataForNameWise.length - 1 ? `₹ ${payment.ProFees}` : '₹ 0'}
+                                                    </td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.EBAmt}</td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.AdjEB}</td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.AdjAmt}</td>
@@ -304,6 +310,7 @@ const Payments = () => {
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.CurDueAmt}</td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.PreDueAmt}</td>
                                                 </tr>
+
                                             ))}
                                 </tbody>
                             </table>

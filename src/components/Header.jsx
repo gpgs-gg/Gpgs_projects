@@ -101,7 +101,7 @@ const Header = () => {
             <Link to="/gpgs-actions" className="nav-link"><span className="text-xl">|</span>  My Account</Link>
       
             {decryptedUser && (
-              <div className="flex items-center space-x-4 ml-6">
+              <div  className="flex items-center space-x-4 ml-6">
                 <div className="text-right">
                   <div className="text-sm font-semibold text-gray-800">{decryptedUser?.name?.substring(0, 12) + "..."}</div>
                   {/* <div className="text-xs text-gray-500">({decryptedUser.role})</div> */}
@@ -115,7 +115,7 @@ const Header = () => {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div  className="md:hidden flex items-center space-x-2">
             {decryptedUser && (
               <div className="text-right mr-2">
                 <div className="text-sm font-semibold text-gray-800">{decryptedUser.name.substring(0, 12) + "..."}</div>
@@ -135,7 +135,9 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col bg-white border-t border-gray-200 px-4 py-4 space-y-4">
+        <div data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="300" className="md:hidden flex flex-col bg-white border-t border-gray-200 px-4 py-4 space-y-4">
           {isHomePage ? (
             <>
               <a onClick={() => setMenuOpen(false)} href="#home" className="mobile-link">Home</a>
@@ -154,7 +156,7 @@ const Header = () => {
               <Link onClick={() => setMenuOpen(false)} to="/contact" className="mobile-link">Contact Us</Link>
             </>
           )}
-          <Link onClick={() => setMenuOpen(false)} to="/gpgs-actions" className="mobile-link">Office</Link>
+          <Link onClick={() => setMenuOpen(false)} to="/gpgs-actions" className="mobile-link">My Account</Link>
           {decryptedUser && (
             <button
               onClick={() => { handleLogout(); setMenuOpen(false); }}

@@ -4,6 +4,7 @@ import { useChangePassword } from './services';
 import CryptoJS from 'crypto-js';
 import { SECRET_KEY } from '../Config';
 import LoaderPage from '../components_office_use_only/NewBooking/LoaderPage';
+import { toast } from 'react-toastify';
 
 const SignupPage = ({ isOpen, setIsOpen }) => {
   const { mutate: changePassword, isPending } = useChangePassword();
@@ -38,13 +39,12 @@ const SignupPage = ({ isOpen, setIsOpen }) => {
     // 🔄 Call mutation to update password
     changePassword(payload, {
       onSuccess: () => {
-        alert('✅ Password updated successfully.');
+        toast.success('Password updated successfully.');
         reset();
         setIsOpen(false);
       },
       onError: (err) => {
-        alert('❌ Failed to update password.');
-        console.error(err);
+        toast.error('Failed to update password.');
       },
     });
   };
@@ -62,7 +62,7 @@ const SignupPage = ({ isOpen, setIsOpen }) => {
           &times;
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-orange-600">Change Password</h2>
+        <h2 className="text-2xl font-bold mb-6 text-orange-600">Create / Change Password</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Login ID */}
@@ -87,12 +87,14 @@ const SignupPage = ({ isOpen, setIsOpen }) => {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your new password"
                 {...register('password', {
-                  required: 'Password is required',
-                  minLength: {
-                    value: 6,
-                    message: 'Password must be at least 6 characters',
-                  },
-                })}
+                required: 'Password is required',
+                validate: (value) => {
+                  const trimmed = value.trim();
+                  if (trimmed.length === 0) return 'Password cannot be empty spaces';
+                  if (trimmed.length < 6) return 'Password must be at least 6 characters';
+                  return true;
+                }
+              })}
                 className="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
               />
               <button

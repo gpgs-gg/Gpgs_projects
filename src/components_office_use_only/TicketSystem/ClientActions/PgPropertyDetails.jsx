@@ -54,7 +54,7 @@ const OverView = () => {
         return pgMainSheetData?.data?.length > 0
             ? pgMainSheetData?.data?.filter((ele) => ele.ClientID.trim() === decryptedUser.clientID.trim()) : []
     }, [pgMainSheetData])
-   console.log("mainSheetDataForNameWise", mainSheetDataForNameWise);
+   
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
         if (encrypted) {
@@ -88,7 +88,7 @@ const OverView = () => {
                             <i className="fas fa-home mr-2 text-orange-500 bg-white"></i>
                             PG Accommodation Details
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
 
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">Property Code</p>
@@ -106,7 +106,7 @@ const OverView = () => {
                             </div>
                             <div className="p-3 bg-white rounded-lg border border-orange-300">
                                 <p className="text-lg font-bold">WiFi Password</p>
-                                <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.["WiFi Pwd"] : "loading..."}</p>
+                                <p className="font-medium text-gray-900 break-after-auto">{propertyData ? propertyData[0]?.["WiFi Pwd"] : "loading..."}</p>
 
                             </div>
                             <div className="p-3 bg-white rounded-lg border border-orange-300">

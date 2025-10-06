@@ -209,7 +209,7 @@ function App() {
 
           
 
-       <Footer/>
+      
    
 
     </>
