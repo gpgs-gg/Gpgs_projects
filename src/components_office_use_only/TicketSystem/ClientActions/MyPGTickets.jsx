@@ -37,7 +37,19 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
                     return (
                         <td key={key} className={stickyStyle}>
                             <div>
-                                <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
+                                <div className="font-medium">{value || "N/A"}</div>
+                                {/* <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
+                                    {ticket.Description ? `${ticket.Description.substring(0, 60)}...` : "No Description"}
+                                </div> */}
+                            </div>
+                        </td>
+                    );
+                }
+                if (key === "Description") {
+                    return (
+                        <td key={key} className={stickyStyle}>
+                            <div>
+                                <div className="font-medium"> {value.substring(0, 40) + "...." || "N/A"}</div>
                                 {/* <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
                                     {ticket.Description ? `${ticket.Description.substring(0, 60)}...` : "No Description"}
                                 </div> */}

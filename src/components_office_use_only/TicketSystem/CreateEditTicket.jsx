@@ -20,7 +20,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const { setCurrentView, selectedTicket } = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
-
+     console.log("selectedTicket", selectedTicket);
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: property } = usePropertMasteryData();
   const [previousWlogs, setPreviousWlogs] = useState("");
@@ -225,6 +225,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     const now = new Date();
     return `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
   }
+  const isValidDate = (date) => {
+    const parsedDate = new Date(date);
+    return parsedDate instanceof Date && !isNaN(parsedDate);
+};
 
   const onSubmit = (data) => {
     const currentTimestamp = getFormattedTimestamp();
@@ -259,7 +263,9 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Category: data.Category?.value || "",
       Assignee: data.Assignee?.value || "",
       Manager: data.Manager?.value || "",
-      TargetDate: data.TargetDate ? getFormattedTimestampForTargetDate(data.TargetDate) : "N/A",
+      TargetDate: isValidDate(data.TargetDate)
+    ? getFormattedTimestampForTargetDate(data.TargetDate)
+    : "N/A",
       Status: statusValue,
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",
@@ -270,16 +276,17 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       ...(isEdit
         ? {
           UpdatedByName: decryptedUser?.name || "Unknown",
-          UpdatedById: decryptedUser?.id || "Unknown",
+          UpdatedById: decryptedUser?.clientID || decryptedUser?.id || "Unknown",
           UpdatedDateTime: Timestamp(),
           Attachment: previews.map(ele => ele.url),
           CreatedById: selectedTicket?.CreatedById || "Unknown",
-
+          CreatedBy : selectedTicket?.CreatedBy || "Unknown",
 
         }
         : {
           CreatedByName: decryptedUser?.name || "Unknown",
-          CreatedById: decryptedUser?.id || "Unknown",
+          CreatedById: decryptedUser?.clientID || decryptedUser?.id || "Unknown",
+          CreatedBy : decryptedUser?.role.charAt(0).toUpperCase() + decryptedUser?.role.slice(1).toLowerCase() || "Unknown",
         }),
     };
     const formData = new FormData();

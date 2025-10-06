@@ -11,7 +11,7 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
     // decrptedTicketData
     const [decryptedUser, setDecryptedUser] = useState(null);
-    const [myPgTicketsTotal , setMyPgTicketsTotal] = useState(null)  
+    const [myPgTicketsTotal, setMyPgTicketsTotal] = useState(null)
 
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
@@ -31,19 +31,12 @@ export const AppProvider = ({ children }) => {
     };
 
 
-
-
-
-
-
     const location = useLocation();
 
     const isTicketsPage = location.pathname === '/gpgs-actions/tickets';
 
     const { data, isLoading, error } = useTicketSheetData(isTicketsPage);
     const { mutate: updateTicketData, isLoading: isticketUpdate } = useUpdateTicketSheetData();
-
-  
 
 
     const initialUsers = [
@@ -67,45 +60,32 @@ export const AppProvider = ({ children }) => {
     }, [decryptedUser]);
 
 
-      // Start with an empty array
+    // Start with an empty array
     const [tickets, setTickets] = useState([]);
 
-  useEffect(() => {
-    if (Array.isArray(data?.data)) {
-        let filteredTickets = data.data;
+    useEffect(() => {
+        if (Array.isArray(data?.data)) {
+            let filteredTickets = data.data;
 
-        if (currentView === "mypgtickets") {
-            // Only filter by property code if myPgTicketsTotal is not null
-            filteredTickets = data.data.filter(
-                (ele) => ele.PropertyCode === decryptedUser?.propertyCode
-            );
-        } else {
-            // Other filters based on role
-            if (decryptedUser?.role === "client") {
+            if (currentView === "mypgtickets") {
                 filteredTickets = data.data.filter(
-                    (ele) => ele.CreatedByName === decryptedUser?.name
+                    (ele) => ele.PropertyCode === decryptedUser?.propertyCode && ele?.CreatedBy.toLowerCase() === decryptedUser?.role,
                 );
+
+            } else {
+                if (decryptedUser?.role === "client") {
+                    filteredTickets = data.data.filter((ele) => {
+                        return ele.CreatedById === decryptedUser?.clientID;
+                    });
+                }
+
             }
-            // else keep all (i.e., already assigned above)
+
+            setTickets(filteredTickets);
         }
+    }, [data, decryptedUser, currentView]);
 
-        setTickets(filteredTickets);
-    }
-}, [data, decryptedUser , currentView]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//  console.log("decryptedUser", decryptedUser)
 
 
     const [modal, setModal] = useState('');
@@ -210,14 +190,17 @@ export const AppProvider = ({ children }) => {
                 ticket.Description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 ticket.id.toLowerCase().includes(searchTerm.toLowerCase());
 
-            const matchesStatus = !filters.Status || ticket.Status === filters.Status;
+            const matchesStatus = !filters.Status ||                              // null or undefined
+                filters.Status.length === 0 ||                  // empty array []
+                (filters.Status.length === 1 && filters.Status[0] === '') || // ['']
+                filters.Status.includes(ticket.Status);
             const matchesPriority = !filters.Priority || ticket.Priority === filters.Priority;
             const matchesDepartment = !filters.Department || ticket.Department === filters.Department;
             const matchesAssignee = !filters.Assignee || ticket.Assignee === filters.Assignee;
             const matchesManager = !filters.Manager || ticket.Manager === filters.Manager;
             const matchesTargetDate = !filters.TargetDate || ticket.TargetDate === filters.TargetDate;
             const matchesCreatedByName = !filters.CreatedByName || ticket.CreatedByName === filters.CreatedByName;
-
+            console.log("matchesStatus", matchesStatus, ticket.Status, filters.Status, matchesPriority);
             return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager && matchesTargetDate && matchesCreatedByName;
         });
     }, [tickets, searchTerm, filters]);

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useApp } from "./AppProvider";
 import { TicketFilters } from "./TicketFilters";
 
@@ -128,8 +128,31 @@ const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClic
 
 export const TicketList = () => {
     const [selectedImage, setSelectedImage] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const { decryptedUser } = useApp();
+    const [currentPage, setCurrentPage] = useState(() => {
+        const saved = localStorage.getItem("currentPage");
+        return saved ? parseInt(saved, 10) : 1;
+    });
+
+    // Save current page to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("currentPage", currentPage);
+    }, [currentPage]);
+
+    // Handle previous/next button clicks
+    const goToPrevious = () => {
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    };
+
+    const goToNext = () => {
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    };
+
+
+    useEffect(() => {
+        localStorage.setItem("currentPage", currentPage);
+    }, [currentPage]);
+
+    const { decryptedUser, filters } = useApp();
 
 
     const TICKETS_PER_PAGE = 10;
@@ -141,9 +164,25 @@ export const TicketList = () => {
     } = useApp();
 
 
+    const prevFiltersRef = useRef(filters);
+
     useEffect(() => {
-        setCurrentPage(1);
-    }, [filteredTickets]);
+        const hasAnyFilterValue = Object.values(filters).some(value => {
+            if (Array.isArray(value)) {
+                return value.some(v => v !== '');
+            }
+            return value !== '';
+        });
+
+        const filtersChanged = JSON.stringify(filters) !== JSON.stringify(prevFiltersRef.current);
+
+        if (hasAnyFilterValue && filtersChanged) {
+            setCurrentPage(1);
+        }
+
+        prevFiltersRef.current = filters;
+    }, [filters]);
+
 
     const totalPages = Math.ceil(filteredTickets.length / TICKETS_PER_PAGE);
 
@@ -231,38 +270,47 @@ export const TicketList = () => {
         <div className="space-y-6">
             <TicketFilters />
 
-            <div className="bg-white rounded-lg shadow overflow-auto">
-                <table className="min-w-full divide-gray-200 text-sm">
-                    <thead className="bg-orange-300">
-                        <tr>
-                            {headers.map(({ label, key }) => (
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-y-auto max-h-[540px]">
+                    <table className="min-w-full divide-gray-200 text-sm">
+                        <thead className="bg-orange-300 sticky top-0 z-30">
+                            <tr>
+                                {headers.map(({ label, key }) => (
+                                    <th
+                                        key={label}
+                                        className={`px-6 py-3 text-left font-bold text-black text-lg whitespace-nowrap max-w-[200px] bg-orange-300 ${key === "TicketID" ? "sticky left-0 z-40 bg-orange-300" : ""
+                                            }`}
+                                        title={label}
+                                    >
+                                        {label.substring(0, 20)}
+                                    </th>
+                                ))}
                                 <th
-                                    key={label}
-                                    className={`px-6 py-3 text-left font-bold text-black text-lg whitespace-nowrap max-w-[200px] ${key === "TicketID" ? "sticky left-0 z-20 bg-orange-300" : ""}`}
-                                    title={label}
+                                    className="px-6 py-3 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-30 max-w-[150px]"
+                                    title="Actions"
                                 >
-                                    {label.substring(0, 20)}
+                                    Actions
                                 </th>
+                            </tr>
+                        </thead>
+
+                        {/* Scrollable body */}
+                        <tbody className="bg-white divide-y text-[18px] divide-gray-200">
+                            {paginatedTickets.map((ticket) => (
+                                <TicketRow
+                                    key={ticket.TicketID}
+                                    ticket={ticket}
+                                    headers={headers}
+                                    formatDate={formatDate}
+                                    onEdit={editTicket}
+                                    onImageClick={setSelectedImage}
+                                />
                             ))}
-                            <th className="px-6 py-3 text-left text-black font-bold text-lg sticky right-0 bg-orange-300 z-10 max-w-[150px]" title="Actions">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y text-[18px] divide-gray-200">
-                        {paginatedTickets.map((ticket) => (
-                            <TicketRow
-                                key={ticket.TicketID}
-                                ticket={ticket}
-                                headers={headers}
-                                formatDate={formatDate}
-                                onEdit={editTicket}
-                                onImageClick={setSelectedImage}
-                            />
-                        ))}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
 
             {/* Pagination */}
             <div className="flex justify-center items-center gap-6 pb-5">
@@ -271,20 +319,19 @@ export const TicketList = () => {
                 </span>
                 <button
                     disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    onClick={goToPrevious}
                     className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
                 >
                     <i className="fa-solid fa-arrow-left"></i> Previous
                 </button>
                 <button
                     disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    onClick={goToNext}
                     className="px-4 py-2 bg-orange-400 text-white rounded disabled:opacity-50"
                 >
                     Next <i className="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
-
             {/* Image Preview Modal */}
             {selectedImage && (
                 <div

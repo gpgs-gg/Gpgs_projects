@@ -45,11 +45,11 @@ const DepartmentOptions = [
 ];
 
 export const TicketFilters = () => {
-    const { filters, setFilters, users, filteredTickets, decryptedUser, currentView , myPgTicketsTotal  } = useApp();
+    const { filters, setFilters, users, filteredTickets, decryptedUser, currentView, myPgTicketsTotal } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
 
 
-
+    console.log("decryptedUser from TicketFilters", filters);
 
     const assigneeOptions = [
         { label: "All Assignees", value: "" },
@@ -108,7 +108,7 @@ export const TicketFilters = () => {
 
     const { control, watch, reset } = useForm({
         defaultValues: {
-            Status: statusOptions.find((opt) => opt.value === filters.Status) || defaultValues.Status,
+            Status: statusOptions.filter(opt => filters.Status?.includes(opt.value)) || defaultValues.Status,
             // Priority: priorityOptions.find((opt) => opt.value === filters.Priority) || defaultValues.Priority,
             Department: DepartmentOptions.find((opt) => opt.value === filters.Department) || defaultValues.Department,
             Assignee: assigneeOptions.find((opt) => opt.value === filters.Assignee) || defaultValues.Assignee,
@@ -130,15 +130,19 @@ export const TicketFilters = () => {
     // const watchedPriority = watch("Priority"); // Uncomment if Priority is used
     React.useEffect(() => {
         setFilters({
-            Status: watchedStatus?.value || "",
-            Priority:watchedPriority?.value || "", // or watchedPriority?.value || "" if you're using it
+            Status: Array.isArray(watchedStatus)
+                ? watchedStatus.map(option => option.value)
+                : watchedStatus && watchedStatus.value
+                    ? [watchedStatus.value]
+                    : [],
+            Priority: watchedPriority?.value || "", // or watchedPriority?.value || "" if you're using it
             Department: watchedDepartment?.value || "",
             Assignee: watchedAssignee?.value || "",
             Manager: watchedManager?.value || "",
             CreatedByName: watchedCreatedByName?.value || "",
             TargetDate: formatDateToDDMMMYYYY(watchedTargetDate) || "",
         });
-    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate, watchedCreatedByName , watchedPriority]);
+    }, [watchedStatus, watchedDepartment, watchedAssignee, watchedManager, setFilters, watchedTargetDate, watchedCreatedByName, watchedPriority]);
 
     const handleClearFilters = () => {
         reset(defaultValues);
@@ -179,7 +183,7 @@ export const TicketFilters = () => {
                         name="Status"
                         control={control}
                         render={({ field }) => (
-                            <Select {...field} options={statusOptions} styles={SelectStyles} isClearable={false} />
+                            <Select {...field} options={statusOptions} styles={SelectStyles} isClearable={false} isMulti />
                         )}
                     />
                 </div>

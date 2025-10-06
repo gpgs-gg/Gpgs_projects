@@ -19,8 +19,6 @@ export const usePropertyData = () => {
   });
 };
 
-
-
 const fetchPropertySheetData = async (sheetId) => {
   if (!sheetId || sheetId.length === 0) {
     return [];

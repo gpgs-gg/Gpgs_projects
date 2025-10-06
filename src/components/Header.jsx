@@ -35,6 +35,7 @@ const Header = () => {
   // Handle logout
   const handleLogout = () => {
     logout();
+    localStorage.clear();
     window.location.reload();
   };
 
