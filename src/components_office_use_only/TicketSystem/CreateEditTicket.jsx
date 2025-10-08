@@ -154,37 +154,58 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
 
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    // Filter out files larger than 5MB
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      alert(`⚠️ Some files are larger than 5 MB and were not added.`);
-    }
-    // Only keep files <= 5MB
-    const validFiles = selectedFiles.filter(file => file.size <= maxSize);
-    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
-    // Filter both arrays by extension
-    const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
-    const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
-    // Final count
-    const totalFiles = filteredPreviews.length + filteredValidFiles.length;
-    if (totalFiles > 5) {
-      alert("⚠️ You can only upload up to 5 files.");
-      return;
-    }
+  const selectedFiles = Array.from(e.target.files);
 
-    const newPreviews = validFiles.map((file) => ({
+  // Max size check
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
+  if (oversizedFiles.length > 0) {
+    toast.dismiss()
+    toast.error(`⚠️ Some files are larger than 5 MB and were not added.`);
+  }
+
+  // Filter valid files (by size)
+  const validFiles = selectedFiles.filter(file => file.size <= maxSize);
+
+  // Allowed extensions
+  const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
+
+  // Filter by extension
+  const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
+  const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
+
+  // Check max file count
+  const totalFiles = filteredPreviews.length + filteredValidFiles.length;
+  if (totalFiles > 5) {
+     toast.dismiss()
+    toast.error("⚠️ You can only upload up to 5 files.");
+    return;
+  }
+
+  // Generate new previews with unique names
+  const newPreviews = filteredValidFiles.map((file) => {
+    const uniquePrefix = Math.floor(100000 + Math.random() * 900000); // Random 6-digit number
+    const newName = `${uniquePrefix}-${file.name}`;
+
+    // Create a new File object with modified name (optional)
+    const renamedFile = new File([file], newName, { type: file.type });
+
+    return {
       url: URL.createObjectURL(file),
       type: file.type,
-      name: file.name,
-      file,
-    }));
-    const updatedPreviews = [...previews, ...newPreviews];
-    setPreviews(updatedPreviews);
+      name: newName,
+      file: renamedFile,
+    };
+  });
 
-    setValue("Attachment", updatedPreviews.map((item) => item.file));
-  };
+  // Update preview state
+  const updatedPreviews = [...previews, ...newPreviews];
+  setPreviews(updatedPreviews);
+
+  // Set final value for form submission
+  setValue("Attachment", updatedPreviews.map((item) => item.file));
+};
+
 
 
   const handleRemoveFile = (index) => {
