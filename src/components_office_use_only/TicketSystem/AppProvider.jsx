@@ -12,6 +12,8 @@ export const AppProvider = ({ children }) => {
     // decrptedTicketData
     const [decryptedUser, setDecryptedUser] = useState(null);
     const [myPgTicketsTotal, setMyPgTicketsTotal] = useState(null)
+    const [input, setInput] = useState('');
+
 
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
@@ -69,7 +71,9 @@ export const AppProvider = ({ children }) => {
 
             if (currentView === "mypgtickets") {
                 filteredTickets = data.data.filter(
-                    (ele) => ele.PropertyCode === decryptedUser?.propertyCode && ele?.CreatedBy.toLowerCase() === decryptedUser?.role,
+                    (ele) => ele.PropertyCode === decryptedUser?.propertyCode && ele?.CreatedBy.toLowerCase() === decryptedUser?.role
+                    // &&
+                    // ele.CreatedById !== decryptedUser?.clientID,
                 );
 
             } else {
@@ -85,7 +89,6 @@ export const AppProvider = ({ children }) => {
         }
     }, [data, decryptedUser, currentView]);
 
-//  console.log("decryptedUser", decryptedUser)
 
 
     const [modal, setModal] = useState('');
@@ -182,13 +185,14 @@ export const AppProvider = ({ children }) => {
     const deleteUser = (userId) => {
         setUsers(users.filter(user => user.id !== userId));
     };
+    const lowerSearchTerm = searchTerm.toLowerCase();
 
     const filteredTickets = useMemo(() => {
 
         return tickets.filter(ticket => {
-            const matchesSearch = ticket.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                ticket.Description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                ticket.id.toLowerCase().includes(searchTerm.toLowerCase());
+           const matchesSearch = Object.values(ticket).some(value =>
+                String(value ?? '').toLowerCase().includes(lowerSearchTerm)
+            );
 
             const matchesStatus = !filters.Status ||                              // null or undefined
                 filters.Status.length === 0 ||                  // empty array []
@@ -200,7 +204,6 @@ export const AppProvider = ({ children }) => {
             const matchesManager = !filters.Manager || ticket.Manager === filters.Manager;
             const matchesTargetDate = !filters.TargetDate || ticket.TargetDate === filters.TargetDate;
             const matchesCreatedByName = !filters.CreatedByName || ticket.CreatedByName === filters.CreatedByName;
-            console.log("matchesStatus", matchesStatus, ticket.Status, filters.Status, matchesPriority);
             return matchesSearch && matchesStatus && matchesPriority && matchesDepartment && matchesAssignee && matchesManager && matchesTargetDate && matchesCreatedByName;
         });
     }, [tickets, searchTerm, filters]);
@@ -230,7 +233,10 @@ export const AppProvider = ({ children }) => {
         modal,
         decryptedUser,
         setMyPgTicketsTotal,
-        myPgTicketsTotal
+        myPgTicketsTotal,
+        setInput,
+        input,
+
     };
 
     return (

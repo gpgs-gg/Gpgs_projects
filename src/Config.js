@@ -34,6 +34,49 @@ export const SelectStyles = {
   })
 };
 
+
+
+export const SelectStylesfilter = {
+  control: (base, state) => ({
+    ...base,
+    width: "200px",
+    paddingTop: "0.25rem",
+    paddingBottom: "0.10rem",
+    paddingLeft: "0.75rem",
+    paddingRight: "0.50rem",
+    marginTop: "0.30rem",
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderColor: state.isFocused ? "#fb923c" : "#fdba74",
+    borderRadius: "0.375rem",
+    boxShadow: state.isFocused
+      ? "0 0 0 2px rgba(251,146,60,0.5)"
+      : "0 1px 2px rgba(0,0,0,0.05)",
+    backgroundColor: "white",
+    minHeight: "40px",
+    "&:hover": { borderColor: "#fb923c" },
+  }),
+
+  option: (provided, state) => ({
+    ...provided,
+    color: state.isSelected ? "white" : "#fb923c",
+    backgroundColor: state.isSelected ? "#fb923c" : "white",
+    "&:hover": { backgroundColor: "#fed7aa" },
+  }),
+
+  menu: (provided) => ({
+    ...provided,
+    zIndex: 9999,
+    maxHeight: "200px",
+    // overflowY: "auto",
+  }),
+
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: 9999,
+  }),
+};
+
 export const CategoryOptions = [
   { value: "Others", label: "Others" },
   { value: "Rent Receipt", label: "Rent Receipt" },

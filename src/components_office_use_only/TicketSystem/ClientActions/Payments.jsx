@@ -4,54 +4,15 @@ import { format, subMonths } from "date-fns"; // date-fns is handy
 import { usePropertyData, usePropertySheetData } from './services';
 import { SECRET_KEY } from '../../../Config';
 import LoaderPage from '../../NewBooking/LoaderPage';
+import OR from '../../../logo/QR.jpeg'
 
-const pgClientData = {
-    personalInfo: {
-        name: "Rahul Sharma",
-        profileImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80",
-        phone: "+91 98765 43210",
-        email: "rahul.sharma@example.com",
-        emergencyContact: "+91 98765 43211 (Parent)",
-        idProof: "Aadhar Card - XXXX XXXX 5678",
-        dob: "15 March 1998",
-        bloodGroup: "B+",
-        occupation: "Software Engineer",
-        company: "Tech Solutions Pvt. Ltd."
-    },
-    pgDetails: {
-        pgName: "Elite PG for Gents",
-        roomNo: "A-204",
-        sharingType: "2 Sharing",
-        checkInDate: "15 June 2023",
-        duration: "6 Months",
-        rent: "₹12,000/month",
-        deposit: "₹15,000",
-        address: "H-12, Sector 63, Noida, Uttar Pradesh - 201301",
-        managerName: "Vikram Singh",
-        managerContact: "+91 98765 12345"
-    },
-    paymentInfo: {
-        currentDue: "₹12,000",
-        dueDate: "5 October 2023",
-        previousDue: "₹0",
-        paymentHistory: [
-            { month: "September 2023", amount: "₹12,000", status: "Paid", date: "2 Sep 2023" },
-            { month: "August 2023", amount: "₹12,000", status: "Paid", date: "1 Aug 2023" },
-            { month: "July 2023", amount: "₹12,000", status: "Paid", date: "3 Jul 2023" }
-        ]
-    },
-    complaints: [
-        { id: "CMP001", date: "20 Sep 2023", category: "Housekeeping", status: "Resolved", description: "Room not cleaned properly" },
-        { id: "CMP002", date: "15 Sep 2023", category: "Maintenance", status: "In Progress", description: "AC not working" },
-        { id: "CMP003", date: "5 Sep 2023", category: "WiFi", status: "Resolved", description: "Internet connectivity issue" }
-    ]
-};
 
 const Payments = () => {
 
     const [activeTab, setActiveTab] = useState('overview');
     const [createTicket, setCreateTicket] = useState(false)
     const [decryptedUser, setDecryptedUser] = useState(null);
+    const [view, setView] = useState(false);
 
     const { data: propertyDataFromApi } = usePropertyData();
 
@@ -72,7 +33,7 @@ const Payments = () => {
 
         // Get last 6 months from current date (including current)
         const sheetIds = [];
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 4; i++) {
             const date = subMonths(new Date(), i); // i months ago
             const sheetName = format(date, "MMMyyyy"); // Format like "Sep2025"
             sheetIds.push(`${sheetBaseId},${sheetName},${bedCount}`);
@@ -216,7 +177,7 @@ const Payments = () => {
                             <p className="font-semibold text-gray-700">{`${new Date().getDate()} ${new Date().toLocaleString('default', { month: 'short' })} ${new Date().getFullYear()}`}</p>
                         </div>
                         <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
-                            <p className="text-gray-700 font-bold">Current Due</p>
+                            <p className="text-gray-700 font-bold">Current Month Due</p>
                             <p className="font-semibold text-gray-700">₹&nbsp;
                                 {mainSheetDataForNameWise.length > 0
                                     ? mainSheetDataForNameWise[0]?.CurDueAmt
@@ -231,13 +192,101 @@ const Payments = () => {
                                     : "loading..."}
                             </p>
                         </div>
+                        <div className="flex gap-10  justify-between p-3 bg-white border border-orange-300 rounded-lg">
+                            <p className="text-gray-700 font-bold">Deposit Due</p>
+                            <p className="font-semibold text-gray-700">₹&nbsp;
+                                {mainSheetDataForNameWise.length > 0
+                                    ? mainSheetDataForNameWise[0]?.DADue
+                                    : "loading..."}
+                            </p>
+                        </div>
+                        <div className="flex gap-10  justify-between p-3 bg-gray-100 border border-orange-300 rounded-lg">
+                            <p className="text-gray-700 font-bold">Total Due</p>
+                            <p className="font-semibold text-gray-700">₹&nbsp;
+                                {mainSheetDataForNameWise.length > 0
+                                    ? Number(mainSheetDataForNameWise[0]?.CurDueAmt) + Number(mainSheetDataForNameWise[0]?.PreDueAmt) + Number(mainSheetDataForNameWise[0]?.DADue)
+                                    : "loading..."}
+                            </p>
+                        </div>
+
+
                         <div className=" flex justify-center items-center">
-                            <button className="w-fit text-xl bg-orange-300 text-black font-bold py-3 px-10 rounded-md hover:bg-orange-400 transition duration-200 flex items-center justify-center">
+                            <button onClick={() => setView(!view)} className="w-fit text-xl bg-orange-300 text-black font-bold py-3 px-10 rounded-md hover:bg-orange-400 transition duration-200 flex items-center justify-center">
                                 {/* <i className="fas fa-wallet mr-2"></i> */}
                                 Pay Now
                             </button>
                         </div>
                     </div>
+
+
+                    {view && (
+                        <div
+                            onClick={() => setView(false)}
+                            className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center"
+                        >
+                            <div
+                                className="bg-gray-50 w-full max-w-4xl rounded-lg shadow-xl p-6 overflow-y-auto max-h-[90vh] relative"
+                                onClick={(e) => e.stopPropagation()} // Prevents modal close on inner click
+                            >
+                                {/* Close Button */}
+                                <button
+                                    onClick={() => setView(null)}
+                                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors"
+                                    aria-label="Close Modal"
+                                >
+                                    <i className="fas fa-times text-2xl"></i>
+                                </button>
+
+                                {/* Modal Title */}
+                                <h2 className="text-3xl font-semibold  border-b text-gray-800">
+                                    Bank Details
+                                </h2>
+
+                                {/* Modal Content */}
+                                <div className="p-4 text-gray-800 text-sm">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8  rounded-md">
+
+                                        {/* Bank Information */}
+                                        <div className="space-y-4 text-base mt-1 p-5 border shadow-lg rounded-lg border-orange-300">
+                                            <h3 className="text-xl font-semibold border-b ">Account Info</h3>
+                                            {[
+                                                ['Bank', 'HDFC'],
+                                                ['Account Type', 'Current'],
+                                                ['Account Number', '50200044250311'],
+                                                ['IFSC Code', 'HDFC0000258'],
+                                                ['Branch', 'Nerul (East), Sector 23'],
+                                                ['Account Name', 'Gopal Paying Guest Services'],
+                                                ['UPI ID', 'kamleshwarkodag-1@okhdfcbank'],
+                                            ].map(([label, value], idx) => (
+                                                <div key={idx} className="flex">
+                                                    <span className="w-40 font-medium">{label}:</span>
+                                                    <span>{value}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {/* QR Code Section */}
+                                        <div className="flex flex-col items-center justify-center text-center space-y-2 shadow-lg rounded-lg border border-orange-300">
+                                            <h3 className="text-lg font-semibold border-b text-gray-800">Scan QR to Pay</h3>
+                                            <img
+                                                src={OR}// Replace with actual image path
+                                                alt="QR Code for UPI Payment"
+                                                className="w-96 h-96 object-cover border border-gray-300 rounded"
+                                            />
+                                            <p className="text-sm pb-3 text-gray-500">
+                                                Use any UPI app to scan and pay securely
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {/* Optional: Add WorkLogs or Attachments sections below here */}
+                            </div>
+                        </div>
+                    )}
+
+
+
 
 
                 </div>
@@ -259,7 +308,7 @@ const Payments = () => {
                                     <tr>
                                         <th className="text-left sticky  left-0 text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Month</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Rent</th>
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Deposit</th>
+                                        {/* <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Deposit</th> */}
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Processing Fees</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Electricity Bill</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Adjusted Electricity Bill</th>
@@ -296,9 +345,9 @@ const Payments = () => {
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.RentAmt}</td>
 
                                                     {/* ✅ Show Deposit only for first row */}
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
+                                                    {/* <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
                                                         {index === mainSheetDataForNameWise.length - 1 ? `₹ ${payment.DA}` : '₹ 0'}
-                                                    </td>
+                                                    </td> */}
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
                                                         {index === mainSheetDataForNameWise.length - 1 ? `₹ ${payment.ProFees}` : '₹ 0'}
                                                     </td>

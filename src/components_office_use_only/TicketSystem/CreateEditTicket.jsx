@@ -20,7 +20,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const { setCurrentView, selectedTicket } = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
-     console.log("selectedTicket", selectedTicket);
+     
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: property } = usePropertMasteryData();
   const [previousWlogs, setPreviousWlogs] = useState("");

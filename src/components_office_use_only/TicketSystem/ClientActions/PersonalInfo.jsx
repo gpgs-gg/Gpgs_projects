@@ -54,7 +54,7 @@ const PersonalInfo = () => {
                     className="p-3 bg-white rounded-lg border border-orange-300"
                 >
                     <p className="text-lg font-bold">{item.label}</p>
-                    <p className="font-medium text-gray-900">{item.value || "N/A"}</p>
+                    <p className="font-medium text-gray-900 break-all">{item.value || "N/A"}</p>
                 </div>
             ))}
 

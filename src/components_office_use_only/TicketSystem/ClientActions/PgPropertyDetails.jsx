@@ -54,7 +54,7 @@ const OverView = () => {
         return pgMainSheetData?.data?.length > 0
             ? pgMainSheetData?.data?.filter((ele) => ele.ClientID.trim() === decryptedUser.clientID.trim()) : []
     }, [pgMainSheetData])
-   
+
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
         if (encrypted) {
@@ -90,178 +90,149 @@ const OverView = () => {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
 
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
+                            {/* Property Code */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
                                 <p className="text-lg font-bold">Property Code</p>
-                                <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.["Property Code"] : "loading..."} </p>
+                                <p className="text-gray-900 font-medium">{propertyData?.[0]?.["Property Code"] || "loading..."}</p>
                             </div>
-                            <div className="md:col-span-5 p-3 bg-white rounded-lg border border-orange-300">
+
+                            {/* Property Address */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 md:col-span-1 lg:col-span-5 break-words">
                                 <p className="text-lg font-bold">Property Address</p>
-                                <p className="font-medium text-gray-900">
-                                    {propertyData ? propertyData[0]?.["Property Address"] : "loading..."}
+                                <p className="text-gray-900 font-medium whitespace-pre-line">
+                                    {propertyData?.[0]?.["Property Address"] || "loading..."}
                                 </p>
                             </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
+
+                            {/* WiFi Name */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
                                 <p className="text-lg font-bold">WiFi Name</p>
-                                <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.["WiFi Name"] : "loading..."}</p>
+                                <p className="text-gray-900 font-medium">{propertyData?.[0]?.["WiFi Name"] || "loading..."}</p>
                             </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
+
+                            {/* WiFi Password */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
                                 <p className="text-lg font-bold">WiFi Password</p>
-                                <p className="font-medium text-gray-900 break-after-auto">{propertyData ? propertyData[0]?.["WiFi Pwd"] : "loading..."}</p>
+                                <p className="text-gray-900 font-medium break-words">{propertyData?.[0]?.["WiFi Pwd"] || "loading..."}</p>
+                            </div>
 
+                            {/* Date of Joining */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
+                                <p className="text-lg font-bold">Date Of Joining</p>
+                                <p className="text-gray-900 font-medium">{decryptedUser?.doj}</p>
                             </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg  font-bold">Date Of Joining</p>
-                                <p className="font-medium text-gray-900">{decryptedUser?.doj}</p>
-                            </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
+
+                            {/* Check-In Date */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
                                 <p className="text-lg font-bold">Check-In Date</p>
-                                <p className="font-medium text-gray-900">{decryptedUser?.actualDoj}</p>
-                            </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg font-bold">Monthly Rent</p>
-                                <p className="font-medium text-gray-900">₹. {mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.MFR : "loading..."}</p>
-                            </div>
-                            <div className="p-3 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg  font-bold">Security Deposit</p>
-                                <p className="font-medium text-gray-900">₹. {mainSheetDataForNameWise.length > 0 ? mainSheetDataForNameWise[0]?.DA : "loading..."}</p>
+                                <p className="text-gray-900 font-medium">{decryptedUser?.actualDoj}</p>
                             </div>
 
-                            <div className="p-3 md:col-span-6 bg-white rounded-lg border border-orange-300">
-                                <p className="text-lg font-bold">Electricity Bill Details</p>
-                                <div className='grid grid-cols-1 md:grid-cols-5 gap-2 mt-2'>
-                                    <div className="p-2  rounded border border-orange-300">
-                                        <p className="text-lg  font-bold">Consumer No</p>
-                                        <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBConsumerNo : "loading..."}</p>
+                            {/* Monthly Rent */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
+                                <p className="text-lg font-bold">Monthly Rent</p>
+                                <p className="text-gray-900 font-medium">₹ {mainSheetDataForNameWise?.[0]?.MFR || "loading..."}</p>
+                            </div>
+
+                            {/* Security Deposit */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 break-words">
+                                <p className="text-lg font-bold">Security Deposit</p>
+                                <p className="text-gray-900 font-medium">₹ {mainSheetDataForNameWise?.[0]?.DA || "loading..."}</p>
+                            </div>
+
+                            {/* Electricity Bill Details */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 md:col-span-2 lg:col-span-6 break-words">
+                                <p className="text-lg font-bold mb-2">Electricity Bill Details</p>
+                                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+                                    {/* Consumer No */}
+                                    <div className="p-2 rounded border border-orange-300 break-words">
+                                        <p className="text-base font-bold">Consumer No</p>
+                                        <p className="text-gray-900 font-medium">{propertyData?.[0]?.EBConsumerNo || "loading..."}</p>
                                     </div>
-                                    <div className="p-2  rounded border border-orange-300">
-                                        <p className="text-lg font-bold">Billing Unit</p>
-                                        <p className="font-medium text-gray-900">{propertyData ? propertyData[0]?.EBBillingUnit : "loading..."}</p>
+
+                                    {/* Billing Unit */}
+                                    <div className="p-2 rounded border border-orange-300 break-words">
+                                        <p className="text-base font-bold">Billing Unit</p>
+                                        <p className="text-gray-900 font-medium">{propertyData?.[0]?.EBBillingUnit || "loading..."}</p>
                                     </div>
-                                    <div className="p-2 col-span-3  rounded border border-orange-300">
-                                        <p className="text-lg  font-bold">Power Company Web Link</p>
-                                        {propertyData && propertyData[0]?.EBPCWebLink ? (
+
+                                    {/* Web Link */}
+                                    <div className="p-2 rounded border border-orange-300 md:col-span-3 break-words">
+                                        <p className="text-base font-bold">Power Company Web Link</p>
+                                        {propertyData?.[0]?.EBPCWebLink ? (
                                             <a
                                                 href={propertyData[0].EBPCWebLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="font-medium text-blue-600 hover:underline break-all"
+                                                className="text-blue-600 hover:underline break-words"
                                             >
                                                 {propertyData[0].EBPCWebLink}
                                             </a>
                                         ) : (
-                                            <p className="font-medium text-gray-900">loading...</p>
+                                            <p className="text-gray-900 font-medium">loading...</p>
                                         )}
                                     </div>
-
                                 </div>
                             </div>
-                            <div className="p-3 md:col-span-3 bg-white rounded-lg border border-orange-300">
+
+                            {/* Emergency Contacts */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 md:col-span-3 break-words">
                                 <p className="text-lg font-bold">
-                                    Emergency Contacts <span className="text-[15px] text-red-600">(<IoIosWarning className="inline-block mr-1 text-xl mt-[-6px]" />Please Do Not Misuse)</span>
-                                    {/* , call only for electrical short circuits, health emergencies, or safety concerns */}
+                                    Emergency Contacts <span className="text-sm text-red-600">(Please Do Not Misuse)</span>
                                 </p>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
 
-                                <div className='grid grid-cols-1 md:grid-cols-3  gap-2 mt-2'>
-                                    <div className="p-2 flex justify-center  flex-col rounded border border-orange-300">
-                                        <p className="text-lg  font-bold">Admin Team</p>
-                                          <br />
-                                        <p className="font-medium  text-gray-900">
-                                            <a
-                                                href={`tel:9044440222`}
-                                            >
-                                                <i className="fas fa-phone mr-2"></i>9044440222
-                                            </a>
-                                            <br />
-                                            <a
-                                                href={`tel:9503322757`}
-                                            >
-                                                <i className="fas fa-phone mr-2"></i>  9503322757
-                                            </a>
-
-                                        </p>
-                                    </div>
-                                    <div className="p-2  rounded border border-orange-300">
-                                        <p className="text-lg font-bold">Maintenance Team</p>
-                                                                                  <br />
-
-                                        <a
-                                            href={`tel:9326325181`}
-                                        >
-                                            <i className="fas fa-phone mr-2"></i>9326325181
-                                        </a>
-
-                                    </div>
-                                    <div className="p-2  rounded border border-orange-300">
-                                        <p className="text-lg  font-bold">Sales Team</p>
-                                                                                  <br />
-
-
-                                        <a
-                                            href={`tel:9326262292`}
-                                        >
-                                            <i className="fas fa-phone mr-2"></i>9326262292
-                                        </a>
-                                        <br />
-                                        <a
-                                            href={`tel:7021368623`}
-                                        >
-                                            <i className="fas fa-phone mr-2"></i>7021368623
-                                        </a>
-
-
+                                    {/* Admin Team */}
+                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                        <p className="font-bold text-base">Admin Team</p>
+                                        <a href="tel:9044440222" className="block text-blue-600 hover:underline">📞 9044440222</a>
+                                        <a href="tel:9503322757" className="block text-blue-600 hover:underline">📞 9503322757</a>
                                     </div>
 
+                                    {/* Maintenance */}
+                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                        <p className="font-bold text-base">Maintenance Team</p>
+                                        <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
+                                    </div>
+
+                                    {/* Sales */}
+                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                        <p className="font-bold text-base">Sales Team</p>
+                                        <a href="tel:9326262292" className="block text-blue-600 hover:underline">📞 9326262292</a>
+                                        <a href="tel:7021368623" className="block text-blue-600 hover:underline">📞 7021368623</a>
+                                    </div>
                                 </div>
                             </div>
 
-
-                            <div className="p-3 md:col-span-3 bg-white rounded-lg border border-orange-300">
+                            {/* Customer Care */}
+                            <div className="p-4 bg-white rounded-lg border border-orange-300 md:col-span-3">
                                 <p className="text-lg font-bold">Customer Care</p>
-                                <div className='grid grid-cols-1 md:grid-cols-3  gap-2 mt-2'>
-                                    <div className="p-2 flex justify-center  flex-col rounded border border-orange-300">
-                                        <p className="text-lg  font-bold">Chat / Call</p>
-                                                                                  <br />
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
 
-                                        <p className="font-medium text-gray-900">
-                                            <a
-                                                href={`tel:8928191814`}
-                                            >
-                                                <i className="fas fa-phone mr-2"></i>8928191814
-                                            </a>
-                                            <br />
-                                            <a
-                                                href={`tel:9503322757`}
-                                            >
-                                                <i className="fas fa-phone mr-2"></i>9819636341
-                                            </a>
+                                    {/* Chat/Call */}
+                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                        <p className="font-bold text-base">Chat / Call</p>
+                                        <a href="tel:8928191814" className="block text-blue-600 hover:underline">📞 8928191814</a>
+                                        <a href="tel:9819636341" className="block text-blue-600 hover:underline">📞 9819636341</a>
+                                    </div>
 
+                                    {/* Review Link */}
+                                    <div className="p-3 md:col-span-2 rounded border border-orange-300">
+                                        <p className="font-bold text-base mb-1">Review Link</p>
+                                        <a href="https://g.page/r/CX8tHckG2lUpEAE/review" target="_blank" rel="noopener noreferrer" className="text-blue-600 break-words hover:underline">
+                                            https://g.page/r/CX8tHckG2lUpEAE/review
+                                        </a>
+                                        <p className="text-sm mt-2 text-gray-700">
+                                            Gopal's Paying Guest Services would love your feedback. Post a review to our profile.
                                         </p>
                                     </div>
-                                    {/* <div className="p-2  rounded border border-orange-300">
-                                        <p className="text-lg font-bold">Maintenance Team</p>
-                                        <a
-                                            href={`tel:9326325181`}
-                                        >
-                                            <i className="fas fa-phone mr-2"></i>9326325181
-                                        </a>
-
-                                    </div> */}
-                                    <div className="p-2 col-span-2 rounded border border-orange-300">
-                                        <p className="text-lg  font-bold">Review Link</p>
-
-                                        <a
-                                            href={`https://g.page/r/CX8tHckG2lUpEAE/review`}
-                                            target='_blank'
-                                        >
-                                          
-                                                <p className='text-blue-500 break-all'>https://g.page/r/CX8tHckG2lUpEAE/review</p>
-                                           <p className='text-md'> Gopal's Paying Guest Services would love your feedback. Post a review to our profile </p>
-                                        </a>
-                                    </div>
-
                                 </div>
                             </div>
+
                         </div>
+
+
                         {/* <div className="mt-6 pt-4 border-t">
                             <h3 className="text-md font-medium text-gray-900 mb-2 flex items-center">
                                 <i className="fas fa-user-tie mr-2 text-orange-500"></i>

@@ -152,9 +152,9 @@ export const TicketList = () => {
         localStorage.setItem("currentPage", currentPage);
     }, [currentPage]);
 
-    const { decryptedUser, filters } = useApp();
+    const { decryptedUser, filters , searchTerm } = useApp();
 
-
+  console.log(111111111111,searchTerm )
     const TICKETS_PER_PAGE = 10;
 
     const {
@@ -176,12 +176,12 @@ export const TicketList = () => {
 
         const filtersChanged = JSON.stringify(filters) !== JSON.stringify(prevFiltersRef.current);
 
-        if (hasAnyFilterValue && filtersChanged) {
+        if (hasAnyFilterValue && filtersChanged || searchTerm) {
             setCurrentPage(1);
         }
 
         prevFiltersRef.current = filters;
-    }, [filters]);
+    }, [filters , searchTerm]);
 
 
     const totalPages = Math.ceil(filteredTickets.length / TICKETS_PER_PAGE);
