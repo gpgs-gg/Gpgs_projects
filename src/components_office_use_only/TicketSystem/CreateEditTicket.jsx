@@ -2,9 +2,10 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { useApp } from "./AppProvider";
 import CryptoJS from "crypto-js";
-import { DepartmentOptions, StatusOptions, PriorityOptions, CategoryOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY, Managers } from "../../Config";
+import { StatusOptions, PriorityOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY, Managers } from "../../Config";
 import {
   useCreateTicket,
+  useDynamicDetails,
   useEmployeeDetails,
   usePropertMasteryData,
   useUpdateTicketSheetData,
@@ -20,7 +21,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const { setCurrentView, selectedTicket } = useApp();
   const { mutate: submitBooking, isPending: isSubmittingBooking } = useCreateTicket();
   const { mutate: updateTicketData, isPending: isUpdatingTicket } = useUpdateTicketSheetData();
-     
+  const { data: DynamicValuesDetails } = useDynamicDetails()
+
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: property } = usePropertMasteryData();
   const [previousWlogs, setPreviousWlogs] = useState("");
@@ -78,6 +80,19 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     },
   });
 
+  const CategoryOptions = DynamicValuesDetails?.data
+    ?.filter((prop) => prop.Categoryies) // Ensure Categoryies is present
+    .map((prop) => ({
+      value: prop.Categoryies,
+      label: prop.Categoryies,
+    })) || [];
+
+  const DepartmentOptions = DynamicValuesDetails?.data
+    ?.filter((prop) => prop.Departments) // Ensure Departments is present
+    .map((prop) => ({
+      value: prop.Departments,
+      label: prop.Departments,
+    })) || [];
 
   // dynamic managersOption define here .........
   const ManagerOptions = EmployeeDetails?.data
@@ -154,57 +169,57 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
 
   const handleFileChange = (e) => {
-  const selectedFiles = Array.from(e.target.files);
+    const selectedFiles = Array.from(e.target.files);
 
-  // Max size check
-  const maxSize = 5 * 1024 * 1024; // 5MB
-  const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
-  if (oversizedFiles.length > 0) {
-    toast.dismiss()
-    toast.error(`⚠️ Some files are larger than 5 MB and were not added.`);
-  }
+    // Max size check
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      toast.dismiss()
+      toast.error(`⚠️ Some files are larger than 5 MB and were not added.`);
+    }
 
-  // Filter valid files (by size)
-  const validFiles = selectedFiles.filter(file => file.size <= maxSize);
+    // Filter valid files (by size)
+    const validFiles = selectedFiles.filter(file => file.size <= maxSize);
 
-  // Allowed extensions
-  const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
+    // Allowed extensions
+    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
 
-  // Filter by extension
-  const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
-  const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
+    // Filter by extension
+    const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
+    const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
 
-  // Check max file count
-  const totalFiles = filteredPreviews.length + filteredValidFiles.length;
-  if (totalFiles > 5) {
-     toast.dismiss()
-    toast.error("⚠️ You can only upload up to 5 files.");
-    return;
-  }
+    // Check max file count
+    const totalFiles = filteredPreviews.length + filteredValidFiles.length;
+    if (totalFiles > 5) {
+      toast.dismiss()
+      toast.error("⚠️ You can only upload up to 5 files.");
+      return;
+    }
 
-  // Generate new previews with unique names
-  const newPreviews = filteredValidFiles.map((file) => {
-    const uniquePrefix = Math.floor(100000 + Math.random() * 900000); // Random 6-digit number
-    const newName = `${uniquePrefix}-${file.name}`;
+    // Generate new previews with unique names
+    const newPreviews = filteredValidFiles.map((file) => {
+      const uniquePrefix = Math.floor(100000 + Math.random() * 900000); // Random 6-digit number
+      const newName = `${uniquePrefix}-${file.name}`;
 
-    // Create a new File object with modified name (optional)
-    const renamedFile = new File([file], newName, { type: file.type });
+      // Create a new File object with modified name (optional)
+      const renamedFile = new File([file], newName, { type: file.type });
 
-    return {
-      url: URL.createObjectURL(file),
-      type: file.type,
-      name: newName,
-      file: renamedFile,
-    };
-  });
+      return {
+        url: URL.createObjectURL(file),
+        type: file.type,
+        name: newName,
+        file: renamedFile,
+      };
+    });
 
-  // Update preview state
-  const updatedPreviews = [...previews, ...newPreviews];
-  setPreviews(updatedPreviews);
+    // Update preview state
+    const updatedPreviews = [...previews, ...newPreviews];
+    setPreviews(updatedPreviews);
 
-  // Set final value for form submission
-  setValue("Attachment", updatedPreviews.map((item) => item.file));
-};
+    // Set final value for form submission
+    setValue("Attachment", updatedPreviews.map((item) => item.file));
+  };
 
 
 
@@ -249,7 +264,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const isValidDate = (date) => {
     const parsedDate = new Date(date);
     return parsedDate instanceof Date && !isNaN(parsedDate);
-};
+  };
 
   const onSubmit = (data) => {
     const currentTimestamp = getFormattedTimestamp();
@@ -285,8 +300,8 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       Assignee: data.Assignee?.value || "",
       Manager: data.Manager?.value || "",
       TargetDate: isValidDate(data.TargetDate)
-    ? getFormattedTimestampForTargetDate(data.TargetDate)
-    : "N/A",
+        ? getFormattedTimestampForTargetDate(data.TargetDate)
+        : "N/A",
       Status: statusValue,
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",
@@ -301,13 +316,13 @@ export const CreateEditTicket = ({ isEdit = false }) => {
           UpdatedDateTime: Timestamp(),
           Attachment: previews.map(ele => ele.url),
           CreatedById: selectedTicket?.CreatedById || "Unknown",
-          CreatedBy : selectedTicket?.CreatedBy || "Unknown",
+          CreatedBy: selectedTicket?.CreatedBy || "Unknown",
 
         }
         : {
           CreatedByName: decryptedUser?.name || "Unknown",
           CreatedById: decryptedUser?.clientID || decryptedUser?.id || "Unknown",
-          CreatedBy : decryptedUser?.role.charAt(0).toUpperCase() + decryptedUser?.role.slice(1).toLowerCase() || "Unknown",
+          CreatedBy: decryptedUser?.role.charAt(0).toUpperCase() + decryptedUser?.role.slice(1).toLowerCase() || "Unknown",
         }),
     };
     const formData = new FormData();
@@ -493,7 +508,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                             options={filteredOptions}
                             styles={SelectStyles}
                             isClearable
-                            isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client" && selectedTicket.Status !== "Resolved"} 
+                            isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client" && selectedTicket.Status !== "Resolved"}
                           />
                           {error && <p className="text-red-500 text-sm">{error.message}</p>}
                         </>
@@ -502,7 +517,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   />
                 </div>
               )}
-              
+
               {!isEdit && decryptedUser?.role.toLowerCase() !== "client" && (<>
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">Manager</label>

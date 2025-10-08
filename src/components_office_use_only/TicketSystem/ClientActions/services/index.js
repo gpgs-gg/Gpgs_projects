@@ -77,3 +77,4 @@ export const useClientDetails = () => {
     queryFn: fetchClientDetailsData,
   });
 };
+

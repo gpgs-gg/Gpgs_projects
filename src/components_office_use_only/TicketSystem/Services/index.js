@@ -85,3 +85,17 @@ export const usePropertMasteryData = () => {
     queryFn: fetchPropertyMasterData,
   });
 };
+
+
+const fetchDynamicDetails = async () => {
+  const response = await apiClient.get("/dynamic-values");
+  return response.data;
+};
+
+// React Query hook to fetch property data
+export const useDynamicDetails = () => {
+  return useQuery({
+    queryKey: ["dynamicvalues"],
+    queryFn: fetchDynamicDetails,
+  });
+};
