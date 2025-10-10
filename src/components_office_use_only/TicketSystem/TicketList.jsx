@@ -154,7 +154,6 @@ export const TicketList = () => {
 
     const { decryptedUser, filters , searchTerm } = useApp();
 
-  console.log(111111111111,searchTerm )
     const TICKETS_PER_PAGE = 10;
 
     const {

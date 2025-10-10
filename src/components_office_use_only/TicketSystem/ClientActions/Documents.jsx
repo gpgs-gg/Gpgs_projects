@@ -13,7 +13,7 @@ const Documents = () => {
         kyc: [],
         agreement: [],
     });
-
+  console.log("uploadedDocs: ", uploadedDocs);
     const [existingDocs, setExistingDocs] = useState({
         kyc: [],
         agreement: [],
@@ -47,27 +47,40 @@ const Documents = () => {
         }
     }, [clientDetailsForDocuments, decryptedUser.name]);
 
-    const handleFileChange = (type, event) => {
-        const newFiles = Array.from(event.target.files);
-        if (!newFiles.length) return;
+  const handleFileChange = (type, event) => {
+    const newFiles = Array.from(event.target.files);
+    if (!newFiles.length) return;
 
-        setUploadedDocs((prev) => {
-            const currentFiles = prev[type] || [];
-            const existingCount = existingDocs[type]?.length || 0;
-            const totalFiles = currentFiles.length + newFiles.length + existingCount;
+    setUploadedDocs((prev) => {
+        const currentFiles = prev[type] || [];
+        const existingCount = existingDocs[type]?.length || 0;
 
-            if (totalFiles > MAX_FILES) {
-                toast.dismiss()
-                toast.error(`You can upload a maximum of ${MAX_FILES} files for ${type.toUpperCase()}.`);
-                return prev;
-            }
+        const totalFiles = currentFiles.length + newFiles.length + existingCount;
+        if (totalFiles > MAX_FILES) {
+            toast.dismiss();
+            toast.error(`You can upload a maximum of ${MAX_FILES} files for ${type.toUpperCase()}.`);
+            return prev;
+        }
 
-            return {
-                ...prev,
-                [type]: [...currentFiles, ...newFiles],
-            };
+        // Rename files to ensure uniqueness
+        const uniqueNewFiles = newFiles.map(file => {
+            const timestamp = Date.now();
+            const uniqueSuffix = `${timestamp}-${Math.floor(Math.random() * 10000)}`;
+            const fileExtension = file.name.split('.').pop();
+            const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            const newFileName = `${uniqueSuffix}_${baseName}.${fileExtension}`;
+            return new File([file], newFileName, { type: file.type });
         });
-    };
+        return {
+            ...prev,
+            [type]: [...currentFiles, ...uniqueNewFiles],
+        };
+    });
+
+    // Reset the input so selecting the same file again will trigger onChange
+    event.target.value = '';
+};
+
 
     const handleUploadClick = (type) => {
         fileInputRefs[type].current.click();

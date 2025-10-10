@@ -81,10 +81,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   });
 
   const CategoryOptions = DynamicValuesDetails?.data
-    ?.filter((prop) => prop.Categoryies) // Ensure Categoryies is present
+    ?.filter((prop) => prop.Categories) // Ensure Categoryies is present
     .map((prop) => ({
-      value: prop.Categoryies,
-      label: prop.Categoryies,
+      value: prop.Categories,
+      label: prop.Categories,
     })) || [];
 
   const DepartmentOptions = DynamicValuesDetails?.data
@@ -386,7 +386,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             <div className="lg:flex   items-center gap-5">
               <h1>Create New Ticket</h1>
               {decryptedUser?.role.toLowerCase().toLowerCase() === "client" && (
-                <p className="text-orange-500 text-sm lg:text-lg">For any Maintenance, Housekeeping, Notice To Vacate PG Facility, Rent Receipt, Agreement, Full & Final Settlement, Electricity Bill Concern, etc.</p>
+                <p className="text-orange-500 text-sm lg:text-lg">Kindly submit a new ticket for any maintenance requests, housekeeping services, notice to vacate, rent receipts, rental agreements, full and final settlements, or electricity bill-related concerns</p>
               )}
             </div>
           )}
@@ -815,10 +815,10 @@ export const CreateEditTicket = ({ isEdit = false }) => {
         {isEdit ? (
           <h1>View & Edit Ticket : {selectedTicket?.TicketID}</h1>
         ) : (
-          <div className="lg:flex   items-center gap-5">
+          <div className="flex flex-col justify-start">
             <h1>Create New Ticket</h1>
             {decryptedUser?.role.toLowerCase().toLowerCase() === "client" && (
-              <p className="text-orange-500 text-sm lg:text-[16px]">For any Maintenance, Housekeeping, Notice To Vacate PG Facility, Rent Receipt, Agreement, Full & Final Settlement, Electricity Bill Concern, etc.</p>
+              <p className="text-orange-500 text-sm lg:text-[14px]">Kindly submit a new ticket for any maintenance requests, housekeeping services, notice to vacate, rent receipts, rental agreements, full and final settlements, or electricity bill-related concerns etc.</p>
             )}
           </div>
         )}

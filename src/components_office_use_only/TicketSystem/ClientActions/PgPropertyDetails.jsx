@@ -28,7 +28,7 @@ const OverView = () => {
         );
     }, [propertyDataFromApi, decryptedUser?.propertyCode]);
 
-
+   console.log("FilteredPropertySheetData:", filteredPropertySheetData , propertyDataFromApi , decryptedUser);
 
     const mainSheetId = useMemo(() => {
         if (!filteredPropertySheetData || filteredPropertySheetData.length === 0) return [];
@@ -54,6 +54,9 @@ const OverView = () => {
         return pgMainSheetData?.data?.length > 0
             ? pgMainSheetData?.data?.filter((ele) => ele.ClientID.trim() === decryptedUser.clientID.trim()) : []
     }, [pgMainSheetData])
+
+    console.log("MainSheetDataForNameWise:", mainSheetDataForNameWise , pgMainSheetData);
+
 
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
@@ -179,7 +182,7 @@ const OverView = () => {
                             {/* Emergency Contacts */}
                             <div className="p-4 bg-white rounded-lg border border-orange-300 md:col-span-3 break-words">
                                 <p className="text-lg font-bold">
-                                    Emergency Contacts <span className="text-sm text-red-600">(Please Do Not Misuse)</span>
+                                    Emergency Contacts <span className="text-sm text-red-600">(Please use this responsibly)</span>
                                 </p>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
 

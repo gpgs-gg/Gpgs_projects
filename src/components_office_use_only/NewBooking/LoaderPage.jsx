@@ -6,7 +6,7 @@ const LoaderPage = () => {
     <div className="flex items-center justify-center">
       <div className="text-center">
         {/* Spinning Loader */}
-        <FaSpinner className="animate-spin h-5 w-5 text-orange-500 mx-auto mb-4" />
+        <FaSpinner className="animate-spin h-5 w-5 text-orange-700 mx-auto mb-1" />
 
               </div>
     </div>

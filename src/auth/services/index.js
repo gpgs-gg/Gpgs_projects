@@ -53,3 +53,40 @@ export const useChangePassword = () => {
     },
   });
 };
+
+
+
+const getOtp= async (data) => {
+  const response = await apiClient.post("/send-otp", data);
+  return response.data;
+};
+
+export const useGetOtp = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: getOtp,
+    onSuccess: () => {
+      // 🔄 Refetch ticket sheet after update
+      queryClient.invalidateQueries(["getOtp"]);
+    },
+  });
+};
+
+
+const verifyOtp= async (data) => {
+  const response = await apiClient.post("/verify-otp", data);
+  return response.data;
+};
+
+export const useVerifyOtp = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: verifyOtp,
+    onSuccess: () => {
+      // 🔄 Refetch ticket sheet after update
+      queryClient.invalidateQueries(["verifyOtp"]);
+    },
+  });
+};
