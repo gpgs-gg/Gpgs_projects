@@ -159,7 +159,7 @@ const LoginPage = () => {
             type="text"
             placeholder="Enter your email ID"
             {...register('loginId', { required: 'Login ID is required' })}
-            className="w-full mb-3 px-3 py-2 border border-orange-300 rounded focus:ring-2 focus:ring-orange-300"
+            className="w-full mb-3 px-3 py-2 border border-orange-300 rounded focus:ring-2 outline-none focus:ring-orange-300"
           />
           {errors.loginId && <p className="text-red-600 text-sm">{errors.loginId.message}</p>}
 
@@ -181,7 +181,7 @@ const LoginPage = () => {
                   return true;
                 },
               })}
-              className="w-full px-3 py-2 pr-10 border border-orange-300 rounded focus:ring-2 focus:ring-orange-300"
+              className="w-full px-3 py-2 pr-10 border border-orange-300 outline-none rounded focus:ring-2 focus:ring-orange-300"
             />
             <button
               type="button"

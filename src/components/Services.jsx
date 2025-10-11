@@ -322,20 +322,23 @@ const Services = () => {
                 {/* Info Box */}
                 <div className="bg-white p-6 rounded-lg flex justify-center items-center flex-col gap-2 text-center">
                   <i className="fas fa-city text-purple-600 text-3xl md:text-4xl mb-4"></i>
-                  <p className="font-bold text-gray-900 text-xl md:text-lg">Found The Right Option For You?</p>
-                  <p className="text-gray-600 mt-2 text-sm md:text-base">
+
+                  <p className="font-bold text-gray-900 text-xl md:text-lg">
+                    Found The Right Option For You?
+                  </p>
+
+                  <div className="text-gray-600 mt-2 text-sm md:text-base w-full flex justify-center">
                     <Link
                       to="/contact"
-                      className="group relative py-2 px-8 flex justify-center items-center rounded-full w-full max-w-md mb-2 space-x-2 overflow-hidden border bg-[#297229]">
-
-                      <p className="text-white text-base sm:text-lg md:text-xl transform animate-zoom">
+                      className="group relative py-2 px-8 flex justify-center items-center rounded-full w-full max-w-md mb-2 space-x-2 overflow-hidden border bg-[#297229]"
+                    >
+                      <span className="text-white text-base sm:text-lg md:text-xl transform animate-zoom">
                         Reserve Your Spot Today
-                      </p>
-
+                      </span>
                     </Link>
-
-                  </p>
+                  </div>
                 </div>
+
               </div>
             </div>
 

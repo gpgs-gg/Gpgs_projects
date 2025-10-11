@@ -85,7 +85,7 @@ const Home = () => {
           {/* Right side: video */}
           <div data-aos="fade-up" className="flex-1   flex justify-center md:justify-end">
             <video
-              className="h-[500px] lg:h-[500px] mt-7 w-full object-cover rounded-lg "
+              className="h-[400px] lg:h-[400px] mt-7 w-full object-cover rounded-lg "
               autoPlay
               muted
               loop
