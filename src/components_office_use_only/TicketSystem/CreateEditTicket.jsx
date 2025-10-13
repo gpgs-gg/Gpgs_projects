@@ -219,7 +219,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
       // Request signature from backend
       const signResponse = await fetch(
-        `http://localhost:3000/api/cloudinary-sign?public_id=${encodeURIComponent(uniqueFileName)}&folder=${encodeURIComponent(folder)}`
+        `https://gpgs-main-server.vercel.app/api/cloudinary-sign?public_id=${encodeURIComponent(uniqueFileName)}&folder=${encodeURIComponent(folder)}`
       );
 
       if (!signResponse.ok) throw new Error("Failed to get signature");
