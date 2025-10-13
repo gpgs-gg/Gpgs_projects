@@ -222,6 +222,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
         `https://gpgs-main-server.vercel.app/api/cloudinary-sign?public_id=${encodeURIComponent(uniqueFileName)}&folder=${encodeURIComponent(folder)}`
       );
 
+
       if (!signResponse.ok) throw new Error("Failed to get signature");
 
       const { signature, timestamp, api_key } = await signResponse.json();
