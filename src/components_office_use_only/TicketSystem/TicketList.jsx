@@ -598,7 +598,6 @@ const TicketCard = ({ ticket, headers, formatDate, onEdit, onImageClick, videoMo
                   const isVideo = /\.(mp4|webm|avi|mov|mkv)$/i.test(trimmedUrl);
 
                   if (!isImage && !isVideo) return null;
-
                   return (
                     <button
                       key={idx}

@@ -129,12 +129,12 @@ function App() {
   }, [TEN_HOURS, logout]);
 
 
-  // Add to main component or index.js
-  // useEffect(() => {
-  //   const onContext = (e) => e.preventDefault();
-  //   document.addEventListener('contextmenu', onContext);
-  //   return () => document.removeEventListener('contextmenu', onContext);
-  // }, []);
+  // lock right click
+  useEffect(() => {
+    const onContext = (e) => e.preventDefault();
+    document.addEventListener('contextmenu', onContext);
+    return () => document.removeEventListener('contextmenu', onContext);
+  }, []);
 
 
   return (
