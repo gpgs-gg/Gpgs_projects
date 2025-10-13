@@ -309,7 +309,7 @@ const Payments = () => {
                                         <th className="text-left sticky  left-0 text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Month</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Rent</th>
                                         {/* <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Deposit</th> */}
-                                        <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Processing Fees</th>
+                                        {/* <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Processing Fees</th> */}
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Electricity Bill</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Adjusted Electricity Bill</th>
                                         <th className="text-left text-lg font-bold bg-orange-300 text-black  whitespace-nowrap px-4 py-2">Adjusted Amount</th>
@@ -348,9 +348,9 @@ const Payments = () => {
                                                     {/* <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
                                                         {index === mainSheetDataForNameWise.length - 1 ? `₹ ${payment.DA}` : '₹ 0'}
                                                     </td> */}
-                                                    <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
+                                                    {/* <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">
                                                         {index === mainSheetDataForNameWise.length - 1 ? `₹ ${payment.ProFees}` : '₹ 0'}
-                                                    </td>
+                                                    </td> */}
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.EBAmt}</td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.AdjEB}</td>
                                                     <td className="px-4 py-7 whitespace-nowrap text-lg text-gray-500">₹ {payment.AdjAmt}</td>

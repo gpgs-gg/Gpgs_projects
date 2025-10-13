@@ -3,8 +3,8 @@ import axios from "axios";
 
 // ✅ Axios instance
 const apiClient = axios.create({
-  baseURL: "https://gpgs-main-server.vercel.app/api", // For production 
-  // baseURL: "http://localhost:3000/api", // For local development
+  // baseURL: "https://gpgs-main-server.vercel.app/api", // For production 
+  baseURL: "http://localhost:3000/api", // For local development
 });
 
 // ✅ Create Ticket

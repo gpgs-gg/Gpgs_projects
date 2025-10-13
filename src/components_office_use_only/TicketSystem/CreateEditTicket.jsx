@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { useApp } from "./AppProvider";
 import CryptoJS from "crypto-js";
-import { StatusOptions, PriorityOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY, Managers } from "../../Config";
+import { StatusOptions, PriorityOptions, CusmoterImpactedOptions, SelectStyles, SECRET_KEY, Managers, PriorityOptionsForForm } from "../../Config";
 import {
   useCreateTicket,
   useDynamicDetails,
@@ -28,7 +28,12 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   const [previousWlogs, setPreviousWlogs] = useState("");
   const [previews, setPreviews] = useState([]);
   const [decryptedUser, setDecryptedUser] = useState(null);
+  const [activePreview, setActivePreview] = useState(null);
 
+  const isImage = (name) => /\.(jpg|jpeg|png|gif|webp)$/i.test(name);
+  const isVideo = (name) => /\.(mp4|webm|avi|mov|mkv)$/i.test(name);
+
+  const handleModalClose = () => setActivePreview(null);
 
   useEffect(() => {
     setDecryptedUser(decryptUser(localStorage.getItem('user'))); // Just to verify decryption works.........
@@ -168,63 +173,242 @@ export const CreateEditTicket = ({ isEdit = false }) => {
   }, [decryptedUser, setValue]);
 
 
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
 
-    // Max size check
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      toast.dismiss()
-      toast.error(`⚠️ Some files are larger than 5 MB and were not added.`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const generateUniqueFileName = (originalName) => {
+  //   const timestamp = Date.now();
+  //   const random = Math.floor(Math.random() * 100000);
+  //   const extension = originalName.substring(originalName.lastIndexOf('.') + 1);
+  //   const baseName = originalName.substring(0, originalName.lastIndexOf('.')).replace(/\s+/g, '_');
+  //   return `${baseName}_${timestamp}_${random}.${extension}`;
+  // };
+
+
+
+  const CLOUD_NAME = "dppyl6k4j"; // ✅ Your Cloudinary name
+
+
+
+  const generateUniqueFileName = (originalName) => {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000000); // 6-digit random number
+    const extension = originalName.split('.').pop();
+    const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
+
+    return `${timestamp}_${random}_${baseName}.${extension}`;
+  };
+
+  const uploadFileToCloudinary = async (file) => {
+    try {
+      const uniqueFileName = generateUniqueFileName(file.name);
+      const folder = 'tickets';
+
+      // Request signature from backend
+      const signResponse = await fetch(
+        `http://localhost:3000/api/cloudinary-sign?public_id=${encodeURIComponent(uniqueFileName)}&folder=${encodeURIComponent(folder)}`
+      );
+
+      if (!signResponse.ok) throw new Error("Failed to get signature");
+
+      const { signature, timestamp, api_key } = await signResponse.json();
+
+      // Build form data
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", api_key);
+      formData.append("timestamp", timestamp);
+      formData.append("signature", signature);
+      formData.append("public_id", uniqueFileName);
+      formData.append("folder", folder);
+
+      const resourceType = file.type.startsWith("video") ? "video" : "image";
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`;
+
+      const uploadResponse = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const uploadResult = await uploadResponse.json();
+
+      if (uploadResponse.ok) {
+        return {
+          url: uploadResult.secure_url,
+          name: uniqueFileName,
+          type: file.type,
+        };
+      } else {
+        console.error("Upload error:", uploadResult);
+        throw new Error("Cloudinary upload failed");
+      }
+    } catch (err) {
+      console.error("Cloudinary Upload Failed:", err);
+      throw err;
     }
+  };
 
-    // Filter valid files (by size)
-    const validFiles = selectedFiles.filter(file => file.size <= maxSize);
 
-    // Allowed extensions
-    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt)$/i;
+  const [uploadingFiles, setUploadingFiles] = useState(new Set());
 
-    // Filter by extension
-    const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
-    const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
+  const handleFileChange = async (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    const maxSize = 100 * 1024 * 1024; // 100MB max
+    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt|mp4|webm|mov|avi|mkv)$/i;
 
-    // Check max file count
-    const totalFiles = filteredPreviews.length + filteredValidFiles.length;
-    if (totalFiles > 5) {
-      toast.dismiss()
-      toast.error("⚠️ You can only upload up to 5 files.");
+    const validFiles = selectedFiles.filter(file =>
+      file.size <= maxSize && allowedExtensions.test(file.name)
+    );
+
+    if (validFiles.length === 0) {
+      toast.error("No valid files or all are too large.");
       return;
     }
 
-    // Generate new previews with unique names
-    const newPreviews = filteredValidFiles.map((file) => {
-      const uniquePrefix = Math.floor(100000 + Math.random() * 900000); // Random 6-digit number
-      const newName = `${uniquePrefix}-${file.name}`;
+    if (previews.length + validFiles.length > 10) {
+      toast.error("⚠️ You can only upload up to 10 files.");
+      return;
+    }
 
-      // Create a new File object with modified name (optional)
-      const renamedFile = new File([file], newName, { type: file.type });
-
-      return {
-        url: URL.createObjectURL(file),
-        type: file.type,
-        name: newName,
-        file: renamedFile,
-      };
+    // Add all valid files to uploading set
+    setUploadingFiles(prev => {
+      const copy = new Set(prev);
+      validFiles.forEach(file => copy.add(file.name));
+      return copy;
     });
 
-    // Update preview state
-    const updatedPreviews = [...previews, ...newPreviews];
-    setPreviews(updatedPreviews);
+    // Upload all files in parallel
+    const uploadedFiles = await Promise.all(
+      validFiles.map(async (file) => {
+        try {
+          const uploaded = await uploadFileToCloudinary(file);
+          // toast.success(`✅ ${file.name} uploaded`);
+          return uploaded; // return full object with url, name, etc.
+        } catch (err) {
+          toast.error(`❌ ${file.name} failed`);
+          return null;
+        } finally {
+          // Remove from uploading set as soon as upload finishes (success or fail)
+          setUploadingFiles(prev => {
+            const copy = new Set(prev);
+            copy.delete(file.name);
+            return copy;
+          });
+        }
+      })
+    );
 
-    // Set final value for form submission
-    setValue("Attachment", updatedPreviews.map((item) => item.file));
+    // Filter failed uploads
+    const successfulUploads = uploadedFiles.filter(Boolean);
+
+    // Update preview state (for display)
+    setPreviews(prev => [...prev, ...successfulUploads]);
+
+    // Set attachment URLs for form submission
+    setValue("Attachment", [...(watch("Attachment") || []), ...successfulUploads.map(f => f.url)]);
   };
+
+
+
+
+
+
+
+
+
+  console.log(111111111, watch("Attachment"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const handleFileChange = (e) => {
+  //   const selectedFiles = Array.from(e.target.files);
+
+  //   // Max size check
+  //   const maxSize = 100 * 1024 * 1024; // 5MB
+  //   const oversizedFiles = selectedFiles.filter(file => file.size > maxSize);
+  //   if (oversizedFiles.length > 0) {
+  //     toast.dismiss();
+  //     toast.error(`⚠️ Some files are larger than 5 MB and were not added.`);
+  //   }
+
+  //   // Filter valid files (by size)
+  //   const validFiles = selectedFiles.filter(file => file.size <= maxSize);
+
+  //   // ✅ Add video extensions here
+  //   const allowedExtensions = /\.(jpg|jpeg|png|gif|webp|pdf|docx|txt|mp4|webm|mov|avi|mkv)$/i;
+
+  //   // Filter previews and files by extension
+  //   const filteredPreviews = previews.filter(file => allowedExtensions.test(file.name));
+  //   const filteredValidFiles = validFiles.filter(file => allowedExtensions.test(file.name));
+
+  //   // Check max file count
+  //   const totalFiles = filteredPreviews.length + filteredValidFiles.length;
+  //   if (totalFiles > 5) {
+  //     toast.dismiss();
+  //     toast.error("⚠️ You can only upload up to 5 files.");
+  //     return;
+  //   }
+
+  //   // Generate new previews with unique names
+  //   const newPreviews = filteredValidFiles.map((file) => {
+  //     const uniquePrefix = Math.floor(100000 + Math.random() * 900000); // Random 6-digit number
+  //     const newName = `${uniquePrefix}-${file.name}`;
+
+  //     const renamedFile = new File([file], newName, { type: file.type });
+
+  //     return {
+  //       url: URL.createObjectURL(file),
+  //       type: file.type,
+  //       name: newName,
+  //       file: renamedFile,
+  //     };
+  //   });
+
+  //   // Update preview state
+  //   const updatedPreviews = [...previews, ...newPreviews];
+  //   setPreviews(updatedPreviews);
+
+  //   // Set final value for form submission
+  //   setValue("Attachment", updatedPreviews.map((item) => item.file));
+  // };
+
 
 
 
   const handleRemoveFile = (index) => {
     const updated = previews.filter((_, i) => i !== index);
+    console.log("Updated after removal:", updated, 11111111111111111111);
     setPreviews(updated);
     setValue("Attachment", updated.map((item) => item.file));
   };
@@ -266,10 +450,117 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     return parsedDate instanceof Date && !isNaN(parsedDate);
   };
 
+
+
+
+
+  // const onSubmit = (data) => {
+  //   const currentTimestamp = getFormattedTimestamp();
+
+  //   // Format WorkLogs
+  //   const newWorkLogEntry = data.WorkLogs
+  //     ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
+  //     : "";
+
+  //   const statusValue = isEdit ? data.Status?.value || "" : "Open";
+  //   const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
+
+  //   // Compose WorkLogs
+  //   let updatedWorkLogs = "";
+  //   if (isStatusChanged) {
+  //     const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name}] Status changed from ${selectedTicket.Status} to ${data.Status?.value}`;
+  //     updatedWorkLogs += statusChangeLog;
+  //   }
+  //   if (newWorkLogEntry) {
+  //     updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${newWorkLogEntry}`;
+  //   }
+  //   if (previousWlogs) {
+  //     updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
+  //   }
+
+  //   // Format data before sending
+  //   const formattedData = {
+  //     ...data,
+  //     Priority: data.Priority?.value || "",
+  //     PropertyCode: data.PropertyCode?.value || "",
+  //     Department: data.Department?.value || "",
+  //     Category: data.Category?.value || "",
+  //     Assignee: data.Assignee?.value || "",
+  //     Manager: data.Manager?.value || "",
+  //     TargetDate: isValidDate(data.TargetDate)
+  //       ? getFormattedTimestampForTargetDate(data.TargetDate)
+  //       : "N/A",
+  //     Status: statusValue,
+  //     CustomerImpacted: data.CustomerImpacted?.value || "",
+  //     Escalated: data.Escalated?.value || "",
+  //     WorkLogs: updatedWorkLogs || "",
+  //     // CreatedByName: decryptedUser?.name || "Unknown",
+  //     // CreatedById: selectedTicket?.CreatedById || "Unknown",
+  //     ClosedDate: statusValue === "Closed" ? Timestamp() : "",
+  //     ...(isEdit
+  //       ? {
+  //         UpdatedByName: decryptedUser?.name || "Unknown",
+  //         UpdatedById: decryptedUser?.clientID || decryptedUser?.id || "Unknown",
+  //         UpdatedDateTime: Timestamp(),
+  //         Attachment: previews.map(ele => ele.url),
+  //         CreatedById: selectedTicket?.CreatedById || "Unknown",
+  //         CreatedBy: selectedTicket?.CreatedBy || "Unknown",
+
+  //       }
+  //       : {
+  //         CreatedByName: decryptedUser?.name || "Unknown",
+  //         CreatedById: decryptedUser?.clientID || decryptedUser?.id || "Unknown",
+  //         CreatedBy: decryptedUser?.role.charAt(0).toUpperCase() + decryptedUser?.role.slice(1).toLowerCase() || "Unknown",
+  //       }),
+  //   };
+  //   const formData = new FormData();
+  //   // 🔁 Append non-file data to FormData
+  //   for (const key in formattedData) {
+  //     const value = formattedData[key];
+
+  //     // Skip appending 'images' key (handled separately)
+  //     if (key === "images") continue;
+
+  //     // Stringify objects (selects, nested fields)
+  //     if (
+  //       typeof value === "object" &&
+  //       value !== null &&
+  //       !(value instanceof File)
+  //     ) {
+  //       formData.append(key, JSON.stringify(value));
+  //     } else {
+  //       formData.append(key, value ?? "");
+  //     }
+  //   }
+
+  //   // 📸 Append each image file
+  //   previews.forEach((file) => {
+  //     formData.append("images", file.file);
+
+  //   });
+
+  //   // ✅ Submit
+  //   const submissionFn = isEdit && selectedTicket ? updateTicketData : submitBooking;
+
+  //   submissionFn(formData, {
+  //     onSuccess: () => {
+  //       toast.success(`Ticket ${isEdit ? "updated" : "created"} successfully!`);
+  //       // toast.error("Error message!");
+  //       reset();
+  //       setCurrentView("tickets");
+  //     },
+  //   });
+
+  //   // 🔍 If you want to inspect formData manually:
+  //   for (let pair of formData.entries()) {
+  //     console.log(pair[0], pair[1]);
+  //   }
+  // };
+
+
   const onSubmit = (data) => {
     const currentTimestamp = getFormattedTimestamp();
 
-    // Format WorkLogs
     const newWorkLogEntry = data.WorkLogs
       ? `[${currentTimestamp} - ${decryptedUser?.name}]  ${data.WorkLogs.trim()}`
       : "";
@@ -277,7 +568,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     const statusValue = isEdit ? data.Status?.value || "" : "Open";
     const isStatusChanged = isEdit && selectedTicket?.Status !== data.Status?.value;
 
-    // Compose WorkLogs
     let updatedWorkLogs = "";
     if (isStatusChanged) {
       const statusChangeLog = `[${currentTimestamp} - ${decryptedUser?.name}] Status changed from ${selectedTicket.Status} to ${data.Status?.value}`;
@@ -290,7 +580,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       updatedWorkLogs += `${updatedWorkLogs ? "\n\n" : ""}${previousWlogs}`;
     }
 
-    // Format data before sending
     const formattedData = {
       ...data,
       Priority: data.Priority?.value || "",
@@ -306,17 +595,16 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       CustomerImpacted: data.CustomerImpacted?.value || "",
       Escalated: data.Escalated?.value || "",
       WorkLogs: updatedWorkLogs || "",
-      // CreatedByName: decryptedUser?.name || "Unknown",
-      // CreatedById: selectedTicket?.CreatedById || "Unknown",
-      ClosedDate: statusValue === "Closed" ? Timestamp() : "",
+      Attachment: data.Attachment, // ✅ Cloudinary URLs
       ...(isEdit
         ? {
           UpdatedByName: decryptedUser?.name || "Unknown",
           UpdatedById: decryptedUser?.clientID || decryptedUser?.id || "Unknown",
           UpdatedDateTime: Timestamp(),
-          Attachment: previews.map(ele => ele.url),
           CreatedById: selectedTicket?.CreatedById || "Unknown",
           CreatedBy: selectedTicket?.CreatedBy || "Unknown",
+          Attachment: previews.map(ele => ele.url),
+
 
         }
         : {
@@ -325,49 +613,25 @@ export const CreateEditTicket = ({ isEdit = false }) => {
           CreatedBy: decryptedUser?.role.charAt(0).toUpperCase() + decryptedUser?.role.slice(1).toLowerCase() || "Unknown",
         }),
     };
+
     const formData = new FormData();
-    // 🔁 Append non-file data to FormData
     for (const key in formattedData) {
       const value = formattedData[key];
-
-      // Skip appending 'images' key (handled separately)
-      if (key === "images") continue;
-
-      // Stringify objects (selects, nested fields)
-      if (
-        typeof value === "object" &&
-        value !== null &&
-        !(value instanceof File)
-      ) {
-        formData.append(key, JSON.stringify(value));
-      } else {
-        formData.append(key, value ?? "");
-      }
+      formData.append(key, typeof value === "object" ? JSON.stringify(value) : value ?? "");
     }
 
-    // 📸 Append each image file
-    previews.forEach((file) => {
-      formData.append("images", file.file);
-
-    });
-
-    // ✅ Submit
     const submissionFn = isEdit && selectedTicket ? updateTicketData : submitBooking;
 
     submissionFn(formData, {
       onSuccess: () => {
         toast.success(`Ticket ${isEdit ? "updated" : "created"} successfully!`);
-        // toast.error("Error message!");
         reset();
         setCurrentView("tickets");
       },
     });
-
-    // 🔍 If you want to inspect formData manually:
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
   };
+
+
 
   useEffect(() => {
     if (!isEdit) {
@@ -525,7 +789,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                     control={control}
                     name="Manager"
                     render={({ field }) => (
-                      <Select {...field} placeholder="Search & Select Manager" options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                      <Select {...field} placeholder="Search & Select " options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                     )}
 
                   />
@@ -536,7 +800,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                     control={control}
                     name="Assignee"
                     render={({ field }) => (
-                      <Select {...field} placeholder="Search & Select Assignee" options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                      <Select {...field} placeholder="Search & Select " options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                       />
                     )}
                   />
@@ -649,37 +913,106 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
                     />
                   </div>
-                  {previews.length > 0 && (
-                    <div className="flex flex-wrap gap-4 mt-5">
-                      {previews.map((file, index) => {
-                        const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
-                        const isImage = imageExtensions.test(file.name);
 
-                        if (!isImage) return null; // Skip non-image files
+                  {(previews.length > 0 || uploadingFiles.size > 0) && (
+                    <div className="flex flex-wrap gap-4 mt-5">
+                      {/* Uploading Loaders */}
+                      {[...uploadingFiles].map((fileName) => (
+                        <div
+                          key={fileName}
+                          className="relative w-40 h-36 flex flex-col items-center justify-center border rounded-md bg-gray-50 shadow-sm"
+                        >
+                          <LoaderPage />
+                          <span className="mt-2 text-xs text-gray-500 text-center break-words">
+                            {fileName}
+                          </span>
+                        </div>
+                      ))}
+
+                      {/* Uploaded Previews */}
+                      {previews.map((file, index) => {
+                        if (!isImage(file.name) && !isVideo(file.name)) return null;
 
                         return (
                           <div
-                            key={index}
-                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                            key={file.url || file.name || index}
+                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm cursor-pointer"
+                            onClick={() => setActivePreview(file)}
                           >
                             <button
                               type="button"
-                              onClick={() => handleRemoveFile(index)}
-                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveFile(index);
+                              }}
+                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow z-10"
                             >
                               ✕
                             </button>
 
-                            <img
-                              src={file.url}
-                              alt={file.name}
-                              className="w-full h-28 object-cover rounded"
-                            />
+                            {isImage(file.name) ? (
+                              <img
+                                src={file.url}
+                                alt={file.name}
+                                className="w-full h-28 object-cover rounded"
+                              />
+                            ) : (
+                              <video
+                                controls
+                                className="w-full h-28 object-cover rounded"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <source src={file.url} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            )}
                           </div>
                         );
                       })}
                     </div>
                   )}
+
+                  {/* Modal Popup */}
+                  {activePreview && (
+                    <div
+                      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                      onClick={handleModalClose}
+                    >
+                      <div
+                        className="relative max-w-[80vw] max-h-[80vh] p-4 bg-white rounded shadow-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full px-3 py-1 text-lg z-50"
+                          onClick={handleModalClose}
+                        >
+                          ✕
+                        </button>
+
+                        {isImage(activePreview.name) ? (
+                          <img
+                            src={activePreview.url}
+                            alt={activePreview.name}
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          />
+                        ) : (
+                          <video
+                            autoPlay
+                            muted
+                            controls
+                            playsInline
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          >
+                            <source src={activePreview.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               )}
 
@@ -791,9 +1124,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   isEdit ? 'Update Ticket' : 'Create'
                 )}
               </button>
-
-
-
               <button
                 type="button"
                 onClick={() => setCurrentView("tickets")}
@@ -811,18 +1141,23 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
   return (
     <div className="">
-      <h2 className="text-2xl font-bold text-gray-900 ml-5">
+      <div className="ml-5">
         {isEdit ? (
-          <h1>View & Edit Ticket : {selectedTicket?.TicketID}</h1>
+          <h2 className="text-2xl font-bold text-gray-900">
+            View & Edit Ticket: {selectedTicket?.TicketID}
+          </h2>
         ) : (
           <div className="flex flex-col justify-start">
-            <h1>Create New Ticket</h1>
-            {decryptedUser?.role.toLowerCase().toLowerCase() === "client" && (
-              <p className="text-orange-500 text-sm lg:text-[14px]">Kindly submit a new ticket for any maintenance requests, housekeeping services, notice to vacate, rent receipts, rental agreements, full and final settlements, or electricity bill-related concerns etc.</p>
+            <h2 className="text-2xl font-bold text-gray-900">Create New Ticket</h2>
+            {decryptedUser?.role?.toLowerCase() === "client" && (
+              <p className="text-orange-500 text-sm lg:text-[14px] mt-1">
+                Kindly submit a new ticket for any maintenance requests, housekeeping services, notice to vacate, rent receipts, rental agreements, full and final settlements, or electricity bill-related concerns etc.
+              </p>
             )}
           </div>
         )}
-      </h2>
+      </div>
+
       <div className="bg-white rounded-lg shadow p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Property Code, Title */}
@@ -837,7 +1172,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 />
               </div>
             )}
-
             <div>
               <label className="block text-sm font-medium text-black mb-2">Property Code <span className="text-red-500">*</span></label>
               <Controller
@@ -852,7 +1186,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       options={ProperyOptions}
                       styles={SelectStyles}
                       isClearable
-                      placeholder="Search & Select Property Code"
+                      placeholder="Search & Select"
                       isDisabled={decryptedUser?.role.toLowerCase() === "client" || isEdit && decryptedUser?.role.toLowerCase() !== "client"}
                     // isDisabled={isEdit}
                     />
@@ -863,13 +1197,13 @@ export const CreateEditTicket = ({ isEdit = false }) => {
             </div>
 
             {[
-              { name: "Department", options: DepartmentOptions, placeholder: "Search & Select Department" },
-              { name: "Category", options: CategoryOptions, placeholder: "Search &  Select Category" },
+              { name: "Department", options: DepartmentOptions, placeholder: "Search & Select" },
+              { name: "Category", options: CategoryOptions, placeholder: "Search &  Select" },
               ...(isEdit && decryptedUser?.role.toLowerCase() === "client"
-                ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
+                ? [{ name: "Priority", options: PriorityOptionsForForm, placeholder: "Search & Select" }]
                 : []),
               ...(decryptedUser?.role.toLowerCase() === "admin"
-                ? [{ name: "Priority", options: PriorityOptions, placeholder: "Search & Select Priority" }]
+                ? [{ name: "Priority", options: PriorityOptionsForForm, placeholder: "Search & Select" }]
                 : []),
             ].map(({ name, options, placeholder }) => (
               <div key={name}>
@@ -909,14 +1243,14 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                 </p>
               )}
             </div>
-            {!isEdit && decryptedUser?.role.toLowerCase() !== "client" && (<>
+            {decryptedUser?.role.toLowerCase() !== "client" && !isEdit && (<>
               <div>
                 <label className="block text-sm font-medium text-black mb-2">Manager</label>
                 <Controller
                   control={control}
                   name="Manager"
                   render={({ field }) => (
-                    <Select {...field} placeholder="Search & Select Manager" options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                    <Select {...field} placeholder="Search & Select " options={ManagerOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
                   )}
 
                 />
@@ -927,7 +1261,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                   control={control}
                   name="Assignee"
                   render={({ field }) => (
-                    <Select {...field} placeholder="Search & Select Assignee" options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
+                    <Select {...field} placeholder="Search & Select " options={assigneeOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"}
                     />
                   )}
                 />
@@ -1027,8 +1361,153 @@ export const CreateEditTicket = ({ isEdit = false }) => {
               )}
 
             </div>
-            {!isEdit && (
 
+
+
+
+
+            {decryptedUser?.role?.toLowerCase() !== "client" && !isEdit && (
+              <div className="grid grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Customer Impacted </label>
+                  <Controller
+                    control={control}
+                    name="CustomerImpacted"
+                    render={({ field }) => (
+                      <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                    )}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mb-2">Escalated </label>
+                  <Controller
+                    control={control}
+                    name="Escalated"
+                    render={({ field }) => (
+                      <Select {...field} options={CusmoterImpactedOptions} isClearable styles={SelectStyles} isDisabled={isEdit && decryptedUser?.role.toLowerCase() === "client"} />
+                    )}
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Attachment</label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*,video/*,application/pdf"
+                      onChange={handleFileChange}
+                      className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                    />
+                  </div>
+
+                
+                  {(previews.length > 0 || uploadingFiles.size > 0) && (
+                    <div className="flex flex-wrap gap-4 mt-5">
+                      {/* Uploading Loaders */}
+                      {[...uploadingFiles].map((fileName) => (
+                        <div
+                          key={fileName}
+                          className="relative w-40 h-36 flex flex-col items-center justify-center border rounded-md bg-gray-50 shadow-sm"
+                        >
+                          <LoaderPage />
+                          <span className="mt-2 text-xs text-gray-500 text-center break-words">
+                            {fileName}
+                          </span>
+                        </div>
+                      ))}
+
+                      {/* Uploaded Previews */}
+                      {previews.map((file, index) => {
+                        if (!isImage(file.name) && !isVideo(file.name)) return null;
+
+                        return (
+                          <div
+                            key={file.url || file.name || index}
+                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm cursor-pointer"
+                            onClick={() => setActivePreview(file)}
+                          >
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveFile(index);
+                              }}
+                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow z-10"
+                            >
+                              ✕
+                            </button>
+
+                            {isImage(file.name) ? (
+                              <img
+                                src={file.url}
+                                alt={file.name}
+                                className="w-full h-28 object-cover rounded"
+                              />
+                            ) : (
+                              <video
+                                controls
+                                className="w-full h-28 object-cover rounded"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <source src={file.url} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Modal Popup */}
+                  {activePreview && (
+                    <div
+                      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                      onClick={handleModalClose}
+                    >
+                      <div
+                        className="relative max-w-[80vw] max-h-[80vh] p-4 bg-white rounded shadow-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full px-3 py-1 text-lg z-50"
+                          onClick={handleModalClose}
+                        >
+                          ✕
+                        </button>
+
+                        {isImage(activePreview.name) ? (
+                          <img
+                            src={activePreview.url}
+                            alt={activePreview.name}
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          />
+                        ) : (
+                          <video
+                            autoPlay
+                            muted
+                            controls
+                            playsInline
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          >
+                            <source src={activePreview.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+
+                </div>
+
+              </div>
+            )}
+
+            {decryptedUser?.role === "client" && !isEdit && (
               <div>
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">Attachment</label>
@@ -1037,40 +1516,109 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                     multiple
                     accept="image/*,video/*,application/pdf"
                     onChange={handleFileChange}
-                    className="w-full h-[90%] border-2 border-orange-300  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                    className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
                   />
                 </div>
-                {previews.length > 0 && (
-                  <div className="flex flex-wrap gap-4 mt-5">
-                    {previews.map((file, index) => {
-                      const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
-                      const isImage = imageExtensions.test(file.name);
-
-                      if (!isImage) return null; // Skip non-image files
-
-                      return (
+               
+                  {(previews.length > 0 || uploadingFiles.size > 0) && (
+                    <div className="flex flex-wrap gap-4 mt-5">
+                      {/* Uploading Loaders */}
+                      {[...uploadingFiles].map((fileName) => (
                         <div
-                          key={index}
-                          className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                          key={fileName}
+                          className="relative w-40 h-36 flex flex-col items-center justify-center border rounded-md bg-gray-50 shadow-sm"
                         >
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveFile(index)}
-                            className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
-                          >
-                            ✕
-                          </button>
-
-                          <img
-                            src={file.url}
-                            alt={file.name}
-                            className="w-full h-28 object-cover rounded"
-                          />
+                          <LoaderPage />
+                          <span className="mt-2 text-xs text-gray-500 text-center break-words">
+                            {fileName}
+                          </span>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
+                      ))}
+
+                      {/* Uploaded Previews */}
+                      {previews.map((file, index) => {
+                        if (!isImage(file.name) && !isVideo(file.name)) return null;
+
+                        return (
+                          <div
+                            key={file.url || file.name || index}
+                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm cursor-pointer"
+                            onClick={() => setActivePreview(file)}
+                          >
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveFile(index);
+                              }}
+                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow z-10"
+                            >
+                              ✕
+                            </button>
+
+                            {isImage(file.name) ? (
+                              <img
+                                src={file.url}
+                                alt={file.name}
+                                className="w-full h-28 object-cover rounded"
+                              />
+                            ) : (
+                              <video
+                                controls
+                                className="w-full h-28 object-cover rounded"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <source src={file.url} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Modal Popup */}
+                  {activePreview && (
+                    <div
+                      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                      onClick={handleModalClose}
+                    >
+                      <div
+                        className="relative max-w-[80vw] max-h-[80vh] p-4 bg-white rounded shadow-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full px-3 py-1 text-lg z-50"
+                          onClick={handleModalClose}
+                        >
+                          ✕
+                        </button>
+
+                        {isImage(activePreview.name) ? (
+                          <img
+                            src={activePreview.url}
+                            alt={activePreview.name}
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          />
+                        ) : (
+                          <video
+                            autoPlay
+                            muted
+                            controls
+                            playsInline
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          >
+                            <source src={activePreview.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
               </div>
             )}
 
@@ -1104,7 +1652,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
               {isEdit && (
                 <>
-
                   <div>
                     <label className="block text-sm font-medium text-black mb-2">Customer Impacted </label>
                     <Controller
@@ -1115,8 +1662,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
                       )}
                     />
                   </div>
-
-
                   <div>
                     <label className="block text-sm font-medium text-black mb-2">Escalated </label>
                     <Controller
@@ -1163,47 +1708,121 @@ export const CreateEditTicket = ({ isEdit = false }) => {
               {/* Attachment */}
               {isEdit && (
                 <>
-                  <div>
-                    <label className="block text-sm font-medium text-black mb-2">Attachment</label>
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*,video/*,application/pdf"
-                      onChange={handleFileChange}
-                      className="w-full h-[90%] border-2 border-orange-300  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
-                    />
-                  </div>
-                  {previews.length > 0 && (
-                    <div className="flex flex-wrap gap-4 mt-5">
-                      {previews.map((file, index) => {
-                        const imageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
-                        const isImage = imageExtensions.test(file.name);
 
-                        if (!isImage) return null; // Skip non-image files
+                  <div>
+                    <div>
+                      <label className="block text-sm font-medium text-black mb-2">Attachment</label>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*,video/*,application/pdf"
+                        onChange={handleFileChange}
+                        className="w-full h-[90%] border border-orange-500  focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-md px-3 py-2"
+                      />
+                    </div>
+
+                
+                  {(previews.length > 0 || uploadingFiles.size > 0) && (
+                    <div className="flex flex-wrap gap-4 mt-5">
+                      {/* Uploading Loaders */}
+                      {[...uploadingFiles].map((fileName) => (
+                        <div
+                          key={fileName}
+                          className="relative w-40 h-36 flex flex-col items-center justify-center border rounded-md bg-gray-50 shadow-sm"
+                        >
+                          <LoaderPage />
+                          <span className="mt-2 text-xs text-gray-500 text-center break-words">
+                            {fileName}
+                          </span>
+                        </div>
+                      ))}
+
+                      {/* Uploaded Previews */}
+                      {previews.map((file, index) => {
+                        if (!isImage(file.name) && !isVideo(file.name)) return null;
 
                         return (
                           <div
-                            key={index}
-                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm"
+                            key={file.url || file.name || index}
+                            className="relative w-40 border rounded-md p-2 bg-gray-100 shadow-sm cursor-pointer"
+                            onClick={() => setActivePreview(file)}
                           >
                             <button
                               type="button"
-                              onClick={() => handleRemoveFile(index)}
-                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveFile(index);
+                              }}
+                              className="absolute top-1 right-1 text-red-600 text-xs bg-white rounded-full px-2 shadow z-10"
                             >
                               ✕
                             </button>
 
-                            <img
-                              src={file.url}
-                              alt={file.name}
-                              className="w-full h-28 object-cover rounded"
-                            />
+                            {isImage(file.name) ? (
+                              <img
+                                src={file.url}
+                                alt={file.name}
+                                className="w-full h-28 object-cover rounded"
+                              />
+                            ) : (
+                              <video
+                                controls
+                                className="w-full h-28 object-cover rounded"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <source src={file.url} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            )}
                           </div>
                         );
                       })}
                     </div>
                   )}
+
+                  {/* Modal Popup */}
+                  {activePreview && (
+                    <div
+                      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                      onClick={handleModalClose}
+                    >
+                      <div
+                        className="relative max-w-[80vw] max-h-[80vh] p-4 bg-white rounded shadow-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full px-3 py-1 text-lg z-50"
+                          onClick={handleModalClose}
+                        >
+                          ✕
+                        </button>
+
+                        {isImage(activePreview.name) ? (
+                          <img
+                            src={activePreview.url}
+                            alt={activePreview.name}
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          />
+                        ) : (
+                          <video
+                            autoPlay
+                            muted
+                            controls
+                            playsInline
+                            className="max-w-full max-h-[75vh] w-auto h-auto rounded"
+                            style={{ display: 'block', margin: '0 auto' }}
+                          >
+                            <source src={activePreview.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+
+                  </div>
                 </>
               )}
             </div>

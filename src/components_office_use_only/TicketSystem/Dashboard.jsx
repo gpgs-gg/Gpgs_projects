@@ -17,8 +17,8 @@ export const Dashboard = () => {
         Assigned: tickets.filter(t => t.Status == 'Assigned').length
     };
 
- 
-   useEffect(() => {
+
+    useEffect(() => {
         const statusCtx = document.getElementById('statusChart');
         const priorityCtx = document.getElementById('priorityChart');
 
@@ -35,10 +35,18 @@ export const Dashboard = () => {
             statusChartRef.current = new window.Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Open', 'In Progress', 'Resolved', 'Closed'],
+                    labels: ['Open', 'In Progress', 'Resolved', 'Closed', 'Acknowledged'],
                     datasets: [{
-                        data: [stats.open, stats.inProgress, stats.resolved, stats.closed, stats.Acknowledged, stats.Assigned],
-                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#6b7280', '#FFA500', '#DAA520'],
+                        data: [stats.open, stats.inProgress, stats.resolved, stats.closed, stats.Acknowledged],
+                        backgroundColor: [
+                            '#f97316', // Open - orange (noticeable)
+                            '#3b82f6', // In Progress - blue (working)
+                            '#10b981', // Resolved - green (success)
+                            '#6b7280', // Closed - gray (inactive)
+                            '#eab308', // Acknowledged - yellow (attention)
+                            // '#8b5cf6'  // Assigned - purple (delegated)
+                        ]
+
                     }]
                 },
                 options: {
@@ -65,7 +73,7 @@ export const Dashboard = () => {
                     datasets: [{
                         label: 'Tickets',
                         data: Object.values(priorityData),
-                        backgroundColor: ['#10b981', '#f59e0b', '#f97316', '#ef4444' , "#FFB6C1"]
+                        backgroundColor: ['#10b981', '#f59e0b', '#f97316', '#ef4444', "#FFB6C1"]
                     }]
                 },
                 options: {

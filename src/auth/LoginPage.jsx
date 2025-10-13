@@ -30,7 +30,7 @@ const LoginPage = () => {
 
   // Normalize employee data
   const normalizedUsers = (userData?.data || []).map(user => ({
-    id: user["LoginID"],
+    id: user["EmployeeID"],
     name: user["Name"],
     role: user["Role"],
     loginId: user["Login ID"] || user["LoginID"],

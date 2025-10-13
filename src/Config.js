@@ -11,15 +11,15 @@ export const SelectStyles = {
     paddingLeft: "0.75rem",
     paddingRight: "0.50rem",
     marginTop: "0.30rem",
-    borderWidth: "2px",
+    borderWidth: "1px",
     borderStyle: "solid",
-    borderColor: state.isFocused ? "#fb923c" : "#fdba74",
+    borderColor: state.isFocused ? "#fb923c" : "#f97316",
     borderRadius: "0.375rem",
     boxShadow: state.isFocused
       ? "0 0 0 2px rgba(251,146,60,0.5)"
       : "0 1px 2px rgba(0,0,0,0.05)",
     backgroundColor: "white",
-    minHeight: "40px",
+    minHeight: "10px",
     "&:hover": { borderColor: "#fb923c" },
   }),
   option: (provided, state) => ({
@@ -176,6 +176,13 @@ export const DepartmentOptions = [
 
 export const PriorityOptions = [
   { value: "", label: "All Priorities" },
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+  { value: "Critical", label: "Critical" },
+];
+export const PriorityOptionsForForm = [
+  // { value: "", label: "All Priorities" },
   { value: "Low", label: "Low" },
   { value: "Medium", label: "Medium" },
   { value: "High", label: "High" },
