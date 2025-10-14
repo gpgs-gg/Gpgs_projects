@@ -41,6 +41,8 @@ const DepartmentOptions = [
     { value: "Admin", label: "Admin" },
     { value: "Human Resource", label: "Human Resource" },
     { value: "Management", label: "Management" },
+    { value: "IT", label: "IT" },
+
 
 ];
 
