@@ -70,7 +70,7 @@ const SignupPage = ({ isOpen, setIsOpen, userData, clientData }) => {
 
   const handleVerifyOtp = ({ otp }) => {
     verifyOtp(
-      { email: emailMatched, otp },
+        { email: emailMatched, otp: otp.trim()},
       {
         onSuccess: () => {
           toast.success('OTP verified.');
