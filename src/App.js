@@ -130,11 +130,11 @@ function App() {
 
 
   // lock right click
-  useEffect(() => {
-    const onContext = (e) => e.preventDefault();
-    document.addEventListener('contextmenu', onContext);
-    return () => document.removeEventListener('contextmenu', onContext);
-  }, []);
+  // useEffect(() => {
+  //   const onContext = (e) => e.preventDefault();
+  //   document.addEventListener('contextmenu', onContext);
+  //   return () => document.removeEventListener('contextmenu', onContext);
+  // }, []);
 
 
   return (

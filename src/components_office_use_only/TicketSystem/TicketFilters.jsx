@@ -41,6 +41,7 @@ const DepartmentOptions = [
     { value: "Admin", label: "Admin" },
     { value: "Human Resource", label: "Human Resource" },
     { value: "Management", label: "Management" },
+    { value: "IT", label: "IT" },
 
 ];
 
@@ -66,6 +67,7 @@ export const TicketFilters = () => {
                 label: `${emp.Name}`,
             })) || [])
     ];
+    
     const assigneeOptionsForCreatedBy = [
         { label: "All CreatedBy", value: "" },
         ...(EmployeeDetails?.data

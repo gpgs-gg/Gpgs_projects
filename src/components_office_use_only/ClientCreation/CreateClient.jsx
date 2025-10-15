@@ -97,7 +97,7 @@ const CreateClient = () => {
         <div className='h-screen w-screen flex justify-center py-24'>
             <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-lg p-5 max-w-8xl w-full">
                 <h3 className="text-xl font-semibold mb-4 pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
                     {/* Property Code */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Property Code <span className="text-red-500">*</span></label>

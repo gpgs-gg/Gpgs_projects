@@ -632,8 +632,6 @@ export const CreateEditTicket = ({ isEdit = false }) => {
     });
   };
 
-
-
   useEffect(() => {
     if (!isEdit) {
       reset()

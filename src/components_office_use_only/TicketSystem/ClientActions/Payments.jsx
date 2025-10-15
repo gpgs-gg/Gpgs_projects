@@ -5,6 +5,9 @@ import { usePropertyData, usePropertySheetData } from './services';
 import { SECRET_KEY } from '../../../Config';
 import LoaderPage from '../../NewBooking/LoaderPage';
 import OR from '../../../logo/QR.jpeg'
+import { toast } from 'react-toastify';
+import { MdContentCopy } from "react-icons/md";
+
 
 
 const Payments = () => {
@@ -258,10 +261,24 @@ const Payments = () => {
                                                 ['Account Name', 'Gopal Paying Guest Services'],
                                                 ['UPI ID', 'kamleshwarkodag-1@okhdfcbank'],
                                             ].map(([label, value], idx) => (
-                                                <div key={idx} className="flex">
+                                                <div key={idx} className="flex items-center">
                                                     <span className="w-40 font-medium">{label}:</span>
-                                                    <span>{value}</span>
+                                                    <span className="mr-2">{value}</span>
+
+                                                    {/* Show copy icon only for UPI ID or Account Number */}
+                                                    {(label === 'UPI ID' || label === 'Account Number'|| label === 'IFSC Code' || label === 'Account Name') && (
+                                                        <button
+                                                            className="ml-2 text-blue-600 hover:text-blue-800 text-sm"
+                                                            onClick={() => {
+                                                                navigator.clipboard.writeText(value);
+                                                                toast.success(`${label} copied to clipboard!`);
+                                                            }}
+                                                        >
+                                                         <MdContentCopy/>
+                                                        </button>
+                                                    )}
                                                 </div>
+
                                             ))}
                                         </div>
                                         {/* QR Code Section */}
@@ -295,10 +312,10 @@ const Payments = () => {
                 <div className="lg:col-span-6">
                     <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md ">
                         <h2 className="text-2xl font-semibold text-gray-900 flex items-center mb-4">
-                            <p className='flex items-center justify-center'>
+                            <span className='flex items-center justify-center'>
                                 <i className="fas fa-history mr-2 text-orange-500"></i>
                                 Payment History <span className='mt-5 ml-10'>{mainSheetDataForNameWise?.length === 0 && <LoaderPage />}</span>
-                            </p>
+                            </span>
                         </h2>
 
                         <div className="overflow-x-auto">

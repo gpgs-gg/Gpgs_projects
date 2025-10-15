@@ -34,15 +34,15 @@ const SignupPage = ({ isOpen, setIsOpen, userData, clientData }) => {
 
 
   const handleGetOtp = ({ loginId }) => {
-    const trimmedEmail = loginId.trim();
+    const trimmedEmail = loginId?.trim()?.toLowerCase();
     console.log("UserData:", userData);
     console.log("ClientData:", clientData);
     console.log("Trimmed Email:", trimmedEmail);
 
    
     const foundUser =
-      userData?.data.find((user) => user?.LoginID === trimmedEmail) ||
-      clientData?.data?.find((client) => client.LoginID === trimmedEmail)
+      userData?.data.find((user) => user?.LoginID?.trim()?.toLowerCase() === trimmedEmail) ||
+      clientData?.data?.find((client) => client.LoginID?.trim()?.toLowerCase() === trimmedEmail)
 
     if (!foundUser) {
       toast.dismiss()
