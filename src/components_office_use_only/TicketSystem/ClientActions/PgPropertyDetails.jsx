@@ -4,7 +4,7 @@ import { usePropertyData, usePropertySheetData } from './services';
 import CryptoJS from 'crypto-js';
 import { format, subMonths } from "date-fns"; // date-fns is handy
 import { SECRET_KEY } from '../../../Config';
-import { IoIosWarning } from "react-icons/io";
+
 
 const OverView = () => {
 
@@ -27,8 +27,6 @@ const OverView = () => {
             (ele) => ele["Property Code"] === decryptedUser?.propertyCode
         );
     }, [propertyDataFromApi, decryptedUser?.propertyCode]);
-
-   console.log("FilteredPropertySheetData:", filteredPropertySheetData , propertyDataFromApi , decryptedUser);
 
     const mainSheetId = useMemo(() => {
         if (!filteredPropertySheetData || filteredPropertySheetData.length === 0) return [];
@@ -189,25 +187,23 @@ const OverView = () => {
                                     {/* Admin Team */}
                                     <div className="p-3 rounded border border-orange-300 space-y-2">
                                         <p className="font-bold text-base">Admin Team</p>
-                                        <a href="tel:9044440222" className="block text-blue-600 hover:underline">📞 9044440222</a>
-                                        <a href="tel:9503322757" className="block text-blue-600 hover:underline">📞 9503322757</a>
+                                        <a href="tel:8928191814" className="block text-blue-600 hover:underline">📞 8928191814</a>
+                                        <a href="tel:7021368623" className="block text-blue-600 hover:underline">📞 7021368623</a>
                                     </div>
-
-                                    {/* Maintenance */}
-                                    <div className="p-3 rounded border border-orange-300 space-y-2">
-                                        <p className="font-bold text-base">Maintenance Team</p>
-                                        <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
-                                    </div>
-
                                     {/* Sales */}
                                     <div className="p-3 rounded border border-orange-300 space-y-2">
                                         <p className="font-bold text-base">Sales Team</p>
                                         <a href="tel:9326262292" className="block text-blue-600 hover:underline">📞 9326262292</a>
                                         <a href="tel:7021368623" className="block text-blue-600 hover:underline">📞 7021368623</a>
                                     </div>
+                                    {/* Maintenance */}
+                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                        <p className="font-bold text-base">Maintenance Team</p>
+                                        <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
+                                    </div>
+
                                 </div>
                             </div>
-
                             {/* Customer Care */}
                             <div className="p-4 bg-white rounded-lg border border-orange-300 md:col-span-3">
                                 <p className="text-lg font-bold">Customer Care</p>
@@ -217,7 +213,7 @@ const OverView = () => {
                                     <div className="p-3 rounded border border-orange-300 space-y-2">
                                         <p className="font-bold text-base">Chat / Call</p>
                                         <a href="tel:8928191814" className="block text-blue-600 hover:underline">📞 8928191814</a>
-                                        <a href="tel:9819636341" className="block text-blue-600 hover:underline">📞 9819636341</a>
+                                        <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
                                     </div>
 
                                     {/* Review Link */}

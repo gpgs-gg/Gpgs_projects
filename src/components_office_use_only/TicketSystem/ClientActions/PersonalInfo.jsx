@@ -26,8 +26,8 @@ const PersonalInfo = () => {
 
     return (
         <div className="max-w-full mx-auto md:px-4 py-6 sm:px-6">
-    <div className="bg-white border border-orange-300 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center bg-white px-2 py-1 w-fit rounded-lg">
+    <div className="bg-gray-50 border border-orange-500 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center  px-2 py-1 w-fit rounded-lg">
             <i className="fas fa-user-circle mr-2 text-orange-500"></i>
             Personal Information
         </h2>
@@ -51,7 +51,7 @@ const PersonalInfo = () => {
             ].map((item, index) => (
                 <div
                     key={index}
-                    className="p-3 bg-white rounded-lg border border-orange-300"
+                    className="p-3 bg-white rounded-lg shadow-lg "
                 >
                     <p className="text-lg font-bold">{item.label}</p>
                     <p className="font-medium text-gray-900 break-all">{item.value || "N/A"}</p>
@@ -59,7 +59,7 @@ const PersonalInfo = () => {
             ))}
 
             {/* Permanent Address - spans 3 columns on md+ screens */}
-            <div className="p-3 bg-white rounded-lg border border-orange-300 md:col-span-3">
+            <div className="p-3 bg-white rounded-lg  shadow-lg md:col-span-3">
                 <p className="text-lg font-bold">Permanent Address</p>
                 <p className="font-medium text-gray-900">
                     {decryptedUser?.permanentAddress || "N/A"}

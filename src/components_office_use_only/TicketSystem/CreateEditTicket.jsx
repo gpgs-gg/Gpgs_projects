@@ -409,7 +409,7 @@ export const CreateEditTicket = ({ isEdit = false }) => {
 
   const handleRemoveFile = (index) => {
     const updated = previews.filter((_, i) => i !== index);
-    console.log("Updated after removal:", updated, 11111111111111111111);
+ 
     setPreviews(updated);
     setValue("Attachment", updated.map((item) => item.file));
   };

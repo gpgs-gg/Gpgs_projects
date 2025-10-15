@@ -32,3 +32,24 @@ export const usePropertyData = () => {
     queryFn: fetchPropertyData,
   });
 };
+
+
+
+
+// ✅ Update Ticket Sheet
+const updateClientCreation= async (data) => {
+  const response = await apiClient.post("/create-client", data);
+  return response.data;
+};
+
+export const useUpdateClientCreation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateClientCreation,
+    onSuccess: () => {
+      // 🔄 Refetch ticket sheet after update
+      queryClient.invalidateQueries(["clientsDetails"]);
+    },
+  });
+};

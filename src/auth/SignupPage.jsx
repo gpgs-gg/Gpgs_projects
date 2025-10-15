@@ -15,7 +15,7 @@ const SignupPage = ({ isOpen, setIsOpen, userData, clientData }) => {
   const [emailMatched, setEmailMatched] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+    
   const {
     register,
     handleSubmit,
@@ -35,9 +35,7 @@ const SignupPage = ({ isOpen, setIsOpen, userData, clientData }) => {
 
   const handleGetOtp = ({ loginId }) => {
     const trimmedEmail = loginId?.trim()?.toLowerCase();
-    console.log("UserData:", userData);
-    console.log("ClientData:", clientData);
-    console.log("Trimmed Email:", trimmedEmail);
+    
 
    
     const foundUser =
@@ -68,20 +66,23 @@ const SignupPage = ({ isOpen, setIsOpen, userData, clientData }) => {
     );
   };
 
-  const handleVerifyOtp = ({ otp }) => {
-    verifyOtp(
-      { email: emailMatched, otp },
-      {
-        onSuccess: () => {
-          toast.success('OTP verified.');
-          setStep(3);
-        },
-        onError: () => {
-          toast.error('Invalid OTP. Please try again.');
-        },
-      }
-    );
-  };
+const handleVerifyOtp = ({ otp }) => {
+  verifyOtp(
+    {
+      email: emailMatched, otp: otp.trim(),
+    },
+    {
+      onSuccess: () => {
+        toast.success('OTP verified.');
+        setStep(3);
+      },
+      onError: () => {
+        toast.error('Invalid OTP. Please try again.');
+      },
+    }
+  );
+};
+
 
   const handleUpdatePassword = ({ password }) => {
     const encryptedPassword = CryptoJS.AES.encrypt(password.trim(), SECRET_KEY).toString();
