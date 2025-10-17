@@ -7,6 +7,7 @@ import { SECRET_KEY } from "../Config";
 
 const Gpgsaction = () => {
   const [showSalesOptions, setShowSalesOptions] = useState(false);
+  const [showAccountsOptions, setShowAccountsOptions] = useState(false);
   const [decryptedUser, setDecryptedUser] = useState(null);
   const navigate = useNavigate()
 
@@ -32,72 +33,117 @@ const Gpgsaction = () => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
-  const cardClasses = "bg-white shadow-lg rounded-xl p-5 hover:shadow-2xl transition duration-300 border flex flex-col items-center text-center";
+  const cardClasses = "bg-white shadow-lg rounded-xl p-5 hover:shadow-2xl transition duration-300  flex flex-col items-center text-center";
   const iconClasses = "h-14 w-14 flex items-center justify-center rounded-full mb-4";
   const titleClasses = "text-xl font-semibold text-gray-800 mb-4";
   const btnClasses = "w-full text-white py-2 px-3 rounded-md font-medium transition";
   const subBtnClasses = "py-2 px-4 rounded-md text-center transition text-sm";
 
-  useEffect(()=>{
-if (decryptedUser?.role.toLowerCase() === "client") {
+  useEffect(() => {
+    if (decryptedUser?.role.toLowerCase() === "client") {
       navigate("/gpgs-actions/tickets")
 
-  }
+    }
   }, [decryptedUser])
-  
+
 
   return (
     <section className="bg-gray-200 min-h-screen py-10 px-4 md:px-6 flex items-center justify-center">
       {decryptedUser?.role === "admin" && (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
 
-        {/* TICKETS SYSTEM */}
-        <Link to="/gpgs-actions/tickets">
-          <div className={cardClasses}>
-            <div className={`${iconClasses} bg-green-100 text-green-600`}>
-              <i className="fa-solid fa-ticket text-xl"></i>
+          {/* TICKETS SYSTEM */}
+          <Link to="/gpgs-actions/tickets">
+            <div className={cardClasses}>
+              <div className={`${iconClasses} bg-green-100 text-green-600`}>
+                <i className="fa-solid fa-ticket text-xl"></i>
+              </div>
+              <h3 className={titleClasses}>TICKETS SYSTEM</h3>
+              <button className={`${btnClasses} bg-indigo-600 hover:bg-indigo-700`}>
+                Go For Tickets System
+              </button>
             </div>
-            <h3 className={titleClasses}>TICKETS SYSTEM</h3>
-            <button className={`${btnClasses} bg-indigo-600 hover:bg-indigo-700`}>
-              Go For Tickets System
+          </Link>
+
+          {/* SALES */}
+          <div>
+            <div
+              className={`${cardClasses} cursor-pointer`}
+              //
+              onClick={() => setShowSalesOptions(prev => !prev)}
+            >
+              <div className={`${iconClasses} bg-yellow-100 text-yellow-600`}>
+                <i className="fa-solid fa-chart-line text-xl"></i>
+              </div>
+              <h3 className={titleClasses}>SALES</h3>
+              <button className={`${btnClasses} bg-yellow-500 hover:bg-yellow-600`}>
+                {showSalesOptions ? 'Hide Sales Options' : 'Show Sales Options'}
+              </button>
+
+              {showSalesOptions && (
+                <div className="w-full flex flex-col gap-3 mt-5">
+                  <Link
+                    to="/gpgs-actions/beds-avilable"
+                    className={`${subBtnClasses} bg-green-100 text-green-800 hover:bg-green-200`}
+                  >
+                    🛏️ Bed Status
+                  </Link>
+                  <Link
+                    to="/gpgs-actions/new-booking"
+                    className={`${subBtnClasses} bg-indigo-100 text-indigo-800 hover:bg-indigo-200`}
+                  >
+                    ➕ New Booking
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+
+
+          {/* ACCOUNTS */}
+          <div>
+          <div
+            className={`${cardClasses} cursor-pointer`}
+            //
+            onClick={() => setShowAccountsOptions(prev => !prev)}
+          >
+            <div className={`${iconClasses} bg-yellow-100 text-yellow-600`}>
+              <i className="fa-solid fa-chart-line text-xl"></i>
+            </div>
+            <h3 className={titleClasses}>ACCOUNTS</h3>
+            <button className={`${btnClasses} bg-green-500 hover:bg-green-600`}>
+              {showAccountsOptions ? 'Hide Sales Options' : 'Show Sales Options'}
             </button>
+
+            {showAccountsOptions && (
+              <div className="w-full flex flex-col gap-3 mt-5">
+                <Link
+                  to="/gpgs-actions/Client-Creation"
+                  className={`${subBtnClasses} bg-green-100 text-green-800 hover:bg-green-200`}
+                >
+                  Client Creation
+                </Link>
+                <Link
+                  to="/gpgs-actions/accounts"
+                  className={`${subBtnClasses} bg-indigo-100 text-indigo-800 hover:bg-indigo-200`}
+                >
+                  RNR Update
+                </Link>
+              </div>
+            )}
           </div>
-        </Link>
-
-        {/* SALES */}
-        <div
-          className={`${cardClasses} cursor-pointer`}
-          //
-          onClick={() => setShowSalesOptions(prev => !prev)}
-        >
-          <div className={`${iconClasses} bg-yellow-100 text-yellow-600`}>
-            <i className="fa-solid fa-chart-line text-xl"></i>
           </div>
-          <h3 className={titleClasses}>SALES</h3>
-          <button className={`${btnClasses} bg-yellow-500 hover:bg-yellow-600`}>
-            {showSalesOptions ? 'Hide Sales Options' : 'Show Sales Options'}
-          </button>
 
-          {showSalesOptions && (
-            <div className="w-full flex flex-col gap-3 mt-5">
-              <Link
-                to="/gpgs-actions/beds-avilable"
-                className={`${subBtnClasses} bg-green-100 text-green-800 hover:bg-green-200`}
-              >
-                🛏️ Bed Status
-              </Link>
-              <Link
-                to="/gpgs-actions/new-booking"
-                className={`${subBtnClasses} bg-indigo-100 text-indigo-800 hover:bg-indigo-200`}
-              >
-                ➕ New Booking
-              </Link>
-            </div>
-          )}
-        </div>
 
-        {/* ACCOUNTS */}
-        <Link to="/gpgs-actions/accounts">
+
+
+
+
+
+
+
+          {/* <Link to="/gpgs-actions/accounts">
           <div className={cardClasses}>
             <div className={`${iconClasses} bg-green-100 text-green-600`}>
               <i className="fa-solid fa-file-invoice text-xl"></i>
@@ -107,11 +153,11 @@ if (decryptedUser?.role.toLowerCase() === "client") {
               Go For Accounts
             </button>
           </div>
-        </Link>
+        </Link> */}
 
-      </div>
+        </div>
       )}
-  
+
     </section>
   );
 };

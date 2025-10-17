@@ -2,7 +2,7 @@ import { useApp } from "./AppProvider";
 import { useForm, Controller, set } from "react-hook-form";
 import Select from "react-select";
 import React, { useState } from "react";
-import { useEmployeeDetails } from "./Services";
+import { useDynamicDetails, useEmployeeDetails } from "./Services";
 import { Managers, PriorityOptions, SelectStylesfilter } from "../../Config";
 
 // Styled select theme
@@ -31,23 +31,24 @@ const statusOptions = [
 //     { label: "Critical", value: "Critical" },
 // ];
 
-const DepartmentOptions = [
-    { value: "", label: "All Departments" },
-    { value: "Maintenance", label: "Maintenance" },
-    { value: "Housekeeping", label: "Housekeeping" },
-    { value: "Accounts", label: "Accounts" },
-    { value: "Sales", label: "Sales" },
-    { value: "Marketing", label: "Marketing" },
-    { value: "Admin", label: "Admin" },
-    { value: "Human Resource", label: "Human Resource" },
-    { value: "Management", label: "Management" },
-    { value: "IT", label: "IT" },
+// const DepartmentOptions = [
+//     { value: "", label: "All Departments" },
+//     { value: "Maintenance", label: "Maintenance" },
+//     { value: "Housekeeping", label: "Housekeeping" },
+//     { value: "Accounts", label: "Accounts" },
+//     { value: "Sales", label: "Sales" },
+//     { value: "Marketing", label: "Marketing" },
+//     { value: "Admin", label: "Admin" },
+//     { value: "Human Resource", label: "Human Resource" },
+//     { value: "Management", label: "Management" },
+//     { value: "IT", label: "IT" },
 
-];
+// ];
 
 export const TicketFilters = () => {
     const { filters, setFilters, users, filteredTickets, decryptedUser, currentView, myPgTicketsTotal ,input , setInput , setSearchTerm } = useApp();
     const { data: EmployeeDetails } = useEmployeeDetails();
+    const { data: DynamicValuesDetails } = useDynamicDetails()
 
     const handleSearch = (e)=>{
         setInput(e.target.value);
@@ -68,6 +69,37 @@ export const TicketFilters = () => {
             })) || [])
     ];
     
+
+
+
+
+    const allowedClientDepartments = ['Maintenance', 'Sales', 'Accounts', 'Housekeeping'];
+const DepartmentOptions = [
+  { label: "All Departments", value: "" },
+  ...(
+    DynamicValuesDetails?.data
+      ?.filter((prop) => {
+        if (!prop.Departments) return false;
+
+        if (decryptedUser?.role?.toLowerCase() === "client") {
+          // Only include departments from the allowed list if the user is a client
+          return allowedClientDepartments.includes(prop.Departments);
+        }
+
+        return true; // For non-client users, include all with Departments
+      })
+      ?.map((prop) => ({
+        value: prop.Departments,
+        label: prop.Departments,
+      })) || []
+  )
+];
+
+
+
+
+
+
     const assigneeOptionsForCreatedBy = [
         { label: "All CreatedBy", value: "" },
         ...(EmployeeDetails?.data

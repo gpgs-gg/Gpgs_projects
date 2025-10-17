@@ -4,6 +4,9 @@ import { Controller, useForm } from 'react-hook-form';
 import Select from "react-select";
 import { useClientDetails, usePropertyData, useUpdateClientCreation } from './services';
 import * as yup from "yup";
+import { toast } from 'react-toastify';
+import LoaderPage from '../NewBooking/LoaderPage';
+import { useApp } from '../TicketSystem/AppProvider';
 
 // ✅ Yup validation schema (example, modify based on real rules)
 const schema = yup.object().shape({
@@ -26,7 +29,11 @@ const schema = yup.object().shape({
 const CreateClient = () => {
     const { data: clientDetails } = useClientDetails();
     const { data: propertyDetails } = usePropertyData();
-    const [mode, setMode] = useState("Create")
+    const [mode, setMode] = useState("Create New Client")
+    const { decryptedUser } = useApp()
+
+    // console.log(1111111111, decryptedUser)
+
 
     const {
         register,
@@ -40,19 +47,23 @@ const CreateClient = () => {
         resolver: yupResolver(schema),
     });
 
+    const filterClientData = clientDetails && clientDetails?.data?.find((ele) => ele.ClientID === watch("ClientID"))
     useEffect(() => {
-        const filterClientData = clientDetails && clientDetails?.data?.find((ele) => ele.ClientID === watch("ClientID"))
-        if (mode !== "Create") {
+
+        if (mode !== "Create New Client") {
             setValue("Name", filterClientData?.Name)
             setValue("IsActive", filterClientData?.IsActive)
-            setValue("RentDate", filterClientData?.RentDate)
+            setValue("RentDate", filterClientData?.RentDate ?
+                new Date(filterClientData?.RentDate).toISOString().slice(0, 10)
+                : "")
             setValue("RentDateComments", filterClientData?.RentDateComments)
             setValue("WhatsAppNo", filterClientData?.WhatsAppNo)
             setValue("CallingNo", filterClientData?.CallingNo)
             setValue("EmailID", filterClientData?.EmailID)
-            setValue("DOJ", filterClientData?.DOJ)
+            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData?.DOJ).toISOString().slice(0, 10)
+                : "")
             setValue("TemporaryPropCode", filterClientData?.TemporaryPropCode)
-            setValue("ActualDOJ", filterClientData?.ActualDOJ)
+            setValue("ActualDOJ", filterClientData?.ActualDOJ ? new Date(filterClientData?.ActualDOJ).toISOString().slice(0, 10) : "")
             setValue("EmgyCont1FullName", filterClientData?.EmgyCont1FullName)
             setValue("EmgyCont1No", filterClientData?.EmgyCont1No)
             setValue("EmgyCont2FullName", filterClientData?.EmgyCont2FullName)
@@ -60,16 +71,19 @@ const CreateClient = () => {
             setValue("BloodGroup", filterClientData?.BloodGroup)
             setValue("Occupation", filterClientData?.Occupation)
             setValue("Organization", filterClientData?.Organization)
-            setValue("NoticeSD", filterClientData?.NoticeSD)
-            setValue("NoticeLD", filterClientData?.NoticeLD)
-            setValue("ActualVD", filterClientData?.ActualVD)
+            setValue("NoticeSD", filterClientData?.NoticeSD ? new Date(filterClientData?.NoticeSD).toISOString().slice(0, 10) : "")
+            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toISOString().slice(0, 10) : "")
+            setValue("ActualVD", filterClientData?.ActualVD ? new Date(filterClientData?.ActualVD).toISOString().slice(0, 10) : "")
             setValue("ParkingCharges", filterClientData?.ParkingCharges)
-            setValue("Comments", filterClientData?.Comments)  
+            setValue("Comments", filterClientData?.Comments)
         }
     }, [watch("ClientID")])
-    useEffect(()=>{
-       reset()
-    },[mode])
+    useEffect(() => {
+        reset()
+    }, [mode])
+
+    console.log("filterClientData", filterClientData)
+
 
     const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange, styles }) => (
         <Select
@@ -133,25 +147,50 @@ const CreateClient = () => {
         const updatedData = {
             ...data,
             Role: "client",
-            mode: mode,
-            IsActive: data.IsActive || "Yes", // Default to "Yes" if not selected
-            CreatedByID: "Admin",
-            CreatedByName: "Admin",
+            // mode: mode,
+            DOJ: data.DOJ ? new Date(data.DOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            ActualDOJ: data.ActualDOJ ? new Date(data.ActualDOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            RentDate: data.RentDate ? new Date(data.RentDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            NoticeSD: data.NoticeSD ? new Date(data.NoticeSD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            NoticeLD: data.NoticeLD ? new Date(data.NoticeLD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            ActualVD: data.ActualVD ? new Date(data.ActualVD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            IsActive: data.IsActive || "Yes",                               
+            CreatedByID: filterClientData?.CreatedByID ? filterClientData?.CreatedByID : decryptedUser?.id,
+            CreatedDate: filterClientData?.CreatedDate ? filterClientData?.CreatedDate :  new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+            // CreatedByName: decryptedUser?.name,
+            ...(mode !== "Create New Client"
+                ? {
+                    UpdatedByID: decryptedUser?.id,
+                    UpdatedDate: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                }
+                : {}),
             LoginID: data.EmailID,
-            CreatedDate: new Date().toISOString().split('T')[0]  // Current date in YYYY-MM-DD format
+            // Current date in YYYY-MM-DD format
         }
-        updateClientCreation(updatedData);
-        console.log("Submitted Data:", updatedData);
+
+        updateClientCreation(updatedData, {
+            onSuccess: () => {
+                if (mode !== "Update Client") {
+                    toast.dismiss()
+                    toast.success("New Client Created successfully")
+                } else {
+                    toast.dismiss()
+                    toast.success("Client Updated successfully")
+                }
+            }
+        });
+
     };
 
     const inputClass = 'w-full px-3 py-2 mt-1 border border-orange-500 rounded-md shadow focus:outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400';
 
     return (
 
-        <div className='min-h-screen w-screen flex flex-col py-28'>
+        <div className='min-h-screen w-screen bg-[#F9F9FB] p-5 flex flex-col py-28'>
+            {/* <h3 className="text-xl font-semibold mb-4 pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3> */}
 
-            <div className=" ml-10 flex gap-4  font-semibold">
-                {["Create", "Update"].map((ele, index) => (
+            <div className=" flex gap-4  border-b-2 bg-white pt-5 pl-5">
+                {["Create New Client", "Update Client"].map((ele, index) => (
                     <button
                         key={index}
                         onClick={() => setMode(ele)}
@@ -163,10 +202,8 @@ const CreateClient = () => {
                     </button>
                 ))}
             </div>
-
-
-            <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-lg px-10 max-w-8xl w-full">
-                <h3 className="text-xl font-semibold mb-4 pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3>
+            <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-sm  py-5 rounded-lg px-10 max-w-8xl w-full">
+                {/* <h3 className="text-xl font-semibold mb-4 pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3> */}
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5">
                     {/* Property Code */}
                     <div>
@@ -217,7 +254,7 @@ const CreateClient = () => {
                     </div>
 
                     {/* Active */}
-                    {mode === "Update" && (
+                    {mode === "Update Client" && (
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Active <span className="text-red-500">*</span></label>
                             <Controller
@@ -241,7 +278,7 @@ const CreateClient = () => {
 
                     {/* Temporary Property Code */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Temporary Property Code <span className="text-black">(opt)</span></label>
+                        <label className="block text-sm font-medium text-gray-700">Temporary Property Code</label>
                         <Controller
                             name="TemporaryPropCode"
                             control={control}
@@ -353,7 +390,7 @@ const CreateClient = () => {
                         type="submit"
                         className="px-6 py-2 bg-orange-300 hover:bg-orange-400 text-black font-semibold rounded"
                     >
-                        Submit
+                        {isUpdatingClientCreation ? <span><LoaderPage /> Submit...</span> : "Submit"}
                     </button>
                 </div>
             </form>
