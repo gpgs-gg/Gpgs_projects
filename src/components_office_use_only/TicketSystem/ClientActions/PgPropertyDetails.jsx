@@ -186,21 +186,22 @@ const OverView = () => {
 
                                     {/* Admin Team */}
                                     <div className="p-3 rounded border border-orange-300 space-y-2">
-                                        <p className="font-bold text-base">Admin Team</p>
+                                                                               <p className="font-bold text-base">Chat / Call</p>
+
                                         <a href="tel:8928191814" className="block text-blue-600 hover:underline">📞 8928191814</a>
-                                        <a href="tel:7021368623" className="block text-blue-600 hover:underline">📞 7021368623</a>
+                                        <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
                                     </div>
                                     {/* Sales */}
-                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                    {/* <div className="p-3 rounded border border-orange-300 space-y-2">
                                         <p className="font-bold text-base">Sales Team</p>
                                         <a href="tel:9326262292" className="block text-blue-600 hover:underline">📞 9326262292</a>
                                         <a href="tel:7021368623" className="block text-blue-600 hover:underline">📞 7021368623</a>
                                     </div>
                                     {/* Maintenance */}
-                                    <div className="p-3 rounded border border-orange-300 space-y-2">
+                                    {/* <div className="p-3 rounded border border-orange-300 space-y-2">
                                         <p className="font-bold text-base">Maintenance Team</p>
                                         <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
-                                    </div>
+                                    </div>  */}
 
                                 </div>
                             </div>
@@ -217,7 +218,7 @@ const OverView = () => {
                                     </div>
 
                                     {/* Review Link */}
-                                    <div className="p-3 md:col-span-2 rounded border border-orange-300">
+                                    {/* <div className="p-3 md:col-span-2 rounded border border-orange-300">
                                         <p className="font-bold text-base mb-1">Review Link</p>
                                         <a href="https://g.page/r/CX8tHckG2lUpEAE/review" target="_blank" rel="noopener noreferrer" className="text-blue-600 break-words hover:underline">
                                             https://g.page/r/CX8tHckG2lUpEAE/review
@@ -225,7 +226,7 @@ const OverView = () => {
                                         <p className="text-sm mt-2 text-gray-700">
                                             Gopal's Paying Guest Services would love your feedback. Post a review to our profile.
                                         </p>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 

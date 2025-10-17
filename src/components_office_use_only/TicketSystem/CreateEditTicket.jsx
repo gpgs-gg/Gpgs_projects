@@ -92,12 +92,32 @@ export const CreateEditTicket = ({ isEdit = false }) => {
       label: prop.Categories,
     })) || [];
 
-  const DepartmentOptions = DynamicValuesDetails?.data
-    ?.filter((prop) => prop.Departments) // Ensure Departments is present
-    .map((prop) => ({
-      value: prop.Departments,
-      label: prop.Departments,
-    })) || [];
+  // const DepartmentOptions = DynamicValuesDetails?.data
+  //   ?.filter((prop) => prop.Departments) // Ensure Departments is present
+  //   .map((prop) => ({
+  //     value: prop.Departments,
+  //     label: prop.Departments,
+  //   })) || [];
+
+
+    const allowedClientDepartments = ['Maintenance', 'Sales', 'Accounts', 'Housekeeping'];
+
+const DepartmentOptions = DynamicValuesDetails?.data
+  ?.filter((prop) => {
+    if (!prop.Departments) return false;
+
+    if (decryptedUser?.role?.toLowerCase() === "client") {
+      // Only include departments from the allowed list if the user is a client
+      return allowedClientDepartments.includes(prop.Departments);
+    }
+
+    return true; // For non-client users, include all with Departments
+  })
+  .map((prop) => ({
+    value: prop.Departments,
+    label: prop.Departments,
+  })) || [];
+
 
   // dynamic managersOption define here .........
   const ManagerOptions = EmployeeDetails?.data
