@@ -73,23 +73,27 @@ export const TicketFilters = () => {
 
 
 
-    const allowedClientDepartments = ['Maintenance', 'Sales', 'Accounts', 'Housekeeping'];
+   const allowedClientDepartments = ['Maintenance', 'Sales', 'Accounts', 'Housekeeping'];
+const DepartmentOptions = [
+  { label: "All Departments", value: "" },
+  ...(
+    DynamicValuesDetails?.data
+      ?.filter((prop) => {
+        if (!prop.Departments) return false;
 
-const DepartmentOptions = DynamicValuesDetails?.data
-  ?.filter((prop) => {
-    if (!prop.Departments) return false;
+        if (decryptedUser?.role?.toLowerCase() === "client") {
+          // Only include departments from the allowed list if the user is a client
+          return allowedClientDepartments.includes(prop.Departments);
+        }
 
-    if (decryptedUser?.role?.toLowerCase() === "client") {
-      // Only include departments from the allowed list if the user is a client
-      return allowedClientDepartments.includes(prop.Departments);
-    }
-
-    return true; // For non-client users, include all with Departments
-  })
-  .map((prop) => ({
-    value: prop.Departments,
-    label: prop.Departments,
-  })) || [];
+        return true; // For non-client users, include all with Departments
+      })
+      ?.map((prop) => ({
+        value: prop.Departments,
+        label: prop.Departments,
+      })) || []
+  )
+];
 
 
 
