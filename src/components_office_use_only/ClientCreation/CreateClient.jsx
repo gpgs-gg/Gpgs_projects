@@ -48,6 +48,7 @@ const CreateClient = () => {
     });
 
     const filterClientData = clientDetails && clientDetails?.data?.find((ele) => ele.ClientID === watch("ClientID"))
+      console.log(1111111111, filterClientData)
     useEffect(() => {
 
         if (mode !== "Create New Client") {
@@ -294,7 +295,11 @@ const CreateClient = () => {
 
                     {/* Text Inputs */}
                     {[
+<<<<<<< HEAD
                         { name: 'RentDate', label: 'Rent Date', type: "Number" },
+=======
+                        { name: 'RentDate', label: 'Rent Date', type: "date" },
+>>>>>>> 00231ea3467c07ab4a7b2331bbc8d5859d507f17
                         { name: 'RentDateComments', label: 'Rent Date Comments' },
                         { name: 'Name', label: 'Full Name' },
                         { name: 'WhatsAppNo', label: 'WhatsApp No', type: "number" },
