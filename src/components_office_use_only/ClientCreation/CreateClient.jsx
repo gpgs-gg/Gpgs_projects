@@ -48,22 +48,23 @@ const CreateClient = () => {
     });
 
     const filterClientData = clientDetails && clientDetails?.data?.find((ele) => ele.ClientID === watch("ClientID"))
+      console.log(1111111111, filterClientData)
     useEffect(() => {
 
         if (mode !== "Create New Client") {
             setValue("Name", filterClientData?.Name)
             setValue("IsActive", filterClientData?.IsActive)
             setValue("RentDate", filterClientData?.RentDate ?
-                new Date(filterClientData?.RentDate).toISOString().slice(0, 10)
+                new Date(filterClientData?.RentDate).toLocaleDateString('en-CA')
                 : "")
             setValue("RentDateComments", filterClientData?.RentDateComments)
             setValue("WhatsAppNo", filterClientData?.WhatsAppNo)
             setValue("CallingNo", filterClientData?.CallingNo)
             setValue("EmailID", filterClientData?.EmailID)
-            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData?.DOJ).toISOString().slice(0, 10)
+            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA') 
                 : "")
             setValue("TemporaryPropCode", filterClientData?.TemporaryPropCode)
-            setValue("ActualDOJ", filterClientData?.ActualDOJ ? new Date(filterClientData?.ActualDOJ).toISOString().slice(0, 10) : "")
+            setValue("ActualDOJ", filterClientData?.ActualDOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA') : "")
             setValue("EmgyCont1FullName", filterClientData?.EmgyCont1FullName)
             setValue("EmgyCont1No", filterClientData?.EmgyCont1No)
             setValue("EmgyCont2FullName", filterClientData?.EmgyCont2FullName)
@@ -71,19 +72,17 @@ const CreateClient = () => {
             setValue("BloodGroup", filterClientData?.BloodGroup)
             setValue("Occupation", filterClientData?.Occupation)
             setValue("Organization", filterClientData?.Organization)
-            setValue("NoticeSD", filterClientData?.NoticeSD ? new Date(filterClientData?.NoticeSD).toISOString().slice(0, 10) : "")
-            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toISOString().slice(0, 10) : "")
-            setValue("ActualVD", filterClientData?.ActualVD ? new Date(filterClientData?.ActualVD).toISOString().slice(0, 10) : "")
+            setValue("NoticeSD", filterClientData?.NoticeSD ? new Date(filterClientData?.NoticeSD).toLocaleDateString('en-CA') : "")
+            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toLocaleDateString('en-CA'): "")
+            setValue("ActualVD", filterClientData?.ActualVD ? new Date(filterClientData.ActualVD).toLocaleDateString('en-CA') : "")
             setValue("ParkingCharges", filterClientData?.ParkingCharges)
             setValue("Comments", filterClientData?.Comments)
         }
-    }, [watch("ClientID")])
+    }, [ filterClientData ])
+
     useEffect(() => {
         reset()
     }, [mode])
-
-    console.log("filterClientData", filterClientData)
-
 
     const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange, styles }) => (
         <Select
@@ -298,7 +297,7 @@ const CreateClient = () => {
 
                     {/* Text Inputs */}
                     {[
-                        { name: 'RentDate', label: 'Rent Start Date', type: "date" },
+                        { name: 'RentDate', label: 'Rent Date', type: "date" },
                         { name: 'RentDateComments', label: 'Rent Date Comments' },
                         { name: 'Name', label: 'Full Name' },
                         { name: 'WhatsAppNo', label: 'WhatsApp No', type: "number" },
