@@ -21,8 +21,8 @@ const schema = yup.object().shape({
     DOJ: yup.string().required("DOJ is required"),
     EmgyCont1FullName: yup.string().required("Emgy Cont1 FullName is required"),
     EmgyCont1No: yup.string().required("Emgy Cont1 No is required"),
-    Occupation: yup.string().required("Occupation is required"),
-    Organization: yup.string().required("Organization is required"),
+    // Occupation: yup.string().required("Occupation is required"),
+    // Organization: yup.string().required("Organization is required"),
     ParkingCharges: yup.string().required("Parking Charges is required"),
 });
 
@@ -53,17 +53,15 @@ const CreateClient = () => {
         if (mode !== "Create New Client") {
             setValue("Name", filterClientData?.Name)
             setValue("IsActive", filterClientData?.IsActive)
-            setValue("RentDate", filterClientData?.RentDate ?
-                new Date(filterClientData?.RentDate).toISOString().slice(0, 10)
-                : "")
+            setValue("RentDate", filterClientData?.RentDate )
             setValue("RentDateComments", filterClientData?.RentDateComments)
             setValue("WhatsAppNo", filterClientData?.WhatsAppNo)
             setValue("CallingNo", filterClientData?.CallingNo)
             setValue("EmailID", filterClientData?.EmailID)
-            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData?.DOJ).toISOString().slice(0, 10)
+            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA') 
                 : "")
             setValue("TemporaryPropCode", filterClientData?.TemporaryPropCode)
-            setValue("ActualDOJ", filterClientData?.ActualDOJ ? new Date(filterClientData?.ActualDOJ).toISOString().slice(0, 10) : "")
+            setValue("ActualDOJ", filterClientData?.ActualDOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA') : "")
             setValue("EmgyCont1FullName", filterClientData?.EmgyCont1FullName)
             setValue("EmgyCont1No", filterClientData?.EmgyCont1No)
             setValue("EmgyCont2FullName", filterClientData?.EmgyCont2FullName)
@@ -71,19 +69,17 @@ const CreateClient = () => {
             setValue("BloodGroup", filterClientData?.BloodGroup)
             setValue("Occupation", filterClientData?.Occupation)
             setValue("Organization", filterClientData?.Organization)
-            setValue("NoticeSD", filterClientData?.NoticeSD ? new Date(filterClientData?.NoticeSD).toISOString().slice(0, 10) : "")
-            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toISOString().slice(0, 10) : "")
-            setValue("ActualVD", filterClientData?.ActualVD ? new Date(filterClientData?.ActualVD).toISOString().slice(0, 10) : "")
+            setValue("NoticeSD", filterClientData?.NoticeSD ? new Date(filterClientData?.NoticeSD).toLocaleDateString('en-CA') : "")
+            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toLocaleDateString('en-CA'): "")
+            setValue("ActualVD", filterClientData?.ActualVD ? new Date(filterClientData.ActualVD).toLocaleDateString('en-CA') : "")
             setValue("ParkingCharges", filterClientData?.ParkingCharges)
             setValue("Comments", filterClientData?.Comments)
         }
-    }, [watch("ClientID")])
+    }, [ filterClientData ])
+
     useEffect(() => {
         reset()
     }, [mode])
-
-    console.log("filterClientData", filterClientData)
-
 
     const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange, styles }) => (
         <Select
@@ -150,7 +146,7 @@ const CreateClient = () => {
             // mode: mode,
             DOJ: data.DOJ ? new Date(data.DOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             ActualDOJ: data.ActualDOJ ? new Date(data.ActualDOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
-            RentDate: data.RentDate ? new Date(data.RentDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
+            RentDate: data.RentDate ,
             NoticeSD: data.NoticeSD ? new Date(data.NoticeSD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             NoticeLD: data.NoticeLD ? new Date(data.NoticeLD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             ActualVD: data.ActualVD ? new Date(data.ActualVD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
@@ -186,10 +182,10 @@ const CreateClient = () => {
 
     return (
 
-        <div className='min-h-screen w-screen bg-[#F9F9FB] p-5 flex flex-col py-28'>
+        <div className='min-h-screen w-screen bg-[#E5E7EB] px-10 flex flex-col py-36'>
             {/* <h3 className="text-xl font-semibold mb-4 pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3> */}
 
-            <div className=" flex gap-4  border-b-2 bg-white pt-5 pl-5">
+            <div className=" flex gap-4 rounded-t-xl  border-b-2 bg-white pt-5 pl-5">
                 {["Create New Client", "Update Client"].map((ele, index) => (
                     <button
                         key={index}
@@ -202,7 +198,7 @@ const CreateClient = () => {
                     </button>
                 ))}
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-sm  py-5 rounded-lg px-10 max-w-8xl w-full">
+            <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-sm  py-5 rounded-b-lg px-10 max-w-8xl w-full">
                 {/* <h3 className="text-xl font-semibold mb-4 pb-2 bg-orange-300 text-black p-2 rounded-sm">Client Details</h3> */}
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5">
                     {/* Property Code */}
@@ -298,7 +294,7 @@ const CreateClient = () => {
 
                     {/* Text Inputs */}
                     {[
-                        { name: 'RentDate', label: 'Rent Start Date', type: "date" },
+                        { name: 'RentDate', label: 'Rent Date', type: "Number" },
                         { name: 'RentDateComments', label: 'Rent Date Comments' },
                         { name: 'Name', label: 'Full Name' },
                         { name: 'WhatsAppNo', label: 'WhatsApp No', type: "number" },
@@ -320,7 +316,7 @@ const CreateClient = () => {
                     ].map((field) => (
                         <div key={field.name}>
                             <label className="block text-sm font-medium text-gray-700">
-                                {field.label} {["RentDateComments", "ActualDOJ", "EmgyCont2FullName", "EmgyCont2No", "BloodGroup", "NoticeSD", 'NoticeLD', 'ActualVD'].includes(field.name) ? "" : <span className="text-red-500">*</span>}
+                                {field.label} {["RentDateComments", "ActualDOJ", "EmgyCont2FullName", "EmgyCont2No", "BloodGroup", "NoticeSD", 'NoticeLD', 'ActualVD' , "Occupation" , "Organization" ].includes(field.name) ? "" : <span className="text-red-500">*</span>}
                             </label>
                             <input
                                 type={field.type || 'text'}

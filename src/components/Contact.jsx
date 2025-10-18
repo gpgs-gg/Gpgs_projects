@@ -82,7 +82,7 @@ const Contact = () => {
                   key={idx}
                   className="bg-white  backdrop-blur-lg rounded-xl p-6 text-center"
                 >
-                  <h3 className="text-sm sm:text-xl text-[#3730a3] font-bold mb-3">
+                  <h3 className="text-xl sm:text-xl text-[#3730a3] font-bold mb-3">
                     {title}
                   </h3>
                   <a

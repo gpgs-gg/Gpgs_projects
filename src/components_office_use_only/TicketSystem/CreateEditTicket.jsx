@@ -1106,7 +1106,7 @@ const DepartmentOptions = DynamicValuesDetails?.data
                   <label className="block text-sm font-medium text-black mb-2">Work Logs <span className="text-red-500">*</span></label>
                   {previousWlogs && (
                     <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-32 overflow-y-auto">
-                      <pre className="text-xs text-black whitespace-pre-wrap">{previousWlogs}</pre>
+                      {/* <pre className="text-xl text-black whitespace-pre-wrap">{previousWlogs}</pre> */}
                     </div>
                   )}
                   <textarea
@@ -1708,8 +1708,8 @@ const DepartmentOptions = DynamicValuesDetails?.data
               <div>
                 <label className="block text-sm font-medium text-black mb-2">Work Logs <span className="text-red-500">*</span></label>
                 {previousWlogs && (
-                  <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-32 overflow-y-auto">
-                    <pre className="text-xs text-black whitespace-pre-wrap">{previousWlogs}</pre>
+                  <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-40 overflow-y-auto">
+                    <p className="text-md text-black whitespace-pre-wrap">{previousWlogs}</p>
                   </div>
                 )}
                 <textarea

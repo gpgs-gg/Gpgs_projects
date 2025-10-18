@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
+
 // Memoized Select Component to prevent unnecessary re-renders
 const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange, styles }) => (
   <Select
@@ -1060,10 +1061,13 @@ const NewBooking = () => {
     })
   };
 
+
+
+
+
   return (
     <div className="max-w-8xl mx-auto bg-[#F8F9FB] min-h-screen">
       <div className="bg-[#F8F9FB] shadow-lg rounded-xl  p-6">
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 mt-20">
           {/* === CLIENT DETAILS === */}
           <section className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
@@ -1117,7 +1121,7 @@ const NewBooking = () => {
                 {renderError('AskForBAOrFA')}
               </div>
 
-              
+
             </div>
 
 
