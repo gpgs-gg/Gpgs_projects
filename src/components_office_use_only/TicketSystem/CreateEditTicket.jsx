@@ -1106,7 +1106,7 @@ const DepartmentOptions = DynamicValuesDetails?.data
                   <label className="block text-sm font-medium text-black mb-2">Work Logs <span className="text-red-500">*</span></label>
                   {previousWlogs && (
                     <div className="mb-2 p-2 bg-gray-100 border border-gray-300 rounded h-32 overflow-y-auto">
-                      <pre className="text-xl text-black whitespace-pre-wrap">{previousWlogs}</pre>
+                    <p className="text-md text-black whitespace-pre-wrap">{previousWlogs}</p>
                     </div>
                   )}
                   <textarea
