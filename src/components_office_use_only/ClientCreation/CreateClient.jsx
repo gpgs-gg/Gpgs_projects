@@ -144,6 +144,7 @@ const CreateClient = () => {
         const updatedData = {
             ...data,
             Role: "client",
+            Password : filterClientData?.Password ? filterClientData?.Password : "",
             // mode: mode,
             DOJ: data.DOJ ? new Date(data.DOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             ActualDOJ: data.ActualDOJ ? new Date(data.ActualDOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
