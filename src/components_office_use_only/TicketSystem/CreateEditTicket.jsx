@@ -655,6 +655,7 @@ const DepartmentOptions = DynamicValuesDetails?.data
   useEffect(() => {
     if (!isEdit) {
       reset()
+     setPreviousWlogs("")
       setPreviews([])
     }
   }, [isEdit])
