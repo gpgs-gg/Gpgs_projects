@@ -138,17 +138,41 @@ const PropertyFormSection = memo(({
         return totalDays;
       };
 
-      if (end && !isNaN(end.getTime())) {
-        // ✅ Case: start to actual end date (inclusive)
-        const diffDays = getCustomDiffDays(start, end);
-        totalRent = Math.round(dailyRent * diffDays);
-      } else {
-        // ✅ Case: No end date — assume 30-day month
-        const startDay = start.getDate();
-        const remainingDays = 30 - startDay + 1; // include start day
-        totalRent = Math.round(dailyRent * remainingDays);
-      }
 
+      // old code 
+      // if (end && !isNaN(end.getTime())) {
+      //   // ✅ Case: start to actual end date (inclusive)
+      //   const diffDays = getCustomDiffDays(start, end);
+      //   totalRent = Math.round(dailyRent * diffDays);
+      // } else {
+      //   // ✅ Case: No end date — assume 30-day month
+      //   const startDay = start.getDate();
+      //   const remainingDays = 30 - startDay + 1; // include start day
+      //   totalRent = Math.round(dailyRent * remainingDays);
+      // }
+
+
+   // new code 
+      if (end && !isNaN(end.getTime())) {
+  // ✅ Case: start to actual end date (inclusive)
+  // Always assume each month = 30 days
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+  const monthDiff = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+
+  // Days difference assuming 30 days per month
+  const diffDays = monthDiff * 30 + (endDay - startDay + 1);
+  totalRent = Math.round(dailyRent * diffDays);
+
+} else {
+  // ✅ Case: No end date — assume 30-day month
+  const startDay = start.getDate();
+  const remainingDays = 30 - startDay + 1; // include start day
+  totalRent = Math.round(dailyRent * remainingDays);
+}
+
+
+      
       setValue(`${titlePrefix}BedRentAmt`, totalRent);
     } else {
       setValue(`${titlePrefix}BedRentAmt`, "");
