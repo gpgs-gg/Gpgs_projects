@@ -3,6 +3,7 @@ import { Copy, X, FileDown, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { toast } from 'react-toastify';
+import LoaderPage from './LoaderPage';
 
 const ConfirmationModel = ({
   showConfirmModal,
@@ -11,8 +12,10 @@ const ConfirmationModel = ({
   handleFinalSubmit,
   applyPermBedRent,
   setApplyPermBedRent,
-  isBookingLoading
+  isBookingLoading,
+  isPending
 }) => {
+  
 
   const invoiceRef = useRef();
 
@@ -201,7 +204,7 @@ Total Amount to be paid: ₹${totalAmount}
   useEffect(() => {
     if (isBookingLoading) {
       shareOnWhatsApp();
-      window.location.reload()
+      // window.location.reload()
     }
   }, [isBookingLoading]);
 
@@ -491,7 +494,9 @@ Total Amount to be paid: ₹${totalAmount}
               handleFinalSubmit();
             }} className="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded"
           >
-            <Send size={18} /> Save & Share on WhatsApp
+             {isPending ? <p className='flex justify-center items-center gap-2'>
+               <LoaderPage/> <Send size={18} /> Save & Share on WhatsApp
+            </p> : "Save & Share on WhatsApp" }
           </button>
 
         </div>
