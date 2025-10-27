@@ -678,14 +678,14 @@ const NewBooking = () => {
     }),
   });
 
-  const { mutate: submitBooking, isLoading: isBookingLoading , isSuccess } = useAddBooking();
+  const { mutate: submitBooking,isPending ,  isSuccess } = useAddBooking();
   const { data: propertyList, isLoading: isPropertyLoading } = usePropertyData();
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: singleSheetData, isLoading: isPropertySheetData } = usePropertySheetData(selectedSheetId);
   const { data: singleTempSheetData, isLoading: isTempPropertySheetData } = useTempPropertySheetData(selectedTempSheetId);
  
 
-    console.log(22222,isBookingLoading  , isSuccess)
+    // console.log(22222,isPending  , isSuccess ,isTempPropertySheetData )
 
   const {
     register,
@@ -1281,6 +1281,7 @@ const NewBooking = () => {
         setApplyPermBedRent={setApplyPermBedRent}
         applyPermBedRent={applyPermBedRent}
            isBookingLoading = {isSuccess}
+           isPending = {isPending}
         formPreviewData={formPreviewData}
       />
     </div>
