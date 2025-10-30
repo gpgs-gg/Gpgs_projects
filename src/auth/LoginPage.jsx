@@ -33,6 +33,7 @@ const LoginPage = () => {
     id: user["EmployeeID"],
     name: user["Name"],
     role: user["Role"],
+     IsActive: user["IsActive"],
     loginId: user["Login ID"] || user["LoginID"],
     password: user["Password"],
   }));
@@ -95,9 +96,11 @@ const LoginPage = () => {
       const decryptedPassword = decrypt(user.password);
       return (
         user.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
-        decryptedPassword === inputPassword
+        decryptedPassword === inputPassword &&
+        user.IsActive?.toLowerCase() === "yes"
       );
     });
+    
 
     const matchedClient = !matchedEmployee && normalizedClients.find((client) => {
       const decryptedPassword = decrypt(client.password);
@@ -116,6 +119,14 @@ const LoginPage = () => {
         client.IsActive?.toLowerCase() !== "yes"
       );
     });
+    const inactiveEmployee = !matchedClient && normalizedUsers.find((user) => {
+      const decryptedPassword = decrypt(user.password);
+      return (
+        user.loginId?.trim().toLowerCase() === inputLoginId.toLowerCase() &&
+        decryptedPassword === inputPassword &&
+        user.IsActive?.toLowerCase() !== "yes"
+      );
+    });
 
     const user = matchedEmployee || matchedClient;
 
@@ -128,6 +139,10 @@ const LoginPage = () => {
     } else if (inactiveClient) {
       toast.error("You don't have permission to log in. Please contact Administrator.", {
         toastId: 'inactive-client',
+      });
+    }  else if (inactiveEmployee) {
+      toast.error("You don't have permission to log in. Please contact Administrator.", {
+        toastId: 'inactive-Employee',
       });
     } else {
       toast.error('Invalid Login ID or Password', {

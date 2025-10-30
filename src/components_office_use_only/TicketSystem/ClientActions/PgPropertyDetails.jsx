@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { usePropertyData, usePropertySheetData } from './services';
+import { useClientDetails, usePropertyData, usePropertySheetData } from './services';
 import CryptoJS from 'crypto-js';
 import { format, subMonths } from "date-fns"; // date-fns is handy
 import { SECRET_KEY } from '../../../Config';
+import AgreementConfirmation from './AgreementConfirmation';
 
 
 const OverView = () => {
@@ -17,10 +18,14 @@ const OverView = () => {
         agreement: true,
         checkIn: false
     });
+    const { data: ClientDetails, isPending: isClientPending } = useClientDetails();
+    const filteredClientData = ClientDetails?.data?.find(
+        (ele) => ele.ClientID === decryptedUser?.clientID
+    );
+
 
 
     const { data: propertyDataFromApi } = usePropertyData();
-
     // Use useMemo to prevent unnecessary recalculations
     const filteredPropertySheetData = useMemo(() => {
         return propertyDataFromApi?.data?.filter(
@@ -30,7 +35,6 @@ const OverView = () => {
 
     const mainSheetId = useMemo(() => {
         if (!filteredPropertySheetData || filteredPropertySheetData.length === 0) return [];
-
         const sheetBaseId = filteredPropertySheetData[0]["PG Main  Sheet ID"];
         const bedCount = filteredPropertySheetData[0]["Bed Count"];
 
@@ -41,7 +45,6 @@ const OverView = () => {
             const sheetName = format(date, "MMMyyyy"); // Format like "Sep2025"
             sheetIds.push(`${sheetBaseId},${sheetName},${bedCount}`);
         }
-
         return sheetIds;
     }, [filteredPropertySheetData]);
 
@@ -52,9 +55,6 @@ const OverView = () => {
         return pgMainSheetData?.data?.length > 0
             ? pgMainSheetData?.data?.filter((ele) => ele.ClientID.trim() === decryptedUser.clientID.trim()) : []
     }, [pgMainSheetData])
-
-    console.log("MainSheetDataForNameWise:", mainSheetDataForNameWise , pgMainSheetData);
-
 
     useEffect(() => {
         const encrypted = localStorage.getItem('user');
@@ -79,6 +79,11 @@ const OverView = () => {
             setPropertyData(filteredPropertySheetData);
         }
     }, [filteredPropertySheetData]);
+
+
+console.log(1111111111111, filteredClientData?.DigitalSelfDeclearationAccepted.toLowerCase());
+
+
 
     return (
         <div className="max-w-full mx-auto  py-6  lg:px-8">
@@ -186,7 +191,7 @@ const OverView = () => {
 
                                     {/* Admin Team */}
                                     <div className="p-3 rounded border border-orange-300 space-y-2">
-                                                                               <p className="font-bold text-base">Chat / Call</p>
+                                        <p className="font-bold text-base">Chat / Call</p>
 
                                         <a href="tel:8928191814" className="block text-blue-600 hover:underline">📞 8928191814</a>
                                         <a href="tel:9326325181" className="block text-blue-600 hover:underline">📞 9326325181</a>
@@ -263,6 +268,11 @@ const OverView = () => {
                     </div>
                 </div>
             </div>
+            {(filteredClientData?.DigitalSelfDeclearationAccepted.toLowerCase() === "false" ||
+                filteredClientData?.DigitalSelfDeclearationAccepted === "") && (
+                    <AgreementConfirmation />
+                )}
+
         </div>
     )
 }

@@ -13,7 +13,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-
 // Memoized Select Component to prevent unnecessary re-renders
 const MemoizedSelect = memo(({ field, options, placeholder, isDisabled, onChange, styles }) => (
   <Select
@@ -120,6 +119,7 @@ const PropertyFormSection = memo(({
 
         let current = new Date(startDate);
         let totalDays = 0;
+     
 
         while (current <= endDate) {
           const year = current.getFullYear();
@@ -135,19 +135,44 @@ const PropertyFormSection = memo(({
             current.setDate(current.getDate() + 1);
           }
         }
+            // console.log(11111111111, totalDays)
         return totalDays;
       };
 
+          
+ // old code 
+      // if (end && !isNaN(end.getTime())) {
+      //   // ✅ Case: start to actual end date (inclusive)
+      //   const diffDays = getCustomDiffDays(start, end);
+      //   totalRent = Math.round(dailyRent * diffDays);
+      // } else {
+      //   // ✅ Case: No end date — assume 30-day month
+      //   const startDay = start.getDate();
+      //   console.log(11111111111, startDay)
+      //   const remainingDays = 30 - startDay + 1; // include start day
+      //   totalRent = Math.round(dailyRent * remainingDays);
+      // }
+
+
+      // new code 
       if (end && !isNaN(end.getTime())) {
-        // ✅ Case: start to actual end date (inclusive)
-        const diffDays = getCustomDiffDays(start, end);
-        totalRent = Math.round(dailyRent * diffDays);
-      } else {
-        // ✅ Case: No end date — assume 30-day month
-        const startDay = start.getDate();
-        const remainingDays = 30 - startDay + 1; // include start day
-        totalRent = Math.round(dailyRent * remainingDays);
-      }
+  // ✅ Case: start to actual end date (inclusive)
+  // Always assume each month = 30 days
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+  const monthDiff = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+
+  // Days difference assuming 30 days per month
+  const diffDays = monthDiff * 30 + (endDay - startDay + 1);
+  totalRent = Math.round(dailyRent * diffDays);
+
+} else {
+  // ✅ Case: No end date — assume 30-day month
+  const startDay = start.getDate();
+  const remainingDays = 30 - startDay + 1; // include start day
+  totalRent = Math.round(dailyRent * remainingDays);
+}
+
 
       setValue(`${titlePrefix}BedRentAmt`, totalRent);
     } else {
@@ -653,11 +678,14 @@ const NewBooking = () => {
     }),
   });
 
-  const { mutate: submitBooking, isLoading: isBookingLoading } = useAddBooking();
+  const { mutate: submitBooking,isPending ,  isSuccess } = useAddBooking();
   const { data: propertyList, isLoading: isPropertyLoading } = usePropertyData();
   const { data: EmployeeDetails } = useEmployeeDetails();
   const { data: singleSheetData, isLoading: isPropertySheetData } = usePropertySheetData(selectedSheetId);
   const { data: singleTempSheetData, isLoading: isTempPropertySheetData } = useTempPropertySheetData(selectedTempSheetId);
+ 
+
+    // console.log(22222,isPending  , isSuccess ,isTempPropertySheetData )
 
   const {
     register,
@@ -1015,10 +1043,11 @@ const NewBooking = () => {
         // setActiveTab('');
         setSelctedSheetId(null);
         setSelectedBedNumber(null);
-        window.location.reload()
+        // window.location.reload()
       },
       onError: () => {
-        alert("❌ Failed to submit. Try again.");
+        // alert("❌ Failed to submit. Try again.");
+          toast.error("❌ Failed to submit. Wait & Try again you have reached the limits.")
       },
     });
   }, [submitBooking, formPreviewData, reset]);
@@ -1251,7 +1280,8 @@ const NewBooking = () => {
         handleFinalSubmit={handleFinalSubmit}
         setApplyPermBedRent={setApplyPermBedRent}
         applyPermBedRent={applyPermBedRent}
-
+           isBookingLoading = {isSuccess}
+           isPending = {isPending}
         formPreviewData={formPreviewData}
       />
     </div>

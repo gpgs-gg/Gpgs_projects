@@ -9,14 +9,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from './components_office_use_only/TicketSystem/AppProvider';
 import { AuthProvider } from './context/AuthContext';
-  import { ToastContainer } from 'react-toastify';
-  import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-
+import { ToastContainer } from 'react-toastify';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+// import GoogleDriveUpload from './GoogleDriveUpload'; 
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
 // Register service worker for PWA
 // serviceWorker.register();
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -25,8 +24,7 @@ root.render(
       <BrowserRouter>
         <AppProvider>
           <AuthProvider>
-                <ToastContainer className="mt-20" />
-  
+            <ToastContainer className="mt-20" />
             <App />
           </AuthProvider>
         </AppProvider>

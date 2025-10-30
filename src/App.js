@@ -110,25 +110,54 @@ function App() {
   }, []);
 
   // for auto logout ...............
-  const TEN_HOURS = 10 * 60 * 60 * 1000; // 36,000,000 ms
+ const TEN_HOURS = 10 * 60 * 60 * 1000;
+  const ONE_HOUR = 60 * 60 * 1000;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const loginTimestamp = Number(localStorage.getItem("loginTimestamp"));
-      const now = Date.now();
+    let lastActivity = Date.now();
 
+    const updateActivity = () => {
+      lastActivity = Date.now();
+    };
+
+    // Listen for user activity on your website
+    window.addEventListener("mousemove", updateActivity);
+    window.addEventListener("keydown", updateActivity);
+    window.addEventListener("scroll", updateActivity);
+    window.addEventListener("click", updateActivity);
+    window.addEventListener("touchstart", updateActivity);
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const loginTimestamp = Number(localStorage.getItem("loginTimestamp"));
+
+      // Logout after 1 hour of inactivity
+      if (now - lastActivity > ONE_HOUR) {
+        logout();
+        localStorage.removeItem("loginTimestamp");
+        window.location.reload();
+        clearInterval(interval);
+        return;
+      }
+
+      // Logout after TEN_HOURS since login
       if (loginTimestamp && now - loginTimestamp > TEN_HOURS) {
         logout();
-        window.location.reload();
         localStorage.removeItem("loginTimestamp");
-        clearInterval(interval); // stop checking after logout
+        window.location.reload();
+        clearInterval(interval);
       }
-    }, 5000); // check every 5 seconds
+    }, 5000);
 
-    return () => clearInterval(interval); // cleanup
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("mousemove", updateActivity);
+      window.removeEventListener("keydown", updateActivity);
+      window.removeEventListener("scroll", updateActivity);
+      window.removeEventListener("click", updateActivity);
+      window.removeEventListener("touchstart", updateActivity);
+    };
   }, [TEN_HOURS, logout]);
-
-
   // lock right click
   // useEffect(() => {
   //   const onContext = (e) => e.preventDefault();

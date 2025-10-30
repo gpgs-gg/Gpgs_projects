@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Copy, X, FileDown, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { toast } from 'react-toastify';
+import LoaderPage from './LoaderPage';
 
 const ConfirmationModel = ({
   showConfirmModal,
@@ -10,8 +12,15 @@ const ConfirmationModel = ({
   handleFinalSubmit,
   applyPermBedRent,
   setApplyPermBedRent,
-  // isBookingLoading
+  isBookingLoading,
+  isPending
 }) => {
+  
+
+
+  console.log(111111111, isBookingLoading)
+
+
   const invoiceRef = useRef();
 
   const formatCurrency = (amt) =>
@@ -40,47 +49,45 @@ const ConfirmationModel = ({
     });
   };
 
+  let endOfDOJMonth = null;
 
+  if (formPreviewData?.PermBedDOJ) {
+    const dojDate = new Date(formPreviewData.PermBedDOJ);
 
-let endOfDOJMonth = null;
-
-if (formPreviewData?.PermBedDOJ) {
-  const dojDate = new Date(formPreviewData.PermBedDOJ);
-
-  if (!isNaN(dojDate)) {
-    const year = dojDate.getFullYear();
-    const month = dojDate.getMonth();
-    // Get the actual last day of the month
-    const actualLastDay = new Date(year, month + 1, 0).getDate();
-    // Use 30 if month has more than 30 days, otherwise use actual last day (like Feb)
-    const customEndDay = actualLastDay >= 30 ? 30 : actualLastDay;
-    const customEndDate = new Date(year, month, customEndDay);
-    endOfDOJMonth = customEndDate.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    if (!isNaN(dojDate)) {
+      const year = dojDate.getFullYear();
+      const month = dojDate.getMonth();
+      // Get the actual last day of the month
+      const actualLastDay = new Date(year, month + 1, 0).getDate();
+      // Use 30 if month has more than 30 days, otherwise use actual last day (like Feb)
+      const customEndDay = actualLastDay >= 30 ? 30 : actualLastDay;
+      const customEndDate = new Date(year, month, customEndDay);
+      endOfDOJMonth = customEndDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
   }
-}
 
-let tempEndOfDOJMonth = null;
-if (formPreviewData?.TempBedDOJ) {
-  const dojDate = new Date(formPreviewData.TempBedDOJ);
-  if (!isNaN(dojDate)) {
-    const year = dojDate.getFullYear();
-    const month = dojDate.getMonth();
-    // Get the actual last day of the month
-    const actualLastDay = new Date(year, month + 1, 0).getDate();
-    // Use 30 if month has more than 30 days, otherwise use actual last day (e.g., February)
-    const customEndDay = actualLastDay >= 30 ? 30 : actualLastDay;
-    const customEndDate = new Date(year, month, customEndDay);
-    tempEndOfDOJMonth = customEndDate.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+  let tempEndOfDOJMonth = null;
+  if (formPreviewData?.TempBedDOJ) {
+    const dojDate = new Date(formPreviewData.TempBedDOJ);
+    if (!isNaN(dojDate)) {
+      const year = dojDate.getFullYear();
+      const month = dojDate.getMonth();
+      // Get the actual last day of the month
+      const actualLastDay = new Date(year, month + 1, 0).getDate();
+      // Use 30 if month has more than 30 days, otherwise use actual last day (e.g., February)
+      const customEndDay = actualLastDay >= 30 ? 30 : actualLastDay;
+      const customEndDate = new Date(year, month, customEndDay);
+      tempEndOfDOJMonth = customEndDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
   }
-}
 
 
   const shareOnWhatsApp = () => {
@@ -140,7 +147,7 @@ if (formPreviewData?.TempBedDOJ) {
     let msg = `Payment Details For ${ClientFullName} ( Contact No : ${CallingNo} )`;
     msg += "\n";
     if (TempPropCode) {
-       msg += "\n";
+      msg += "\n";
       msg += `
 Temporary PG Facility Code: ${TempPropCode}
 Room No.: ${TempRoomNo}
@@ -164,11 +171,11 @@ Permanent Bed Deposit Amount: ₹${PermBedDepositAmt}
 Processing Fees: ₹${ProcessingFeesAmt}
 Total Amount to be paid: ₹${totalAmount}
 `.trim();
- if(applyPermBedRent){
-    msg += "  ( Please Note : Permanent Bed Rent is included )"
- }  else{
-    msg += "  ( Please Note : Permanent Bed Rent is not included )"
- }
+    if (applyPermBedRent) {
+      msg += "  ( Please Note : Permanent Bed Rent is included )"
+    } else {
+      msg += "  ( Please Note : Permanent Bed Rent is not included )"
+    }
 
     msg += "\n\n";
 
@@ -186,13 +193,24 @@ Total Amount to be paid: ₹${totalAmount}
     const number = WhatsAppNo?.replace(/\D/g, "") || "";
 
     // window.open(`https://wa.me/${number}?text=${encodedMsg}`, "_blank");
-    window.open(`https://api.whatsapp.com/send?phone=91${number}&text=${encodedMsg}`, "_blank");
+
+    window.open(
+      `https://api.whatsapp.com/send?phone=91${number}&text=${encodedMsg}`,
+      "_blank"
+    );
+
     // =HYPERLINK("https://api.whatsapp.com/send?phone="&ENCODEURL(91&$AE4)&"&text="&ENCODEURL($AC4),"Click Me")(
 
   };
 
   // Assuming PermBedDOJ is in YYYY-MM-DD format
 
+  useEffect(() => {
+    if (isBookingLoading) {
+      shareOnWhatsApp();
+      // window.location.reload()
+    }
+  }, [isBookingLoading]);
 
   if (!showConfirmModal) return null;
 
@@ -360,7 +378,7 @@ Total Amount to be paid: ₹${totalAmount}
                   className="w-5 h-5 accent-orange-500 border border-orange-500"
                 />
                 {
-                  applyPermBedRent ? (  <label htmlFor="permanent-bed-rent" className='text-sm'>Permanent Bed Rent Applied</label>) : (  <label  htmlFor="permanent-bed-rent" className='text-sm'>Permanent Bed Rent Not Applied</label>)
+                  applyPermBedRent ? (<label htmlFor="permanent-bed-rent" className='text-sm'>Permanent Bed Rent Applied</label>) : (<label htmlFor="permanent-bed-rent" className='text-sm'>Permanent Bed Rent Not Applied</label>)
                 }
               </div>
 
@@ -434,7 +452,7 @@ Total Amount to be paid: ₹${totalAmount}
               <p>
                 📌 The booking is confirmed only after full amount ₹{" "}
                 {
-                 (applyPermBedRent ? Number(formPreviewData.PermBedRentAmt || 0) : 0) +
+                  (applyPermBedRent ? Number(formPreviewData.PermBedRentAmt || 0) : 0) +
                   Number(formPreviewData.PermBedDepositAmt) +
                   Number(formPreviewData.ProcessingFeesAmt) +
                   (formPreviewData.TempBedRentAmt ? Number(formPreviewData.TempBedRentAmt) : 0)
@@ -476,11 +494,13 @@ Total Amount to be paid: ₹${totalAmount}
 
           <button
             onClick={() => {
-              shareOnWhatsApp();
+              // shareOnWhatsApp();
               handleFinalSubmit();
             }} className="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded"
           >
-            <Send size={18} /> Save & Share on WhatsApp
+             {isPending ? <p className='flex justify-center items-center gap-2'>
+               <LoaderPage/> <Send size={18} /> Save & Share on WhatsApp
+            </p> : "Save & Share on WhatsApp" }
           </button>
 
         </div>

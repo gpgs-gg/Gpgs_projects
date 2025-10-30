@@ -78,3 +78,17 @@ export const useClientDetails = () => {
   });
 };
 
+
+
+
+const fetchSystemInfo = async () => {
+  const response = await axios.get("https://ipapi.co/json");
+  return response.data;
+};
+// React Query hook to fetch property data
+export const useFetchSystemInfo = () => {
+  return useQuery({
+    queryKey: ["SystemInfo"],
+    queryFn: fetchSystemInfo,
+  });
+};

@@ -48,18 +48,18 @@ const CreateClient = () => {
     });
 
     const filterClientData = clientDetails && clientDetails?.data?.find((ele) => ele.ClientID === watch("ClientID"))
-      console.log(1111111111, filterClientData)
+   
     useEffect(() => {
 
         if (mode !== "Create New Client") {
             setValue("Name", filterClientData?.Name)
             setValue("IsActive", filterClientData?.IsActive)
-            setValue("RentDate", filterClientData?.RentDate )
+            setValue("RentDate", filterClientData?.RentDate)
             setValue("RentDateComments", filterClientData?.RentDateComments)
             setValue("WhatsAppNo", filterClientData?.WhatsAppNo)
             setValue("CallingNo", filterClientData?.CallingNo)
             setValue("EmailID", filterClientData?.EmailID)
-            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA') 
+            setValue("DOJ", filterClientData?.DOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA')
                 : "")
             setValue("TemporaryPropCode", filterClientData?.TemporaryPropCode)
             setValue("ActualDOJ", filterClientData?.ActualDOJ ? new Date(filterClientData.DOJ).toLocaleDateString('en-CA') : "")
@@ -71,12 +71,12 @@ const CreateClient = () => {
             setValue("Occupation", filterClientData?.Occupation)
             setValue("Organization", filterClientData?.Organization)
             setValue("NoticeSD", filterClientData?.NoticeSD ? new Date(filterClientData?.NoticeSD).toLocaleDateString('en-CA') : "")
-            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toLocaleDateString('en-CA'): "")
+            setValue("NoticeLD", filterClientData?.NoticeLD ? new Date(filterClientData?.NoticeLD).toLocaleDateString('en-CA') : "")
             setValue("ActualVD", filterClientData?.ActualVD ? new Date(filterClientData.ActualVD).toLocaleDateString('en-CA') : "")
             setValue("ParkingCharges", filterClientData?.ParkingCharges)
             setValue("Comments", filterClientData?.Comments)
         }
-    }, [ filterClientData ])
+    }, [filterClientData])
 
     useEffect(() => {
         reset()
@@ -144,16 +144,17 @@ const CreateClient = () => {
         const updatedData = {
             ...data,
             Role: "client",
+            Password: filterClientData?.Password ? filterClientData?.Password : "",
             // mode: mode,
             DOJ: data.DOJ ? new Date(data.DOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             ActualDOJ: data.ActualDOJ ? new Date(data.ActualDOJ).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
-            RentDate: data.RentDate ,
+            RentDate: data.RentDate,
             NoticeSD: data.NoticeSD ? new Date(data.NoticeSD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             NoticeLD: data.NoticeLD ? new Date(data.NoticeLD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
             ActualVD: data.ActualVD ? new Date(data.ActualVD).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "",
-            IsActive: data.IsActive || "Yes",                               
+            IsActive: data.IsActive || "Yes",
             CreatedByID: filterClientData?.CreatedByID ? filterClientData?.CreatedByID : decryptedUser?.id,
-            CreatedDate: filterClientData?.CreatedDate ? filterClientData?.CreatedDate :  new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+            CreatedDate: filterClientData?.CreatedDate ? filterClientData?.CreatedDate : new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
             // CreatedByName: decryptedUser?.name,
             ...(mode !== "Create New Client"
                 ? {
@@ -246,7 +247,6 @@ const CreateClient = () => {
                                 );
                             }}
                         />
-
                         {errors.ClientID && <p className="text-red-500 text-sm">{errors.ClientID.message}</p>}
                     </div>
 
@@ -317,7 +317,7 @@ const CreateClient = () => {
                     ].map((field) => (
                         <div key={field.name}>
                             <label className="block text-sm font-medium text-gray-700">
-                                {field.label} {["RentDateComments", "ActualDOJ", "EmgyCont2FullName", "EmgyCont2No", "BloodGroup", "NoticeSD", 'NoticeLD', 'ActualVD' , "Occupation" , "Organization" ].includes(field.name) ? "" : <span className="text-red-500">*</span>}
+                                {field.label} {["RentDateComments", "ActualDOJ", "EmgyCont2FullName", "EmgyCont2No", "BloodGroup", "NoticeSD", 'NoticeLD', 'ActualVD', "Occupation", "Organization"].includes(field.name) ? "" : <span className="text-red-500">*</span>}
                             </label>
                             <input
                                 type={field.type || 'text'}

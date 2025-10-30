@@ -391,160 +391,160 @@ import { useApp } from "./AppProvider";
 import { TicketFilters } from "./TicketFilters";
 
 const TicketRow = React.memo(({ ticket, headers, formatDate, onEdit, onImageClick, videoModalUrl, setVideoModalUrl }) => {
-    return (
-        <tr key={ticket.TicketID} className="hover:bg-[#F8F9FB] border">
-            {headers.map(({ key }) => {
-                const value = ticket[key];
-                const isTicketID = key === "TicketID";
+  return (
+    <tr key={ticket.TicketID} className="hover:bg-[#F8F9FB] border">
+      {headers.map(({ key }) => {
+        const value = ticket[key];
+        const isTicketID = key === "TicketID";
 
-                const stickyStyle = isTicketID
-                    ? "sticky left-0 bg-white z-20 px-4 py-3 bg-orange-300 whitespace-nowrap text-gray-900 font-semibold border-r"
-                    : "px-4 py-3 whitespace-nowrap text-gray-900";
+        const stickyStyle = isTicketID
+          ? "sticky left-0 bg-white z-20 px-4 py-3 bg-orange-300 whitespace-nowrap text-gray-900 font-semibold border-r"
+          : "px-4 py-3 whitespace-nowrap text-gray-900";
 
-                if (key === "Status") {
-                    return (
-                        <td key={key} className={stickyStyle}>
-                            <span className="px-2 py-1 rounded-full">{value}</span>
-                        </td>
-                    );
-                }
-
-                if (key === "Title") {
-                    return (
-                        <td key={key} className={stickyStyle}>
-                            <div>
-                                <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
-                                <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                    {ticket.Description ? `${ticket.Description.substring(0, 60)}...` : "No Description"}
-                                </div>
-                            </div>
-                        </td>
-                    );
-                }
-
-                if (key === "Attachment") {
-                    return (
-                        <td key={key} className={stickyStyle}>
-                            <div className="flex gap-2 mt-1 max-h-48 overflow-auto">
-                                {value ? (
-                                    value.split(",").map((url, idx) => {
-                                        const trimmedUrl = url.trim();
-                                        const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
-                                        const isVideo = /\.(mp4|webm|avi|mov|mkv)$/i.test(trimmedUrl);
-
-                                        if (!isImage && !isVideo) return null;
-
-                                        return (
-                                            <button
-                                                key={idx}
-                                                type="button"
-                                                className="w-10 h-10 border rounded-md overflow-hidden bg-gray-100 hover:ring-2 hover:ring-blue-400 relative cursor-pointer"
-                                                title={trimmedUrl}
-                                                onClick={() => {
-                                                    if (isImage) {
-                                                        onImageClick(trimmedUrl);
-                                                    } else if (isVideo) {
-                                                        setVideoModalUrl(trimmedUrl);
-                                                    }
-                                                }}
-                                            >
-                                                {isImage ? (
-                                                    <img
-                                                        src={trimmedUrl}
-                                                        alt={`Attachment ${idx + 1}`}
-                                                        loading="lazy"
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <video
-                                                        src={trimmedUrl}
-                                                        className="w-full h-full object-cover"
-                                                        muted
-                                                        playsInline
-                                                    />
-                                                )}
-                                            </button>
-                                        );
-                                    })
-                                ) : (
-                                    <p className="text-sm text-gray-500">No Attachments</p>
-                                )}
-                            </div>
-
-                            {/* Video Modal */}
-                            {videoModalUrl && (
-                                <div className="fixed inset-0 bg-black bg-opacity-70 z-[9999] flex items-center justify-center h-screen">
-                                    <div className="relative w-full max-w-3xl p-4">
-                                        <video
-                                            src={videoModalUrl}
-                                            controls
-                                            autoPlay
-                                            muted
-                                            playsInline
-                                            className="w-full h-auto rounded shadow-lg"
-                                            onClick={() => setVideoModalUrl(null)}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                        </td>
-                    );
-                }
-
-                if (key === "DateCreated") {
-                    return (
-                        <td key={key} className={stickyStyle}>
-                            {formatDate(value)}
-                        </td>
-                    );
-                }
-
-                if (key === "WorkLogs") {
-                    return (
-                        <td key={key} className={stickyStyle}>
-                            <div className="relative group">
-                                <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
-                                    {value ? `${value.substring(0, 28)}` : "No WorkLogs"}
-                                </div>
-                                {value && (
-                                    <div className="absolute z-50 hidden group-hover:block bg-white border p-3 rounded shadow-md w-96 max-h-96 overflow-y-auto cursor-pointer top-full mt-1 left-0 whitespace-pre-wrap break-words text-sm">
-                                        {value}
-                                    </div>
-                                )}
-                            </div>
-                        </td>
-                    );
-                }
-
-                return (
-                    <td key={key} className={stickyStyle}>
-                        {value || "N/A"}
-                    </td>
-                );
-            })}
-
-            {/* Actions */}
-            <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky border-l right-0 bg-white z-10">
-                <button
-                    onClick={() => onEdit(ticket)}
-                    className="text-red-600 hover:text-red-900"
-                    title="View"
-                >
-                    <i className="fa fa-eye"></i>
-                </button>
-                <button
-                    onClick={() => onEdit(ticket)}
-                    className="text-green-600 hover:text-green-900 mr-3"
-                    title="Edit"
-                >
-                    <i className="fas fa-edit"></i>
-                </button>
+        if (key === "Status") {
+          return (
+            <td key={key} className={stickyStyle}>
+              <span className="px-2 py-1 rounded-full">{value}</span>
             </td>
-        </tr>
-    );
+          );
+        }
+
+        if (key === "Title") {
+          return (
+            <td key={key} className={stickyStyle}>
+              <div>
+                <div className="font-medium">{value?.substring(0, 25) || "N/A"}...</div>
+                <div className="text-xs text-gray-500 break-words max-w-[300px] whitespace-nowrap overflow-hidden text-ellipsis">
+                  {ticket.Description ? `${ticket.Description.substring(0, 60)}...` : "No Description"}
+                </div>
+              </div>
+            </td>
+          );
+        }
+
+        if (key === "Attachment") {
+          return (
+            <td key={key} className={stickyStyle}>
+              <div className="flex gap-2 mt-1 max-h-48 overflow-auto">
+                {value ? (
+                  value.split(",").map((url, idx) => {
+                    const trimmedUrl = url.trim();
+                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
+                    const isVideo = /\.(mp4|webm|avi|mov|mkv)$/i.test(trimmedUrl);
+
+                    if (!isImage && !isVideo) return null;
+
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="w-10 h-10 border rounded-md overflow-hidden bg-gray-100 hover:ring-2 hover:ring-blue-400 relative cursor-pointer"
+                        title={trimmedUrl}
+                        onClick={() => {
+                          if (isImage) {
+                            onImageClick(trimmedUrl);
+                          } else if (isVideo) {
+                            setVideoModalUrl(trimmedUrl);
+                          }
+                        }}
+                      >
+                        {isImage ? (
+                          <img
+                            src={trimmedUrl}
+                            alt={`Attachment ${idx + 1}`}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <video
+                            src={trimmedUrl}
+                            className="w-full h-full object-cover"
+                            muted
+                            playsInline
+                          />
+                        )}
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="text-sm text-gray-500">No Attachments</p>
+                )}
+              </div>
+
+              {/* Video Modal */}
+              {videoModalUrl && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 z-[9999] flex items-center justify-center h-screen">
+                  <div className="relative w-full max-w-3xl p-4">
+                    <video
+                      src={videoModalUrl}
+                      controls
+                      autoPlay
+                      muted
+                      playsInline
+                      className="w-full h-auto rounded shadow-lg"
+                      onClick={() => setVideoModalUrl(null)}
+                    />
+                  </div>
+                </div>
+              )}
+            </td>
+          );
+        }
+
+        if (key === "DateCreated") {
+          return (
+            <td key={key} className={stickyStyle}>
+              {formatDate(value)}
+            </td>
+          );
+        }
+
+        if (key === "WorkLogs") {
+          return (
+            <td key={key} className={stickyStyle}>
+              <div className="relative group">
+                <div className="text-xs text-gray-700 cursor-pointer whitespace-pre-wrap break-words max-w-[1000px]">
+                  {value ? `${value.substring(0, 28)}` : "No WorkLogs"}
+                </div>
+                {value && (
+                  <div className="absolute z-50 hidden group-hover:block bg-white border p-3 rounded shadow-md w-96 max-h-96 overflow-y-auto cursor-pointer top-full mt-1 left-0 whitespace-pre-wrap break-words text-sm">
+                    {value}
+                  </div>
+                )}
+              </div>
+            </td>
+          );
+        }
+
+        return (
+          <td key={key} className={stickyStyle}>
+            {value || "N/A"}
+          </td>
+        );
+      })}
+
+      {/* Actions */}
+      <td className="px-5 py-7 flex gap-3 whitespace-nowrap text-lg font-medium sticky border-l right-0 bg-white z-10">
+        <button
+          onClick={() => onEdit(ticket)}
+          className="text-red-600 hover:text-red-900"
+          title="View"
+        >
+          <i className="fa fa-eye"></i>
+        </button>
+        <button
+          onClick={() => onEdit(ticket)}
+          className="text-green-600 hover:text-green-900 mr-3"
+          title="Edit"
+        >
+          <i className="fas fa-edit"></i>
+        </button>
+      </td>
+    </tr>
+  );
 });
 
-const TicketCard = ({ ticket, headers, formatDate, onEdit, onImageClick, videoModalUrl, setVideoModalUrl }) => {
+const TicketCard = ({ ticket, headers, formatDate, onEdit, onImageClick, videoModalUrl, setVideoModalUrl ,  }) => {
   return (
     <div className="bg-white rounded-lg shadow p-4 mb-4 space-y-3 border border-gray-200">
       <div className="flex justify-between items-center">
@@ -588,51 +588,54 @@ const TicketCard = ({ ticket, headers, formatDate, onEdit, onImageClick, videoMo
             </div>
           );
         }
-        if (key === "Attachment") {
+          if (key === "Attachment") {
           return (
-            <div key={key} className="flex gap-2 overflow-x-auto">
-              {value ? (
-                value.split(",").map((url, idx) => {
-                  const trimmedUrl = url.trim();
-                  const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
-                  const isVideo = /\.(mp4|webm|avi|mov|mkv)$/i.test(trimmedUrl);
+            <td key={key} className="flex gap-2 overflow-x-auto">
+              <div className="flex gap-2 mt-1 max-h-48 overflow-auto">
+                {value ? (
+                  value.split(",").map((url, idx) => {
+                    const trimmedUrl = url.trim();
+                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(trimmedUrl);
+                    const isVideo = /\.(mp4|webm|avi|mov|mkv)$/i.test(trimmedUrl);
 
-                  if (!isImage && !isVideo) return null;
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      className="w-16 h-16 border rounded-md overflow-hidden bg-gray-100 hover:ring-2 hover:ring-blue-400 relative cursor-pointer flex-shrink-0"
-                      title={trimmedUrl}
-                      onClick={() => {
-                        if (isImage) {
-                          onImageClick(trimmedUrl);
-                        } else if (isVideo) {
-                          setVideoModalUrl(trimmedUrl);
-                        }
-                      }}
-                    >
-                      {isImage ? (
-                        <img
-                          src={trimmedUrl}
-                          alt={`Attachment ${idx + 1}`}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <video
-                          src={trimmedUrl}
-                          className="w-full h-full object-cover"
-                          muted
-                          playsInline
-                        />
-                      )}
-                    </button>
-                  );
-                })
-              ) : (
-                <p className="text-sm text-gray-500">No Attachments</p>
-              )}
+                    if (!isImage && !isVideo) return null;
+
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="w-10 h-10 border rounded-md overflow-hidden bg-gray-100 hover:ring-2 hover:ring-blue-400 relative cursor-pointer"
+                        title={trimmedUrl}
+                        onClick={() => {
+                          if (isImage) {
+                            onImageClick(trimmedUrl);
+                          } else if (isVideo) {
+                            setVideoModalUrl(trimmedUrl);
+                          }
+                        }}
+                      >
+                        {isImage ? (
+                          <img
+                            src={trimmedUrl}
+                            alt={`Attachment ${idx + 1}`}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <video
+                            src={trimmedUrl}
+                            className="w-full h-full object-cover"
+                            muted
+                            playsInline
+                          />
+                        )}
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="text-sm text-gray-500">No Attachments</p>
+                )}
+              </div>
 
               {/* Video Modal */}
               {videoModalUrl && (
@@ -650,7 +653,7 @@ const TicketCard = ({ ticket, headers, formatDate, onEdit, onImageClick, videoMo
                   </div>
                 </div>
               )}
-            </div>
+            </td>
           );
         }
         if (key === "Status") {
@@ -770,11 +773,11 @@ export const TicketList = () => {
     { label: "Department", key: "Department" },
     { label: "Manager", key: "Manager" },
     { label: "Assignee", key: "Assignee" },
-    { label: "Client ID", key: "ClientID" },
-    { label: "Employee ID", key: "EmployeeID" },
+    // { label: "Client ID", key: "ClientID" },
+    // { label: "Employee ID", key: "EmployeeID" },
     { label: "Created By Id", key: "CreatedById" },
     { label: "Created By Name", key: "CreatedByName" },
-    { label: "Closed Date", key: "ClosedDate" },
+    // { label: "Closed Date", key: "ClosedDate" },
     { label: "Updated By ID", key: "UpdatedById" },
     { label: "Updated By Name", key: "UpdatedByName" },
     { label: "Updated Date Time", key: "UpdatedDateTime" },
@@ -844,7 +847,7 @@ export const TicketList = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-[18px]">
 
-              {console.log('Paginated Tickets:', paginatedTickets)      }
+                {console.log('Paginated Tickets:', paginatedTickets)}
                 {paginatedTickets.map((ticket) => (
                   <TicketRow
                     key={ticket.TicketID}

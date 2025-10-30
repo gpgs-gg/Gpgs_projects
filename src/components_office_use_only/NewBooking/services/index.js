@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const apiClient = axios.create({
@@ -7,16 +7,45 @@ const apiClient = axios.create({
 });
 
 // POST request to send booking data
-const addBooking = async (data) => {
+// const addBooking = async (data) => {
+//   const response = await apiClient.post("/add-row", data);
+//   return response.data;
+// };
+
+// export const useAddBooking = () => {  
+//   return useMutation({
+//     mutationFn: addBooking,
+//   });   
+// };
+
+
+
+const addBooking= async (data) => {
   const response = await apiClient.post("/add-row", data);
   return response.data;
 };
 
-export const useAddBooking = () => {  
+export const useAddBooking = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: addBooking,
-  });   
+    onSuccess: () => {
+      // 🔄 Refetch ticket sheet after update
+      queryClient.invalidateQueries(["new-booking"]);
+    },
+  });
 };
+
+
+
+
+
+
+
+
+
+
 
 // GET request to fetch property data
 const fetchPropertyData = async () => {
@@ -32,15 +61,12 @@ export const usePropertyData = () => {
   });
 };
 
-
-
 const fetchPropertySheetData = async (sheetId) => {
   if(sheetId){
     const response = await apiClient.get(`/property-sheet-data-for-new-booking?sheetId=${sheetId}`);
     return response.data;
   }
 };
-
 
 export const usePropertySheetData = (sheetId, enabled) => {
   return useQuery({

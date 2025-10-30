@@ -47,6 +47,7 @@ const Documents = () => {
         }
     }, [clientDetailsForDocuments, decryptedUser.name]);
 
+    
   const handleFileChange = (type, event) => {
     const newFiles = Array.from(event.target.files);
     if (!newFiles.length) return;
@@ -294,6 +295,7 @@ const Documents = () => {
                 </div>
             </div>
         </div>
+
     );
 };
 

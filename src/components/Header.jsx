@@ -145,6 +145,7 @@ const Header = () => {
               <a onClick={() => setMenuOpen(false)} href="#services" className="mobile-link">Services & Facilities</a>
               <a onClick={() => setMenuOpen(false)} href="#locations" className="mobile-link">Locations</a>
               <a onClick={() => setMenuOpen(false)} href="#about" className="mobile-link">About Us</a>
+              <Link onClick={() => setMenuOpen(false)} to="/gallery" className="mobile-link">Gallery</Link>
               <a onClick={() => setMenuOpen(false)} href="#contact" className="mobile-link">Contact Us</a>
             </>
           ) : (
