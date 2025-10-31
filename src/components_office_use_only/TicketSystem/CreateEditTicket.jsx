@@ -2112,19 +2112,19 @@ const DepartmentOptions = DynamicValuesDetails?.data
 
 
 
-  const CLOUD_NAME = "dppyl6k4j"; // ✅ Your Cloudinary name
+  // const CLOUD_NAME = "dppyl6k4j"; // ✅ Your Cloudinary name
 
 
 // const CLOUD_NAME = "dppyl6k4j";
-const GOOGLE_DRIVE_FOLDER_ID = "0ADzSPK9dbjmuUk9PVA";
+// const GOOGLE_DRIVE_FOLDER_ID = "0ADzSPK9dbjmuUk9PVA";
 
-const generateUniqueFileName = (originalName) => {  
-  const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 1000000);
-  const extension = originalName.split('.').pop();
-  const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
-  return `${timestamp}_${random}_${baseName}.${extension}`;
-};
+// const generateUniqueFileName = (originalName) => {  
+//   const timestamp = Date.now();
+//   const random = Math.floor(Math.random() * 1000000);
+//   const extension = originalName.split('.').pop();
+//   const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
+//   return `${timestamp}_${random}_${baseName}.${extension}`;
+// };
 
 // Cloudinary Upload (your existing function)
 // const uploadFileToCloudinary = async (file) => {

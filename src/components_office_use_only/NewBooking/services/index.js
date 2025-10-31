@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://gpgs-main-server.vercel.app/api", // for vercel deployement
+  baseURL: `${process.env.REACT_APP_BASE_URL}`, // for vercel deployement
   // baseURL: "http://localhost:3000/api", // for Local Developement
 });
 

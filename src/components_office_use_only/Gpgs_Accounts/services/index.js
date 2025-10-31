@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: "https://gpgs-main-server.vercel.app/api", // change later for production
+  baseURL: `${process.env.REACT_APP_BASE_URL}`, // for vercel deployement
   // baseURL: "http://localhost:3000/api", // change later for production
 }); 
 

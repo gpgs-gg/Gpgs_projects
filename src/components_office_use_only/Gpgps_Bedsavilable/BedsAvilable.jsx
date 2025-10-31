@@ -33,8 +33,10 @@ const BedsAvilable = () => {
       try {
         const res = await axios.get(
           // `http://localhost:3000/Beds-status`
-          "https://gpgs-main-server.vercel.app/api/Beds-status"
+          `${process.env.REACT_APP_BASE_URL}/Beds-status`
         );
+
+        console.log(22222222, process.env.Base_Url)
         if (res.data.success) {
           const raw = res.data.data;
           setData(raw);
